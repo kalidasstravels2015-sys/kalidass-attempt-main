@@ -71,9 +71,18 @@ export function getWhatsAppDigits(rawPhone) {
   return digits;
 }
 
+export function stripWhatsAppIcons(text = '') {
+  return String(text || '')
+    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0E}\u{FE0F}\u{200D}]/gu, '')
+    .replace(/^[ \t]+/gm, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
 export function buildWhatsAppUrl(phone, text = '') {
   const digits = getWhatsAppDigits(phone);
-  const encoded = encodeURIComponent(text || '');
+  const cleanText = stripWhatsAppIcons(text);
+  const encoded = encodeURIComponent(cleanText);
   if (digits) {
     return `https://wa.me/${digits}${encoded ? `?text=${encoded}` : ''}`;
   }
@@ -148,27 +157,130 @@ export function isTripActiveOnDate(trip, targetIsoDate) {
   return target >= start && target <= end;
 }
 
+// ==========================================
+// 4-STAGE PIPELINE STATUS & IST AUTO-START
+// ==========================================
+
+export const PIPELINE_STAGES = ['Quotation', 'Confirmed', 'On Trip', 'Completed'];
+
+export function normalizeManifestStatus(rawStatus) {
+  const s = String(rawStatus || '').trim().toLowerCase();
+  if (!s || s === 'quotation' || s === 'follow-up' || s === 'followup' || s === 'enquiry' || s === 'inquiry' || s === 'lead') {
+    return 'Quotation';
+  }
+  if (s === 'confirmed' || s === 'unassigned' || s === 'need driver' || s === 'needs driver' || s === 'booked') {
+    return 'Confirmed';
+  }
+  if (s === 'on trip' || s === 'ontrip' || s === 'active' || s === 'running' || s === 'on road') {
+    return 'On Trip';
+  }
+  if (s === 'completed' || s === 'settled' || s === 'closed' || s === 'finished') {
+    return 'Completed';
+  }
+  return 'Confirmed';
+}
+
+export function parseTripPickupTimestampIST(pickupDate, pickupTime) {
+  const iso = toIsoDate(pickupDate);
+  if (!iso) return null;
+
+  let hours = 0;
+  let minutes = 0;
+  const rawTime = String(pickupTime || '').trim();
+  if (rawTime) {
+    const ampm = rawTime.match(/(\d{1,2})\s*[:.]\s*(\d{2})\s*(AM|PM)/i);
+    const h24 = rawTime.match(/\b(\d{1,2})\s*[:.]\s*(\d{2})\b/);
+    if (ampm) {
+      hours = parseInt(ampm[1], 10);
+      minutes = parseInt(ampm[2], 10);
+      const meridiem = ampm[3].toUpperCase();
+      if (meridiem === 'PM' && hours < 12) hours += 12;
+      if (meridiem === 'AM' && hours === 12) hours = 0;
+    } else if (h24) {
+      hours = Math.min(23, parseInt(h24[1], 10));
+      minutes = Math.min(59, parseInt(h24[2], 10));
+    }
+  }
+
+  const hh = String(hours).padStart(2, '0');
+  const mm = String(minutes).padStart(2, '0');
+  const ts = Date.parse(`${iso}T${hh}:${mm}:00+05:30`);
+  return Number.isNaN(ts) ? null : ts;
+}
+
+export function shouldAutoMoveToOnTrip(trip, nowMs = Date.now()) {
+  if (!trip) return false;
+  if (normalizeManifestStatus(trip.manifestStatus) !== 'Confirmed') return false;
+  const hasDriver = Boolean(String(trip.driverName || '').trim());
+  if (!hasDriver) return false;
+  const pickupMs = parseTripPickupTimestampIST(trip.pickupDate, trip.pickupTime);
+  if (pickupMs === null) return false;
+  return nowMs >= pickupMs;
+}
+
+export function isOverdueWithoutDriver(trip, nowMs = Date.now()) {
+  if (!trip) return false;
+  if (normalizeManifestStatus(trip.manifestStatus) !== 'Confirmed') return false;
+  const hasDriver = Boolean(String(trip.driverName || '').trim());
+  if (hasDriver) return false;
+  const pickupMs = parseTripPickupTimestampIST(trip.pickupDate, trip.pickupTime);
+  if (pickupMs === null) return false;
+  return nowMs >= pickupMs;
+}
+
 function parseNaturalDate(text, fallbackYear) {
-  const yearNow = fallbackYear || new Date().getFullYear();
+  const now = new Date();
+  const yearNow = fallbackYear || now.getFullYear();
   const s = String(text || '').trim();
 
   // DD-MM-YYYY or DD/MM/YYYY
   const dmy = s.match(/(\d{1,2})[-/](\d{1,2})[-/](\d{2,4})/);
   if (dmy) {
-    const dd = dmy[1].padStart(2, '0');
-    const mm = dmy[2].padStart(2, '0');
-    const yyyy = dmy[3].length === 2 ? `20${dmy[3]}` : dmy[3];
-    return `${yyyy}-${mm}-${dd}`;
+    const ddNum = parseInt(dmy[1], 10);
+    const mmNum = parseInt(dmy[2], 10);
+    if (ddNum >= 1 && ddNum <= 31 && mmNum >= 1 && mmNum <= 12) {
+      const dd = String(ddNum).padStart(2, '0');
+      const mm = String(mmNum).padStart(2, '0');
+      const yyyy = dmy[3].length === 2 ? `20${dmy[3]}` : dmy[3];
+      return `${yyyy}-${mm}-${dd}`;
+    }
   }
 
-  // "23 Nov 2026" or "26th Nov" or "17 Dec"
-  const dMon = s.match(/(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]{3,9})(?:[\s,]+(\d{4}))?/i);
-  if (dMon) {
-    const mon = MONTH_MAP[dMon[2].toLowerCase()];
-    if (mon) {
-      const dd = dMon[1].padStart(2, '0');
+  // Scan ALL occurrences of "26 Nov", "23 Nov 2026", "26th Nov" so non-months like "3 Days" are skipped!
+  const dMonRegex = /\b(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]{3,9})(?:[\s,]+(20\d{2}))?\b/gi;
+  for (const m of s.matchAll(dMonRegex)) {
+    const mon = MONTH_MAP[m[2].toLowerCase()];
+    const dayNum = parseInt(m[1], 10);
+    if (mon && dayNum >= 1 && dayNum <= 31) {
+      const dd = String(dayNum).padStart(2, '0');
       const mm = String(mon).padStart(2, '0');
-      const yyyy = dMon[3] || String(yearNow);
+      let yyyy = m[3] ? Number(m[3]) : yearNow;
+      // Smart year rollover if no explicit year and month is >2 months behind today (e.g. quoting in Dec for Jan)
+      if (!m[3] && !fallbackYear) {
+        const currentMonth = now.getMonth() + 1;
+        if (mon < currentMonth - 2) {
+          yyyy = yearNow + 1;
+        }
+      }
+      return `${yyyy}-${mm}-${dd}`;
+    }
+  }
+
+  // Also support "Nov 26" or "Nov 26, 2026"
+  const monDRegex = /\b([A-Za-z]{3,9})\s+(\d{1,2})(?:st|nd|rd|th)?(?:[\s,]+(20\d{2}))?\b/gi;
+  for (const m of s.matchAll(monDRegex)) {
+    const mon = MONTH_MAP[m[1].toLowerCase()];
+    const dayNum = parseInt(m[2], 10);
+    if (mon && dayNum >= 1 && dayNum <= 31) {
+      const dd = String(dayNum).padStart(2, '0');
+      const mm = String(mon).padStart(2, '0');
+      let yyyy = m[3] ? Number(m[3]) : yearNow;
+      if (!m[3] && !fallbackYear) {
+        const currentMonth = now.getMonth() + 1;
+        if (mon < currentMonth - 2) {
+          yyyy = yearNow + 1;
+        }
+      }
       return `${yyyy}-${mm}-${dd}`;
     }
   }
@@ -226,6 +338,21 @@ export function encodeTripForSheet(trip) {
     meta.quotedFare = Number(trip.quotedFare);
   }
   if (trip.tourKey) meta.tourKey = String(trip.tourKey).trim();
+  if (trip.commissionPct !== undefined && trip.commissionPct !== null && trip.commissionPct !== '') {
+    meta.commissionPct = Number(trip.commissionPct);
+  }
+  if (Number(trip.extraCharges) > 0) meta.extraCharges = Number(trip.extraCharges);
+  if (trip.extraChargesNote) meta.extraChargesNote = String(trip.extraChargesNote).trim();
+  if (trip.finalCollected !== undefined && trip.finalCollected !== null && trip.finalCollected !== '') {
+    meta.finalCollected = Number(trip.finalCollected);
+  }
+  if (trip.paymentCollector) meta.paymentCollector = String(trip.paymentCollector).trim();
+  if (trip.commissionSettled) meta.commissionSettled = true;
+  if (trip.commissionSettledAt) meta.commissionSettledAt = String(trip.commissionSettledAt);
+  if (trip.reviewSent) meta.reviewSent = true;
+  if (trip.reviewSentAt) meta.reviewSentAt = String(trip.reviewSentAt);
+  if (trip.startedAt) meta.startedAt = String(trip.startedAt);
+  if (trip.completedAt) meta.completedAt = String(trip.completedAt);
   if (Array.isArray(trip.dayPlan) && trip.dayPlan.length > 0) {
     meta.dayPlan = trip.dayPlan.map((d, i) => ({
       day: d.day || i + 1,
@@ -294,6 +421,18 @@ export function decodeTripFromSheet(row) {
     driverBata: Number(meta.driverBata) || 0,
     quotedFare: Number(meta.quotedFare) || 0,
     tourKey: String(meta.tourKey || ''),
+    commissionPct: meta.commissionPct !== undefined ? Number(meta.commissionPct) : (row.commissionPct !== undefined ? Number(row.commissionPct) : 10),
+    extraCharges: Number(meta.extraCharges || row.extraCharges || 0),
+    extraChargesNote: String(meta.extraChargesNote || row.extraChargesNote || ''),
+    finalCollected: meta.finalCollected !== undefined ? Number(meta.finalCollected) : (row.finalCollected !== undefined ? Number(row.finalCollected) : undefined),
+    paymentCollector: String(meta.paymentCollector || row.paymentCollector || 'Driver'),
+    commissionSettled: Boolean(meta.commissionSettled || row.commissionSettled),
+    commissionSettledAt: String(meta.commissionSettledAt || row.commissionSettledAt || ''),
+    reviewSent: Boolean(meta.reviewSent || row.reviewSent),
+    reviewSentAt: String(meta.reviewSentAt || row.reviewSentAt || ''),
+    startedAt: String(meta.startedAt || row.startedAt || ''),
+    completedAt: String(meta.completedAt || row.completedAt || ''),
+    manifestStatus: normalizeManifestStatus(row.manifestStatus),
     dayPlan,
     notes: getCleanNotes(row.notes)
   };
@@ -354,7 +493,23 @@ export function parseWhatsAppBookingText(rawText, tariffConfig = {}) {
     highlights.push(`Ref: ${parsed.quoteRef}`);
   }
 
-  // 2. Phone numbers (preserve international & alternate contacts)
+  // 2. Phone numbers & WhatsApp copy-paste chat headers (preserve international & alternate contacts)
+  // e.g. "[12:26 pm, 22/11/2026] +91 91711 63663:" or "[22/11/26, 12:26:00 PM] Riddhi Gandhi:"
+  const waHeaderMatches = [...text.matchAll(/^\[[^\]]+\]\s*([^:\n\r]{2,50}):/gm)];
+  for (const hm of waHeaderMatches) {
+    const sender = hm[1].trim();
+    const senderDigits = sender.replace(/\D/g, '');
+    if (senderDigits.endsWith('8939539211') || senderDigits.endsWith('9092303060') || /^kalidass/i.test(sender)) {
+      continue;
+    }
+    if (/^\+?\d[\d\s-]{8,15}$/.test(sender)) {
+      if (!parsed.phone) parsed.phone = normalizePhoneNumber(sender);
+    } else if (!parsed.customerName) {
+      parsed.customerName = sender;
+      highlights.push(`Sender: ${sender}`);
+    }
+  }
+
   const phoneMatches = [...text.matchAll(/(?:\+\d{1,3}[\s-]?\d[\d\s-]{7,13}|\b[6-9]\d{9}\b)/g)]
     .map(m => m[0].trim())
     // Filter out our own office numbers
@@ -368,12 +523,13 @@ export function parseWhatsAppBookingText(rawText, tariffConfig = {}) {
     const altMatch = text.match(/(?:dad|father|brother|guest|passenger|alternate|contact\s+you)[^\n\r\d]{0,30}(\+?\d[\d\s-]{8,14})/i);
     if (altMatch && uniquePhones.length >= 2) {
       parsed.guestPhone = normalizePhoneNumber(altMatch[1]);
-      parsed.phone = uniquePhones.find(p => p !== parsed.guestPhone) || uniquePhones[0];
+      parsed.phone = parsed.phone || uniquePhones.find(p => p !== parsed.guestPhone) || uniquePhones[0];
     } else if (altMatch && uniquePhones.length === 1) {
       parsed.guestPhone = normalizePhoneNumber(altMatch[1]);
     } else {
-      parsed.phone = uniquePhones[0];
-      if (uniquePhones[1]) parsed.guestPhone = uniquePhones[1];
+      parsed.phone = parsed.phone || uniquePhones[0];
+      const otherPhone = uniquePhones.find(p => p !== parsed.phone);
+      if (otherPhone && !parsed.guestPhone) parsed.guestPhone = otherPhone;
     }
   }
 
@@ -458,28 +614,45 @@ export function parseWhatsAppBookingText(rawText, tariffConfig = {}) {
 
   // 6. Dates & Times (if not already populated by Day-by-Day)
   if (!parsed.pickupDate) {
-    // Pattern A: "21-11-2026 06:00 AM – 23-11-2026 09:00 AM"
-    const rangeDmy = text.match(/(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})(?:\s+(\d{1,2}:\d{2}\s*(?:AM|PM)))?\s*[–—\-to]+\s*(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})/i);
-    if (rangeDmy) {
-      parsed.pickupDate = parseNaturalDate(rangeDmy[1], defaultYear);
-      parsed.returnDate = parseNaturalDate(rangeDmy[3], defaultYear);
-      if (rangeDmy[2]) parsed.pickupTime = rangeDmy[2].toUpperCase();
-    } else {
-      // Pattern B: "23 Nov - 25 Nov 2026" or "26th to 29th Nov"
-      const rangeNat1 = text.match(/(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]{3,9})\s*(?:[-–—]|to)\s*(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]{3,9})(?:\s+(\d{4}))?/i);
-      const rangeNat2 = text.match(/(\d{1,2})(?:st|nd|rd|th)?\s*(?:[-–—]|to)\s*(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]{3,9})(?:\s+(\d{4}))?/i);
-      if (rangeNat1) {
-        const yr = rangeNat1[5] ? Number(rangeNat1[5]) : defaultYear;
-        parsed.pickupDate = parseNaturalDate(`${rangeNat1[1]} ${rangeNat1[2]} ${yr}`, yr);
-        parsed.returnDate = parseNaturalDate(`${rangeNat1[3]} ${rangeNat1[4]} ${yr}`, yr);
-      } else if (rangeNat2) {
-        const yr = rangeNat2[4] ? Number(rangeNat2[4]) : defaultYear;
-        parsed.pickupDate = parseNaturalDate(`${rangeNat2[1]} ${rangeNat2[3]} ${yr}`, yr);
-        parsed.returnDate = parseNaturalDate(`${rangeNat2[2]} ${rangeNat2[3]} ${yr}`, yr);
+    // Pattern 0: Explicit "Pickup: Thu, 26 Nov, 06:00 AM" and "Return: Sat, 28 Nov, 09:00 PM" lines
+    const pickupLineMatch = text.match(/^(?:[-•*]\s*)?(?:Pickup|Pick[\s-]?up|Start|Departure)\s*[:\-]\s*([^\n\r]+)/im);
+    const returnLineMatch = text.match(/^(?:[-•*]\s*)?(?:Return|Drop[\s-]?off|End|Drop\s*Date)\s*[:\-]\s*([^\n\r]+)/im);
+
+    if (pickupLineMatch) {
+      const pDate = parseNaturalDate(pickupLineMatch[1], defaultYear);
+      if (pDate) parsed.pickupDate = pDate;
+      const pTime = pickupLineMatch[1].match(/(\d{1,2}:\d{2}\s*(?:AM|PM))/i);
+      if (pTime) parsed.pickupTime = pTime[1].toUpperCase();
+    }
+    if (returnLineMatch) {
+      const rDate = parseNaturalDate(returnLineMatch[1], defaultYear);
+      if (rDate) parsed.returnDate = rDate;
+    }
+
+    if (!parsed.pickupDate) {
+      // Pattern A: "21-11-2026 06:00 AM – 23-11-2026 09:00 AM"
+      const rangeDmy = text.match(/(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})(?:\s+(\d{1,2}:\d{2}\s*(?:AM|PM)))?\s*[–—\-to]+\s*(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})/i);
+      if (rangeDmy) {
+        parsed.pickupDate = parseNaturalDate(rangeDmy[1], defaultYear);
+        parsed.returnDate = parseNaturalDate(rangeDmy[3], defaultYear);
+        if (rangeDmy[2]) parsed.pickupTime = rangeDmy[2].toUpperCase();
       } else {
-        // Single date: "Pickup: Thu, 17 Dec, 06:00 AM" or "26th Nov"
-        const singleDate = parseNaturalDate(text, defaultYear);
-        if (singleDate) parsed.pickupDate = singleDate;
+        // Pattern B: "23 Nov - 25 Nov 2026" or "26th to 29th Nov"
+        const rangeNat1 = text.match(/(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]{3,9})\s*(?:[-–—]|to)\s*(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]{3,9})(?:\s+(\d{4}))?/i);
+        const rangeNat2 = text.match(/(\d{1,2})(?:st|nd|rd|th)?\s*(?:[-–—]|to)\s*(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]{3,9})(?:\s+(\d{4}))?/i);
+        if (rangeNat1 && MONTH_MAP[rangeNat1[2].toLowerCase()] && MONTH_MAP[rangeNat1[4].toLowerCase()]) {
+          const yr = rangeNat1[5] ? Number(rangeNat1[5]) : defaultYear;
+          parsed.pickupDate = parseNaturalDate(`${rangeNat1[1]} ${rangeNat1[2]} ${yr}`, yr);
+          parsed.returnDate = parseNaturalDate(`${rangeNat1[3]} ${rangeNat1[4]} ${yr}`, yr);
+        } else if (rangeNat2 && MONTH_MAP[rangeNat2[3].toLowerCase()]) {
+          const yr = rangeNat2[4] ? Number(rangeNat2[4]) : defaultYear;
+          parsed.pickupDate = parseNaturalDate(`${rangeNat2[1]} ${rangeNat2[3]} ${yr}`, yr);
+          parsed.returnDate = parseNaturalDate(`${rangeNat2[2]} ${rangeNat2[3]} ${yr}`, yr);
+        } else {
+          // Single date: "Pickup: Thu, 17 Dec, 06:00 AM" or "26th Nov"
+          const singleDate = parseNaturalDate(text, defaultYear);
+          if (singleDate) parsed.pickupDate = singleDate;
+        }
       }
     }
   }
@@ -489,6 +662,7 @@ export function parseWhatsAppBookingText(rawText, tariffConfig = {}) {
   }
   if (parsed.pickupDate && parsed.returnDate) {
     parsed.days = computeTripDays(parsed.pickupDate, parsed.returnDate);
+    highlights.push(`${formatShortDate(parsed.pickupDate)} – ${formatShortDate(parsed.returnDate)} (${parsed.days}D)`);
   } else {
     const daysMatch = text.match(/(\d+)\s*[-]?\s*days?/i);
     if (daysMatch && !parsed.days) {
@@ -496,6 +670,11 @@ export function parseWhatsAppBookingText(rawText, tariffConfig = {}) {
       if (parsed.pickupDate && parsed.days > 1) {
         parsed.returnDate = addDaysToIsoDate(parsed.pickupDate, parsed.days - 1);
       }
+    }
+    if (parsed.pickupDate && parsed.returnDate) {
+      highlights.push(`${formatShortDate(parsed.pickupDate)} – ${formatShortDate(parsed.returnDate)} (${parsed.days}D)`);
+    } else if (parsed.pickupDate) {
+      highlights.push(`Date: ${formatShortDate(parsed.pickupDate)}`);
     }
   }
 
@@ -525,7 +704,7 @@ export function parseWhatsAppBookingText(rawText, tariffConfig = {}) {
     const arrowLine = text.match(/([^\n\r•]+?)\s*(?:⇄|↔|➔|->)\s*([^\n\r•]+)/);
     if (arrowLine) {
       parsed.pickupLocation = parsed.pickupLocation || arrowLine[1].replace(/^[*-]\s*/, '').trim();
-      parsed.dropLocation = arrowLine[2].trim();
+      parsed.dropLocation = arrowLine[2].replace(/\s*\(\s*\d+\s*Days?\s*\)\s*$/i, '').trim();
     } else {
       const parenRoute = text.match(/:\s*(Chennai[^)\n\r]+(?:–|-|to)[^)\n\r]+)/i);
       if (parenRoute) {
@@ -624,8 +803,8 @@ export function parseWhatsAppBookingText(rawText, tariffConfig = {}) {
 
   // 11. Detect if it looks like an unconfirmed / deferred inquiry
   if (/not\s*available|plan\s*changed|inform\s*you\s*later|please\s*share\s*(?:vehicle\s*)?availability|do\s*you\s*have\s*any\s*tour/i.test(lower)) {
-    parsed.bookingStatus = 'Follow-up';
-    highlights.push('Suggested: Pending / Follow-up');
+    parsed.bookingStatus = 'Quotation';
+    highlights.push('Suggested: Quotation / Enquiry');
   }
 
   return { parsed, highlights };

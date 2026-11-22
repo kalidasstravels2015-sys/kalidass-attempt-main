@@ -131,24 +131,35 @@ function doGet(e) {
         var propKey = 'quote_seq_' + dateCode;
         var currentSeq = parseInt(props.getProperty(propKey) || '0', 10);
 
-        // If not initialized in Script Properties today, scan Enquiries sheet for highest today
-        if (currentSeq === 0) {
-          var enqLast = enqSheet.getLastRow();
-          if (enqLast > 1) {
-            var enqIds = enqSheet.getRange(2, 1, enqLast - 1, 1).getValues();
-            var qRegex = new RegExp('^Q-' + dateCode + '-(\\d+)$', 'i');
-            for (var r = 0; r < enqIds.length; r++) {
-              var qVal = String(enqIds[r][0] || '').trim();
-              var qMatch = qVal.match(qRegex);
-              if (qMatch) {
-                var qNum = parseInt(qMatch[1], 10);
-                if (!isNaN(qNum) && qNum > currentSeq) {
-                  currentSeq = qNum;
-                }
-              }
+        // Also cross-check Enquiries & Bookings sheets for both Q-DDMMYY-N and KT/DDMMM/NN
+        var monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+        var ddStr = dateCode.slice(0, 2);
+        var mmIdx = Math.max(0, Math.min(11, parseInt(dateCode.slice(2, 4), 10) - 1));
+        var ktPrefix = 'KT\\/' + ddStr + (monthNames[mmIdx] || 'NOV') + '\\/';
+        var qRegex = new RegExp('Q-' + dateCode + '-(\\d+)', 'gi');
+        var ktRegex = new RegExp(ktPrefix + '0*(\\d+)', 'gi');
+
+        var scanRangeForMax = function(sheet) {
+          var lastR = sheet.getLastRow();
+          if (lastR <= 1) return;
+          var vals = sheet.getRange(2, 1, lastR - 1, sheet.getLastColumn()).getValues();
+          for (var r = 0; r < vals.length; r++) {
+            var rowText = String(vals[r][0] || '') + ' ' + String(vals[r][vals[r].length - 1] || '');
+            var m;
+            qRegex.lastIndex = 0;
+            while ((m = qRegex.exec(rowText)) !== null) {
+              var n1 = parseInt(m[1], 10);
+              if (!isNaN(n1) && n1 > currentSeq) currentSeq = n1;
+            }
+            ktRegex.lastIndex = 0;
+            while ((m = ktRegex.exec(rowText)) !== null) {
+              var n2 = parseInt(m[1], 10);
+              if (!isNaN(n2) && n2 > currentSeq) currentSeq = n2;
             }
           }
-        }
+        };
+        scanRangeForMax(enqSheet);
+        scanRangeForMax(bookSheet);
 
         var shouldAdvance = Boolean(e && e.parameter && (e.parameter.claim === 'true' || e.parameter.advance === 'true' || e.parameter.reserve === 'true'));
         var nextSeq = currentSeq + 1;

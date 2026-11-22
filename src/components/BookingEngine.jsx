@@ -941,17 +941,17 @@ export default function BookingEngine({
       if (nextId) setQuoteRefId(nextId);
     } catch (_) {}
 
-    // Centralized server synchronization across all devices/visitors (Option 2: Live Sync)
+    // Centralized server peek across all devices/visitors (read-only preview; never burns numbers on view)
     if (typeof fetch === 'function') {
-      fetch('/api/next-quote-id?claim=true')
+      fetch('/api/next-quote-id')
         .then(res => res.json())
         .then(data => {
           if (data && data.quoteId) {
             setQuoteRefId(data.quoteId);
             const dateCode = data.dateCode;
-            if (dateCode && (data.currentSeq !== undefined || data.nextSeq !== undefined)) {
+            if (dateCode && data.currentSeq !== undefined) {
               try {
-                localStorage.setItem(`kt_last_quotation_seq_${dateCode}`, String(data.nextSeq || data.currentSeq));
+                localStorage.setItem(`kt_last_quotation_seq_${dateCode}`, String(data.currentSeq));
               } catch (_) {}
             }
           }
@@ -1464,18 +1464,21 @@ export default function BookingEngine({
           .then(data => {
             if (data && data.nextQuoteId) {
               setQuoteRefId(data.nextQuoteId);
+              if (data.dateCode && data.seq !== undefined) {
+                try {
+                  localStorage.setItem(`kt_last_quotation_seq_${data.dateCode}`, String(data.seq));
+                } catch (_) {}
+              }
             }
           })
-          .catch(() => {});
+          .catch(() => {
+            // Fallback to local increment only if network request fails
+            try {
+              const nextLocal = getNextQuotationId?.();
+              if (nextLocal) setQuoteRefId(nextLocal);
+            } catch (_) {}
+          });
       }
-
-      // 2. Also increment local sequential counter for instant fallback
-      try {
-        const nextLocal = getNextQuotationId?.();
-        if (nextLocal) {
-          setTimeout(() => setQuoteRefId(nextLocal), 120);
-        }
-      } catch (_) {}
 
       logCalculationEvent(vehicleName, fare);
 
@@ -1736,9 +1739,9 @@ Ref: ${cleanRef}`;
     setValidationError('');
     setViewMode('results');
 
-    // Fresh claim check on calculation to guarantee atomic sequence from Google Sheets
+    // Read-only peek on calculation so browsing fares never burns sequential quote numbers
     if (typeof fetch === 'function') {
-      fetch('/api/next-quote-id?claim=true')
+      fetch('/api/next-quote-id')
         .then(res => res.json())
         .then(data => {
           if (data && data.quoteId) {

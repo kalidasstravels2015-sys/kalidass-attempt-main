@@ -27,15 +27,30 @@ function getKolkataDateCode() {
   return `${dd}${mm}${yy}`;
 }
 
+const MONTH_SHORT_UPPER = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+function getRefPrefixFromDateCode(dateCode) {
+  const dd = dateCode.slice(0, 2);
+  const mmIdx = Math.max(0, Math.min(11, parseInt(dateCode.slice(2, 4), 10) - 1));
+  return `KT/${dd}${MONTH_SHORT_UPPER[mmIdx] || 'NOV'}/`;
+}
+
 function extractMaxSeqFromTrips(trips, dateCode) {
   if (!Array.isArray(trips)) return 0;
   let maxSeq = 0;
-  const regex = new RegExp(`Q-${dateCode}-(\\d+)`, 'gi');
+  const qRegex = new RegExp(`Q-${dateCode}-(\\d+)`, 'gi');
+  const refPrefix = getRefPrefixFromDateCode(dateCode).replace('/', '\\/').replace('/', '\\/');
+  const ktRegex = new RegExp(`${refPrefix}0*(\\d+)`, 'gi');
   for (const row of trips) {
-    const searchStr = `${row?.id || ''} ${row?.notes || ''}`;
+    const searchStr = `${row?.id || ''} ${row?.quoteRef || ''} ${row?.notes || ''}`;
     let m;
-    regex.lastIndex = 0;
-    while ((m = regex.exec(searchStr)) !== null) {
+    qRegex.lastIndex = 0;
+    while ((m = qRegex.exec(searchStr)) !== null) {
+      const val = parseInt(m[1], 10);
+      if (!isNaN(val) && val > maxSeq) maxSeq = val;
+    }
+    ktRegex.lastIndex = 0;
+    while ((m = ktRegex.exec(searchStr)) !== null) {
       const val = parseInt(m[1], 10);
       if (!isNaN(val) && val > maxSeq) maxSeq = val;
     }
@@ -71,7 +86,8 @@ async function fetchFromGoogleSheets(webhookUrl, dateCode, claim = false) {
           success: true,
           currentSeq: baseSeq,
           nextSeq,
-          quoteId: `Q-${dateCode}-${nextSeq}`
+          quoteId: `Q-${dateCode}-${nextSeq}`,
+          claimed: claim
         };
       }
     } catch (_) {}
@@ -95,14 +111,17 @@ export async function onRequestGet({ request, env }) {
     try {
       const gData = await fetchFromGoogleSheets(webhookUrl, dateCode, claim);
       if (gData && gData.quoteId) {
-        const remoteSeq = Number(gData.nextSeq || gData.currentSeq || 0);
-        if (remoteSeq > edgeSeq) edgeSeq = remoteSeq;
+        const committedSeq = claim
+          ? Number(gData.nextSeq || gData.currentSeq || 0)
+          : Number(gData.currentSeq || 0);
+        if (committedSeq > edgeSeq) edgeSeq = committedSeq;
         return new Response(JSON.stringify({
           success: true,
           dateCode,
           currentSeq: gData.currentSeq,
           nextSeq: gData.nextSeq,
           quoteId: gData.quoteId,
+          claimed: Boolean(gData.claimed ?? claim),
           source: 'GoogleSheet'
         }), {
           status: 200,
@@ -117,18 +136,20 @@ export async function onRequestGet({ request, env }) {
       console.warn('[next-quote-id] Google sheet sync warning:', gErr.message);
     }
 
-    // 2. Resilient Edge Memory Fallback
-    if (claim || edgeSeq === 0) {
-      edgeSeq += 1;
+    // 2. Resilient Edge Memory Fallback (GET without claim is strictly read-only peek!)
+    const nextSeq = edgeSeq + 1;
+    if (claim) {
+      edgeSeq = nextSeq;
     }
-    const quoteId = `Q-${dateCode}-${edgeSeq}`;
+    const quoteId = `Q-${dateCode}-${nextSeq}`;
 
     return new Response(JSON.stringify({
       success: true,
       dateCode,
-      currentSeq: edgeSeq,
-      nextSeq: edgeSeq + 1,
+      currentSeq: claim ? nextSeq : edgeSeq,
+      nextSeq,
       quoteId,
+      claimed: claim,
       source: 'EdgeMemory'
     }), {
       status: 200,

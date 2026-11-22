@@ -37,9 +37,18 @@ export function cleanWhatsAppNumber(phone: string): string {
  * @param customPhone - Optional phone number override (digits or formatted). Defaults to WHATSAPP_CONFIG.phone.
  * @returns Fully formatted WhatsApp click-to-chat URL (e.g., https://wa.me/918939539211?text=...)
  */
+export function stripWhatsAppIcons(text: string): string {
+  return String(text || '')
+    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0E}\u{FE0F}\u{200D}]/gu, '')
+    .replace(/^[ \t]+/gm, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
 export function buildWhatsAppUrl(message?: string, customPhone?: string): string {
   const phone = customPhone ? cleanWhatsAppNumber(customPhone) : WHATSAPP_CONFIG.phone;
-  const text = message && message.trim().length > 0 ? message.trim() : WHATSAPP_CONFIG.defaultGreeting;
+  const rawText = message && message.trim().length > 0 ? message.trim() : WHATSAPP_CONFIG.defaultGreeting;
+  const text = stripWhatsAppIcons(rawText);
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
 }
 

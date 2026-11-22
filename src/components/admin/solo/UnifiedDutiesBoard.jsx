@@ -283,23 +283,23 @@ export default function UnifiedDutiesBoard({
     const adv = Number(b.advancePaid) || 0;
     const bal = Math.max(0, fare - adv);
     const msg =
-      `🚖 *KALIDASS TRAVELS — CAB & DRIVER DETAILS*\n` +
+      `*KALIDASS TRAVELS — CAB & DRIVER DETAILS*\n` +
       `Booking ID: *${b.bookingId}*\n\n` +
-      `👨‍✈️ *Driver & Cab:* ${b.assignedChauffeur}\n` +
-      `🚗 *Vehicle:* ${b.vehicleCategory}\n` +
-      `🗓 *Pickup Time:* ${b.travelDateTime}\n` +
-      `📍 *Route:* ${b.pickupAddress}\n\n` +
-      `💰 *Total Fare:* ₹${fare.toLocaleString('en-IN')}\n` +
-      `🟢 *Advance Paid:* ₹${adv.toLocaleString('en-IN')}\n` +
-      `🔴 *Balance to Pay Driver:* ₹${bal.toLocaleString('en-IN')}\n\n` +
-      `📱 *Open Live Digital Duty Slip:*\n${tripUrl}\n\n` +
-      `Have a safe and pleasant journey! ✨\n` +
-      `📞 24/7 Helpline: +91 89395 39211`;
+      `*Driver & Cab:* ${b.assignedChauffeur}\n` +
+      `*Vehicle:* ${b.vehicleCategory}\n` +
+      `*Pickup Time:* ${b.travelDateTime}\n` +
+      `*Route:* ${b.pickupAddress}\n\n` +
+      `*Total Fare:* ₹${fare.toLocaleString('en-IN')}\n` +
+      `*Advance Paid:* ₹${adv.toLocaleString('en-IN')}\n` +
+      `*Balance to Pay Driver:* ₹${bal.toLocaleString('en-IN')}\n\n` +
+      `*Open Live Digital Duty Slip:*\n${tripUrl}\n\n` +
+      `Have a safe and pleasant journey.\n` +
+      `24/7 Helpline: +91 89395 39211`;
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     showToast?.(`Duty slip sent to customer ${guestName}!`, 'success');
   };
 
-  // Action: Send Driver Duty Slip via WhatsApp
+  // Action: Send Driver Duty Slip via WhatsApp (Amount to Collect only)
   const handleSendDriverDutySlip = (b) => {
     const phoneMatch = (b.assignedChauffeur || '').match(/[6-9]\d{9}/);
     const cleanPhone = phoneMatch ? phoneMatch[0] : '';
@@ -307,33 +307,31 @@ export default function UnifiedDutiesBoard({
     const fare = Number(b.terminalFare) || 0;
     const adv = Number(b.advancePaid) || 0;
     const bal = Math.max(0, fare - adv);
-    const driverShare = Number(b.chauffeurPayout) || Math.round(fare * 0.82);
     const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.pickupAddress || 'Chennai')}`;
     const msg =
-      `🚕 *KALIDASS TRAVELS — DRIVER DUTY SLIP*\n` +
+      `*KALIDASS TRAVELS — DRIVER DUTY SLIP*\n` +
       `Trip ID: *${b.bookingId}*\n\n` +
-      `👤 *Passenger:* ${b.guestNamePhone}\n` +
-      `🗓 *Pickup Time:* ${b.travelDateTime}\n` +
-      `📍 *Route:* ${b.pickupAddress}\n` +
-      `🗺️ *Google Maps Pin:* ${mapsLink}\n\n` +
-      `💵 *Collect Balance from Customer at Drop:* *₹${bal.toLocaleString('en-IN')}*\n` +
-      `🤝 *Your Net Driver Share:* ₹${driverShare.toLocaleString('en-IN')}\n\n` +
-      `📱 *Enter Start/End KM & Close Bill Here:*\n${tripUrl}`;
+      `*Passenger:* ${b.guestNamePhone}\n` +
+      `*Pickup Time:* ${b.travelDateTime}\n` +
+      `*Route:* ${b.pickupAddress}\n` +
+      `*Google Maps Pin:* ${mapsLink}\n\n` +
+      `*Amount to Collect:* *₹${bal.toLocaleString('en-IN')} + Toll & Parking (Actuals)*\n\n` +
+      `*Enter Start/End KM & Close Bill Here:*\n${tripUrl}`;
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     showToast?.(`Duty slip sent to driver!`, 'success');
   };
 
-  // Action: Send 5★ Google Review Request
+  // Action: Send 5-Star Google Review Request
   const handleSendReviewWA = (b) => {
     const cleanPhone = extractPhone(b);
     const guestName = (b.guestNamePhone || 'Customer').split('(')[0].trim();
     const dest = (b.pickupAddress || '').split(/➔|->|→/)[1]?.trim() || 'your destination';
     const msg =
-      `Namaskaram ${guestName} ji! 🙏 Thank you for choosing *Kalidass Travels Chennai* for your trip to ${dest}.\n\n` +
-      `We hope your driver took great care of you and your journey was comfortable and safe! ⭐\n\n` +
-      `⭐⭐⭐⭐⭐ Kindly take 10 seconds to share your 5-star Google review here:\n` +
+      `Namaskaram ${guestName} ji! Thank you for choosing *Kalidass Travels Chennai* for your trip to ${dest}.\n\n` +
+      `We hope your driver took great care of you and your journey was comfortable and safe.\n\n` +
+      `Kindly take 10 seconds to share your 5-star Google review here:\n` +
       `https://share.google/1IOq41QwMkhDJvrLY\n\n` +
-      `Your kind review means the world to our family-run team. Looking forward to serving you again! 🙏`;
+      `Your kind review means the world to our family-run team. Looking forward to serving you again.`;
     onReviewStatusChange?.(b.bookingId, 'Requested');
     showToast?.(`Review request sent to ${guestName}!`, 'success');
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');

@@ -18,9 +18,17 @@ export function sanitizeWhatsAppDate(str: string): string {
   });
 }
 
+export function stripWhatsAppIcons(text: string): string {
+  return String(text || '')
+    .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0E}\u{FE0F}\u{200D}]/gu, '')
+    .replace(/^[ \t]+/gm, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
 export function buildWhatsAppUrl(phone: string, text: string): string {
   const cleanPhone = String(phone || '').replace(/[^0-9]/g, '');
-  const encodedText = encodeURIComponent(text.trim());
+  const encodedText = encodeURIComponent(stripWhatsAppIcons(text));
   if (cleanPhone.length >= 10) {
     const formattedPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
     return `https://wa.me/${formattedPhone}?text=${encodedText}`;
@@ -107,7 +115,7 @@ export function buildGoogleReviewMessage(guestName: string = 'Sir/Madam'): strin
 Thank you for traveling with Kalidass Travels!
 We hope you had a pleasant and comfortable journey.
 
-Please take 10 seconds to share your 5★ feedback on Google:
+Please take 10 seconds to share your 5-star feedback on Google:
 https://share.google/1IOq41QwMkhDJvrLY
 
 Thank you,

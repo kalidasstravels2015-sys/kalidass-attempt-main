@@ -86,7 +86,7 @@ export const POST: APIRoute = async ({ request, url }) => {
     const fareNum = parseInt(String(data.fare || data.terminalFare || data.estimate || '0').replace(/[^0-9]/g, ''), 10) || 0;
     const advanceNum = parseInt(String(data.advance || data.advancePaid || '0').replace(/[^0-9]/g, ''), 10) || 0;
     const payoutNum = parseInt(String(data.chauffeurPayout || Math.round(fareNum * 0.8)).replace(/[^0-9]/g, ''), 10) || 0;
-    const manifestStatus = data.manifestStatus || 'Need Driver';
+    const manifestStatus = data.manifestStatus || 'Quotation';
     const driver = data.assignedChauffeur || 'Unassigned';
     const notes = data.notes || data.metadata || 'Booked via Website WhatsApp';
 
@@ -122,7 +122,7 @@ export const POST: APIRoute = async ({ request, url }) => {
           driverName: '',
           driverPhone: '',
           vehicleNumber: '',
-          manifestStatus: 'Unassigned',
+          manifestStatus: data.manifestStatus || 'Quotation',
           notes: notes,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()

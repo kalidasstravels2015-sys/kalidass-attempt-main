@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import MobileDispatchCopilot from './MobileDispatchCopilot.jsx';
 import DirectBookingIntakeForm from './DirectBookingIntakeForm.jsx';
+import ContactPickerControl from './ContactPickerControl.jsx';
 import tariffConfig from '../../data/tariff_config.json' with { type: 'json' };
-import { getFormattedDateCode, getNextDriverRosterId, formatWhatsAppRefId } from '../../utils/sequenceGenerator.js';
+import { getFormattedDateCode, getNextDriverRosterId, formatWhatsAppRefId, peekNextQuotationId } from '../../utils/sequenceGenerator.js';
+import { loadImportedContacts, buildUnifiedContactsList } from '../../utils/contactBookHelper.js';
 import {
   encodeTripForSheet,
   decodeTripFromSheet,
@@ -15,7 +17,13 @@ import {
   formatPhoneForDisplay,
   buildCustomerBookingSummaryWA,
   buildEnhancedDriverDutySlipWA,
-  buildFollowUpReminderWA
+  buildFollowUpReminderWA,
+  normalizeManifestStatus,
+  parseTripPickupTimestampIST,
+  shouldAutoMoveToOnTrip,
+  isOverdueWithoutDriver,
+  parseWhatsAppBookingText,
+  normalizePhoneNumber
 } from '../../utils/adminBookingHelper.js';
 import {
   VEHICLE_CATEGORIES,
@@ -33,7 +41,7 @@ const GOOGLE_SHEET_URL_KEY = 'kt_admin_google_sheet_webhook_v1';
 const LOCAL_BACKUP_KEY = 'kt_admin_offline_trips_backup_v2';
 const DRIVERS_STORAGE_KEY = 'kt_admin_drivers_roster_v2';
 const LEGACY_STORAGE_KEYS = ['kt_admin_offline_trips_backup_v1', 'kt_admin_drivers_roster_v1'];
-const GOOGLE_REVIEW_URL = 'https://search.google.com/local/writereview?placeid=ChIJ8_e8xR1kUjoRh2-wL0T6j9M';
+const GOOGLE_REVIEW_URL = 'https://share.google/1IOq41QwMkhDJvrLY';
 const DRIVER_LANGUAGES = ['Tamil', 'English', 'Telugu', 'Kannada', 'Malayalam', 'Hindi'];
 
 function normalizeLanguages(val, fallback = []) {
@@ -142,11 +150,66 @@ function doGet(e) {
   if (tripsSheet.getLastRow() === 0) {
     tripsSheet.appendRow(TRIP_HEADERS);
   }
+
+  // Atomic Daily Sequential Quote Ref Coordinator (v4: KT/DDMMM/01, 02, 03...)
+  var action = (e && e.parameter && e.parameter.action) || "";
+  if (action === "next_quote_id" || action === "quote_id") {
+    var lock = LockService.getScriptLock();
+    var gotLock = lock.tryLock(5000);
+    try {
+      var dateCode = (e && e.parameter && e.parameter.dateCode) || Utilities.formatDate(new Date(), "Asia/Kolkata", "ddMMyy");
+      var props = PropertiesService.getScriptProperties();
+      var propKey = "quote_seq_" + dateCode;
+      var currentSeq = parseInt(props.getProperty(propKey) || "0", 10) || 0;
+
+      // Cross-check Trips sheet for any Q-DDMMYY-N or KT/DDMMM/NN saved today
+      var monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+      var ddStr = dateCode.slice(0, 2);
+      var mmIdx = Math.max(0, Math.min(11, parseInt(dateCode.slice(2, 4), 10) - 1));
+      var ktPrefix = "KT\\/" + ddStr + (monthNames[mmIdx] || "NOV") + "\\/";
+      var qRegex = new RegExp("Q-" + dateCode + "-(\\d+)", "gi");
+      var ktRegex = new RegExp(ktPrefix + "0*(\\d+)", "gi");
+
+      var tripRows = tripsSheet.getDataRange().getValues();
+      for (var r = 1; r < tripRows.length; r++) {
+        var rowText = String(tripRows[r][0] || "") + " " + String(tripRows[r][17] || "") + " " + String(tripRows[r][25] || "");
+        var m;
+        qRegex.lastIndex = 0;
+        while ((m = qRegex.exec(rowText)) !== null) {
+          var v1 = parseInt(m[1], 10);
+          if (!isNaN(v1) && v1 > currentSeq) currentSeq = v1;
+        }
+        ktRegex.lastIndex = 0;
+        while ((m = ktRegex.exec(rowText)) !== null) {
+          var v2 = parseInt(m[1], 10);
+          if (!isNaN(v2) && v2 > currentSeq) currentSeq = v2;
+        }
+      }
+
+      var shouldClaim = Boolean(e && e.parameter && (e.parameter.claim === "true" || e.parameter.advance === "true"));
+      var nextSeq = currentSeq + 1;
+      if (shouldClaim) {
+        props.setProperty(propKey, String(nextSeq));
+      }
+      var assignedId = "Q-" + dateCode + "-" + nextSeq;
+      return ContentService.createTextOutput(JSON.stringify({
+        success: true,
+        dateCode: dateCode,
+        currentSeq: shouldClaim ? nextSeq : currentSeq,
+        nextSeq: nextSeq,
+        quoteId: assignedId,
+        claimed: shouldClaim
+      })).setMimeType(ContentService.MimeType.JSON);
+    } finally {
+      if (gotLock) lock.releaseLock();
+    }
+  }
+
   var driversSheet = getOrCreateSheet(ss, "Drivers", DRIVER_HEADERS);
   var trips = readSheetObjects(tripsSheet);
   var drivers = readSheetObjects(driversSheet);
   return ContentService.createTextOutput(JSON.stringify({
-    schemaVersion: 2,
+    schemaVersion: 4,
     trips: trips,
     drivers: drivers
   })).setMimeType(ContentService.MimeType.JSON);
@@ -678,8 +741,55 @@ export default function FastOperationsDesk() {
     };
   }, [calcTripType, calcVehicle, calcLocalPkg, calcTourKey, calcDays, calcDistanceKm, calcTollParking, calcExtraHours, calcExtraKm, detectedStateCode]);
 
+  // Unified Contact Book (Past Customers + Drivers + Imported Phonebook .vcf/.csv)
+  const [importedContacts, setImportedContacts] = useState(() => loadImportedContacts());
+  const savedContacts = useMemo(
+    () => buildUnifiedContactsList(trips, drivers, importedContacts),
+    [trips, drivers, importedContacts]
+  );
+
+  // Live Sequential Quotation Ref (read-only peek until user actually Copies/Sends/Pushes)
+  const [calcQuoteId, setCalcQuoteId] = useState(() => {
+    try {
+      return peekNextQuotationId?.() || `Q-${getFormattedDateCode()}-1`;
+    } catch (_) {
+      return `Q-${getFormattedDateCode()}-1`;
+    }
+  });
+
   useEffect(() => {
-    const cleanRef = formatWhatsAppRefId(`Q-${getFormattedDateCode()}-1`);
+    if (activeNav !== 'calculator' || typeof fetch !== 'function') return;
+    const webhookParam = googleSheetUrl ? `?webhook=${encodeURIComponent(googleSheetUrl)}` : '';
+    fetch(`/api/next-quote-id${webhookParam}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.quoteId) {
+          setCalcQuoteId(data.quoteId);
+        }
+      })
+      .catch(() => {});
+  }, [activeNav, googleSheetUrl]);
+
+  const claimAtomicQuoteRef = async () => {
+    const fallbackRef = formatWhatsAppRefId(calcQuoteId);
+    if (typeof fetch !== 'function') return fallbackRef;
+    try {
+      const webhookParam = googleSheetUrl ? `?webhook=${encodeURIComponent(googleSheetUrl)}` : '';
+      const res = await fetch(`/api/next-quote-id${webhookParam}`, { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.quoteId) {
+          const claimedRef = formatWhatsAppRefId(data.quoteId);
+          if (data.nextQuoteId) setCalcQuoteId(data.nextQuoteId);
+          return claimedRef;
+        }
+      }
+    } catch (_) {}
+    return fallbackRef;
+  };
+
+  useEffect(() => {
+    const cleanRef = formatWhatsAppRefId(calcQuoteId);
     let tripTitle = '';
     if (calcTripType === 'outstation_round') tripTitle = `${calcDays} Day${calcDays > 1 ? 's' : ''}`;
     else if (calcTripType === 'outstation_oneway') tripTitle = 'One-Way Drop';
@@ -725,34 +835,43 @@ To confirm booking:
 
     setCalcOption1Text(opt1);
     setCalcQuoteText(opt2);
-  }, [calculatedFare, calcVehicle, calcRoute, calcTimingNote, calcCustName, calcTripType, calcDays, calcLocalPkg, calcTourKey]);
+  }, [calculatedFare, calcVehicle, calcRoute, calcTimingNote, calcCustName, calcTripType, calcDays, calcLocalPkg, calcTourKey, calcQuoteId]);
 
-  const handleSendWhatsAppQuote = (textToUse = calcQuoteText) => {
-    let phone = calcCustPhone.replace(/\D/g, '');
-    if (phone.length === 10) phone = '91' + phone;
-    const url = phone
-      ? `https://wa.me/${phone}?text=${encodeURIComponent(textToUse)}`
-      : `https://wa.me/?text=${encodeURIComponent(textToUse)}`;
-    window.open(url, '_blank');
+  const handleSendWhatsAppQuote = async (textToUse = calcQuoteText, shouldClaimRef = false) => {
+    let finalText = textToUse;
+    if (shouldClaimRef && /Ref:\s*KT\/\S+/i.test(textToUse)) {
+      const claimedRef = await claimAtomicQuoteRef();
+      finalText = textToUse.replace(/Ref:\s*KT\/\S+/i, `Ref: ${claimedRef}`);
+    }
+    window.open(buildWhatsAppUrl(calcCustPhone, finalText), '_blank');
   };
 
-  const handleCopyQuote = (textToUse = calcQuoteText, label = 'Quote') => {
-    navigator.clipboard.writeText(textToUse);
-    showToast(`${label} copied to clipboard!`);
+  const handleCopyQuote = async (textToUse = calcQuoteText, label = 'Quote', shouldClaimRef = false) => {
+    let finalText = textToUse;
+    let claimedRef = '';
+    if (shouldClaimRef && /Ref:\s*KT\/\S+/i.test(textToUse)) {
+      claimedRef = await claimAtomicQuoteRef();
+      finalText = textToUse.replace(/Ref:\s*KT\/\S+/i, `Ref: ${claimedRef}`);
+    }
+    navigator.clipboard.writeText(finalText);
+    showToast(claimedRef ? `${label} copied! (${claimedRef})` : `${label} copied to clipboard!`);
   };
 
   const [bookingPrefill, setBookingPrefill] = useState(null);
 
-  const handleTransferToBooking = (overrideFare = null) => {
+  const handleTransferToBooking = async (overrideFare = null) => {
     let tripCat = 'Tour Package';
     if (calcTripType === 'outstation_round') tripCat = 'Outstation Round Trip';
     else if (calcTripType === 'outstation_oneway') tripCat = 'Outstation One-Way Drop';
     else if (calcTripType === 'local_package') tripCat = 'Local Chennai Rental';
 
+    const claimedRef = await claimAtomicQuoteRef();
+
     setBookingPrefill({
       _nonce: Date.now(),
       customerName: calcCustName || '',
       phone: calcCustPhone || '',
+      quoteRef: claimedRef,
       vehicle: calcVehicle,
       agreedRate: overrideFare !== null ? overrideFare : calculatedFare.total,
       advance: 0,
@@ -764,7 +883,7 @@ To confirm booking:
       driverBata: calculatedFare.driverBata || 0
     });
     navigateTo('new-booking');
-    showToast('Quote details populated into Booking Form!');
+    showToast(`Quote ${claimedRef} populated into Booking Form!`);
   };
 
   const handlePushFromCopilot = (meta) => {
@@ -869,22 +988,121 @@ To confirm booking:
     }
 
     showToast(
-      newTrip.manifestStatus === 'Follow-up'
-        ? `Inquiry ${newId} saved to Pending / Follow-up!`
-        : `Booking ${newId} created in Unassigned queue!`
+      normalizeManifestStatus(newTrip.manifestStatus) === 'Quotation'
+        ? `Quotation ${newId} saved to 1. Quotation / Enquiry!`
+        : `Booking ${newId} saved to 2. Confirmed!`
     );
     navigateTo('dispatch');
   };
 
-  const handlePromoteFollowUpToDispatch = (trip) => {
-    const updatedTrip = {
+  // ==========================================
+  // STAGE 1 -> STAGE 2: CONFIRM QUOTATION MODAL
+  // ==========================================
+  const [confirmingTrip, setConfirmingTrip] = useState(null);
+  const [confirmWaPaste, setConfirmWaPaste] = useState('');
+
+  const handleOpenConfirmModal = (trip) => {
+    const isPlaceholderName = /website\s*whatsapp\s*lead|^guest\b/i.test(String(trip.customerName || '').trim());
+    setConfirmingTrip({
       ...trip,
-      manifestStatus: 'Unassigned',
+      customerName: isPlaceholderName ? '' : (trip.customerName || ''),
+      phone: trip.phone || '',
+      pickupDate: trip.pickupDate || new Date().toISOString().split('T')[0],
+      pickupTime: trip.pickupTime || '06:00 AM',
+      pickupLocation: trip.pickupLocation || '',
+      dropLocation: trip.dropLocation || '',
+      vehicle: trip.vehicle || 'Swift Dzire',
+      agreedRate: Number(trip.agreedRate) || '',
+      advance: Number(trip.advance) > 0 ? Number(trip.advance) : 500,
+      notes: getCleanNotes(trip.notes)
+    });
+    setConfirmWaPaste('');
+  };
+
+  const handleParseConfirmWhatsApp = () => {
+    if (!confirmingTrip || !confirmWaPaste.trim()) {
+      showToast('Paste the customer WhatsApp quote first', 'error');
+      return;
+    }
+    const { parsed, highlights } = parseWhatsAppBookingText(confirmWaPaste, tariffConfig);
+    setConfirmingTrip(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        customerName: parsed.customerName || prev.customerName,
+        phone: parsed.phone || prev.phone,
+        quoteRef: parsed.quoteRef || prev.quoteRef,
+        vehicle: parsed.vehicle || prev.vehicle,
+        tripCategory: parsed.tripCategory || prev.tripCategory,
+        pickupDate: parsed.pickupDate || prev.pickupDate,
+        returnDate: parsed.returnDate || prev.returnDate,
+        pickupTime: parsed.pickupTime || prev.pickupTime,
+        pickupLocation: parsed.pickupLocation || prev.pickupLocation,
+        dropLocation: parsed.dropLocation || prev.dropLocation,
+        agreedRate: parsed.agreedRate || prev.agreedRate,
+        advance: parsed.suggestedAdvance || prev.advance,
+        paxCount: parsed.paxCount || prev.paxCount,
+        guestName: parsed.guestName || prev.guestName,
+        guestPhone: parsed.guestPhone || prev.guestPhone,
+        hotelName: parsed.hotelName || prev.hotelName,
+        tollPolicy: parsed.tollPolicy || prev.tollPolicy,
+        extraKmRate: parsed.extraKmRate || prev.extraKmRate,
+        extraHrRate: parsed.extraHrRate || prev.extraHrRate,
+        nightStayCharge: parsed.nightStayCharge || prev.nightStayCharge,
+        dayPlan: Array.isArray(parsed.dayPlan) && parsed.dayPlan.length > 0 ? parsed.dayPlan : prev.dayPlan
+      };
+    });
+    showToast(
+      highlights.length > 0
+        ? `Auto-filled from WhatsApp (${highlights.slice(0, 3).join(' • ')})`
+        : 'Parsed WhatsApp quote — verify Name, Phone & Advance!'
+    );
+  };
+
+  const handleSubmitConfirmQuotation = (e, { sendWhatsApp = false } = {}) => {
+    if (e) e.preventDefault();
+    if (!confirmingTrip) return;
+    const cleanName = String(confirmingTrip.customerName || '').trim();
+    const cleanPhone = normalizePhoneNumber(confirmingTrip.phone);
+    if (!cleanName) {
+      showToast('Please enter Customer Name', 'error');
+      return;
+    }
+    if (!cleanPhone) {
+      showToast('Please enter Customer Phone Number', 'error');
+      return;
+    }
+
+    const agreed = Number(confirmingTrip.agreedRate) || 0;
+    const adv = Number(confirmingTrip.advance) || 0;
+    const pickupLoc = String(confirmingTrip.pickupLocation || '').trim() || 'Chennai';
+    const dropLoc = String(confirmingTrip.dropLocation || '').trim();
+    const updatedTrip = {
+      ...confirmingTrip,
+      customerName: cleanName,
+      phone: cleanPhone,
+      pickupLocation: pickupLoc,
+      dropLocation: dropLoc,
+      route: dropLoc ? `${pickupLoc} -> ${dropLoc}` : (confirmingTrip.route || pickupLoc),
+      agreedRate: agreed,
+      advance: adv,
+      balance: Math.max(0, agreed - adv),
+      manifestStatus: 'Confirmed',
+      notes: getCleanNotes(confirmingTrip.notes),
       updatedAt: new Date().toISOString()
     };
-    setTrips(prev => prev.map(t => (t.id === trip.id ? updatedTrip : t)));
+
+    setTrips(prev => prev.map(t => (t.id === updatedTrip.id ? updatedTrip : t)));
     saveTripToGoogleSheet(updatedTrip);
-    showToast(`Booking #${trip.id} confirmed & moved to 1. Unassigned!`);
+    setConfirmingTrip(null);
+    setConfirmWaPaste('');
+
+    if (sendWhatsApp) {
+      const waText = buildCustomerBookingSummaryWA(updatedTrip);
+      window.open(buildWhatsAppUrl(updatedTrip.phone, waText), '_blank');
+    }
+
+    showToast(`Confirmed #${updatedTrip.id} (Adv ₹${adv.toLocaleString('en-IN')}) → Moved to 2. Confirmed!`);
   };
 
   const handleSendFollowUpWA = (trip) => {
@@ -907,22 +1125,29 @@ To confirm booking:
   const [assignSearchQuery, setAssignSearchQuery] = useState('');
 
   // Compute commission & settlement math for a trip
-  const computeSettlementMath = (trip, commPct = 10) => {
-    const fare = Number(trip?.agreedRate || 0);
+  const computeSettlementMath = (trip, commPct = 10, overrides = {}) => {
+    const baseFare = Number(trip?.agreedRate || 0);
+    const extras = Number(overrides.extraCharges ?? trip?.extraCharges ?? 0);
+    const fare = baseFare + extras;
     const adv = Number(trip?.advance || 0);
     const pct = Math.max(0, Math.min(50, Number(commPct) || 0));
     const commissionAmt = Math.round((fare * pct) / 100);
     const driverNetShare = Math.max(0, fare - commissionAmt);
+    const collector = overrides.paymentCollector ?? trip?.paymentCollector ?? 'Driver';
     const customerBalanceToDriver = Math.max(0, fare - adv);
-    // Difference between what driver collects from customer vs driver's net share
-    const netDiff = customerBalanceToDriver - driverNetShare; // = commissionAmt - adv
+    // If Driver collects balance: netDiff = collectedByDriver - driverNetShare = commissionAmt - adv
+    // If Office collects balance: driver collected ₹0, so Office owes Driver full driverNetShare
+    const netDiff = collector === 'Office' ? -driverNetShare : (customerBalanceToDriver - driverNetShare);
     return {
       fare,
+      baseFare,
+      extras,
       adv,
       pct,
       commissionAmt,
       driverNetShare,
       customerBalanceToDriver,
+      collector,
       settlementDirection: netDiff >= 0 ? 'DRIVER_PAYS_OFFICE' : 'OFFICE_PAYS_DRIVER',
       settlementAmount: Math.abs(netDiff)
     };
@@ -970,12 +1195,7 @@ Are you available for this upcoming trip?
 
 *Reply YES immediately to lock this duty & receive Passenger Contact Slip.*`;
 
-    let phone = (driver.phone || '').replace(/\D/g, '');
-    if (phone.length === 10) phone = '91' + phone;
-    const url = phone
-      ? `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
-      : `https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
+    window.open(buildWhatsAppUrl(driver.phone, text), '_blank');
   };
 
   const handleConfirmAssignment = (overrideDriver = null) => {
@@ -990,6 +1210,9 @@ Are you available for this upcoming trip?
     }
 
     const math = computeSettlementMath(assigningTrip, assignCommissionPct);
+    const pickupMs = parseTripPickupTimestampIST(assigningTrip.pickupDate, assigningTrip.pickupTime);
+    const isAlreadyOnTrip = normalizeManifestStatus(assigningTrip.manifestStatus) === 'On Trip';
+    const shouldStartNow = isAlreadyOnTrip || (pickupMs !== null && Date.now() >= pickupMs);
 
     const updatedTrip = {
       ...assigningTrip,
@@ -1001,7 +1224,8 @@ Are you available for this upcoming trip?
       driverNetShare: math.driverNetShare,
       settlementDirection: math.settlementDirection,
       settlementAmount: math.settlementAmount,
-      manifestStatus: 'Active',
+      manifestStatus: shouldStartNow ? 'On Trip' : 'Confirmed',
+      ...(shouldStartNow && !assigningTrip.startedAt ? { startedAt: new Date().toISOString() } : {}),
       updatedAt: new Date().toISOString()
     };
 
@@ -1009,7 +1233,24 @@ Are you available for this upcoming trip?
     setTrips(updatedList);
     saveTripToGoogleSheet(updatedTrip);
     setAssigningTrip(null);
-    showToast(`Assigned to ${dName} (${updatedTrip.vehicleNumber})! Moved #${updatedTrip.id} to Active Trips`);
+    showToast(
+      shouldStartNow
+        ? `Assigned ${dName} (${updatedTrip.vehicleNumber}) — Pickup time reached, moved to 3. On Trip!`
+        : `Assigned ${dName} (${updatedTrip.vehicleNumber})! Ready in 2. Confirmed (auto-moves to On Trip at pickup time).`
+    );
+  };
+
+  // Manual override: Start Trip Now (Stage 2 -> Stage 3)
+  const handleStartTripNow = (trip) => {
+    const updatedTrip = {
+      ...trip,
+      manifestStatus: 'On Trip',
+      startedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    setTrips(prev => prev.map(t => (t.id === trip.id ? updatedTrip : t)));
+    saveTripToGoogleSheet(updatedTrip);
+    showToast(`Trip #${trip.id} started & moved to 3. On Trip!`);
   };
 
   const handleSendDriverDutySlip = (trip) => {
@@ -1039,17 +1280,64 @@ Our chauffeur will report on time and assist with your luggage. Have a comfortab
     window.open(buildWhatsAppUrl(trip.phone, text), '_blank');
   };
 
-  const handleCompleteTrip = (trip) => {
+  // ==========================================
+  // STAGE 3 -> STAGE 4: END TRIP & COLLECT PAYMENT MODAL
+  // ==========================================
+  const [completingTrip, setCompletingTrip] = useState(null);
+  const [hideClosedTrips, setHideClosedTrips] = useState(false);
+
+  const handleOpenCompleteModal = (trip) => {
+    const baseBal = Math.max(0, (Number(trip.agreedRate) || 0) - (Number(trip.advance) || 0));
+    setCompletingTrip({
+      ...trip,
+      extraCharges: Number(trip.extraCharges) || 0,
+      extraChargesNote: trip.extraChargesNote || '',
+      paymentCollector: trip.paymentCollector || 'Driver',
+      commissionSettled: Boolean(trip.commissionSettled),
+      baseBalance: baseBal
+    });
+  };
+
+  const handleSubmitCompleteTrip = (e) => {
+    if (e) e.preventDefault();
+    if (!completingTrip) return;
+    const extras = Number(completingTrip.extraCharges) || 0;
+    const baseBal = Math.max(0, (Number(completingTrip.agreedRate) || 0) - (Number(completingTrip.advance) || 0));
+    const totalCollectedAtEnd = baseBal + extras;
+    const nowIso = new Date().toISOString();
+
+    const updatedTrip = {
+      ...completingTrip,
+      manifestStatus: 'Completed',
+      extraCharges: extras,
+      extraChargesNote: String(completingTrip.extraChargesNote || '').trim(),
+      finalCollected: totalCollectedAtEnd,
+      paymentCollector: completingTrip.paymentCollector || 'Driver',
+      commissionSettled: Boolean(completingTrip.commissionSettled),
+      commissionSettledAt: completingTrip.commissionSettled ? nowIso : '',
+      balance: 0,
+      completedAt: nowIso,
+      updatedAt: nowIso
+    };
+    delete updatedTrip.baseBalance;
+
+    setTrips(prev => prev.map(t => (t.id === updatedTrip.id ? updatedTrip : t)));
+    saveTripToGoogleSheet(updatedTrip);
+    setCompletingTrip(null);
+    showToast(`Trip #${updatedTrip.id} completed (₹${totalCollectedAtEnd.toLocaleString('en-IN')} collected by ${updatedTrip.paymentCollector}) → Send Review Link!`);
+  };
+
+  const handleToggleCommissionSettled = (trip) => {
+    const nextVal = !trip.commissionSettled;
     const updatedTrip = {
       ...trip,
-      manifestStatus: 'Settled',
-      balance: 0,
+      commissionSettled: nextVal,
+      commissionSettledAt: nextVal ? new Date().toISOString() : '',
       updatedAt: new Date().toISOString()
     };
-    const updatedList = trips.map(t => (t.id === trip.id ? updatedTrip : t));
-    setTrips(updatedList);
+    setTrips(prev => prev.map(t => (t.id === trip.id ? updatedTrip : t)));
     saveTripToGoogleSheet(updatedTrip);
-    showToast(`Trip #${trip.id} completed & moved to Settlements!`);
+    showToast(nextVal ? `Commission settled for #${trip.id}!` : `Marked commission pending for #${trip.id}`);
   };
 
   const handleSendGoogleReviewRequest = (trip) => {
@@ -1066,7 +1354,65 @@ Warm regards,
 *Kalidass Travels, Chennai*`;
 
     window.open(buildWhatsAppUrl(trip.phone, text), '_blank');
+
+    const updatedTrip = {
+      ...trip,
+      reviewSent: true,
+      reviewSentAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    setTrips(prev => prev.map(t => (t.id === trip.id ? updatedTrip : t)));
+    saveTripToGoogleSheet(updatedTrip);
+    showToast(`Review link opened on WhatsApp & marked Sent for #${trip.id}!`);
   };
+
+  // ==========================================
+  // AUTO-MOVE ENGINE: CONFIRMED -> ON TRIP AT IST PICKUP TIME
+  // ==========================================
+  const [nowTick, setNowTick] = useState(() => Date.now());
+
+  useEffect(() => {
+    const interval = setInterval(() => setNowTick(Date.now()), 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const dueTrips = trips.filter(t => shouldAutoMoveToOnTrip(t, nowTick));
+    if (dueTrips.length === 0) return;
+
+    const nowIso = new Date().toISOString();
+    const dueIds = new Set(dueTrips.map(t => t.id));
+    const promoted = [];
+
+    setTrips(prev =>
+      prev.map(t => {
+        if (!dueIds.has(t.id)) return t;
+        const nextTrip = {
+          ...t,
+          manifestStatus: 'On Trip',
+          startedAt: t.startedAt || nowIso,
+          updatedAt: nowIso
+        };
+        promoted.push(nextTrip);
+        return nextTrip;
+      })
+    );
+
+    dueTrips.forEach(t => {
+      saveTripToGoogleSheet({
+        ...t,
+        manifestStatus: 'On Trip',
+        startedAt: t.startedAt || nowIso,
+        updatedAt: nowIso
+      });
+    });
+
+    showToast(
+      dueTrips.length === 1
+        ? `Auto-moved #${dueTrips[0].id} (${dueTrips[0].customerName}) to 3. On Trip!`
+        : `Auto-moved ${dueTrips.length} trips to 3. On Trip!`
+    );
+  }, [trips, nowTick]);
 
   const handleDeleteTrip = (id) => {
     if (window.confirm('Are you sure you want to delete this trip record?')) {
@@ -1110,10 +1456,16 @@ Warm regards,
     });
   }, [trips, searchQuery, dateFilter]);
 
-  const followUpTrips = useMemo(() => filteredTrips.filter(t => t.manifestStatus === 'Follow-up'), [filteredTrips]);
-  const unassignedTrips = useMemo(() => filteredTrips.filter(t => !t.manifestStatus || t.manifestStatus === 'Unassigned' || t.manifestStatus === 'Need Driver'), [filteredTrips]);
-  const activeTrips = useMemo(() => filteredTrips.filter(t => t.manifestStatus === 'Active'), [filteredTrips]);
-  const settledTrips = useMemo(() => filteredTrips.filter(t => t.manifestStatus === 'Settled'), [filteredTrips]);
+  const quotationTrips = useMemo(() => filteredTrips.filter(t => normalizeManifestStatus(t.manifestStatus) === 'Quotation'), [filteredTrips]);
+  const confirmedTrips = useMemo(() => filteredTrips.filter(t => normalizeManifestStatus(t.manifestStatus) === 'Confirmed'), [filteredTrips]);
+  const activeTrips = useMemo(() => filteredTrips.filter(t => normalizeManifestStatus(t.manifestStatus) === 'On Trip'), [filteredTrips]);
+  const settledTrips = useMemo(() => filteredTrips.filter(t => normalizeManifestStatus(t.manifestStatus) === 'Completed'), [filteredTrips]);
+  const needsDriverCount = useMemo(() => confirmedTrips.filter(t => !String(t.driverName || '').trim()).length, [confirmedTrips]);
+  const closedCompletedCount = useMemo(() => settledTrips.filter(t => t.commissionSettled && t.reviewSent).length, [settledTrips]);
+  const visibleCompletedTrips = useMemo(
+    () => (hideClosedTrips ? settledTrips.filter(t => !(t.commissionSettled && t.reviewSent)) : settledTrips),
+    [settledTrips, hideClosedTrips]
+  );
 
   // ==========================================
   // VIEW 4: DRIVERS FLEET ROSTER MANAGEMENT
@@ -1529,12 +1881,12 @@ Warm regards,
 
   // Navigation Items Config
   const NAV_ITEMS = [
-    { id: 'dispatch', label: 'Live Dispatch Desk', icon: 'view_kanban', badge: unassignedTrips.length },
+    { id: 'dispatch', label: 'Live Dispatch Desk', icon: 'view_kanban', badge: quotationTrips.length + needsDriverCount },
     { id: 'copilot', label: '24/7 Mobile AI Co-Pilot', icon: 'smart_toy' },
     { id: 'quotes', label: 'Rate & Quote Generator', icon: 'calculate' },
     { id: 'new-booking', label: 'New Booking Entry', icon: 'add_circle' },
     { id: 'drivers', label: 'Drivers & Fleet Roster', icon: 'badge', badge: drivers.length },
-    { id: 'settlements', label: 'Settlements & Reviews', icon: 'payments', badge: settledTrips.length },
+    { id: 'settlements', label: 'Settlements & Reviews', icon: 'payments', badge: settledTrips.length - closedCompletedCount },
     { id: 'settings', label: 'Cloud Sheet & Settings', icon: 'settings' }
   ];
 
@@ -1763,33 +2115,55 @@ Warm regards,
           )}
 
           {/* ========================================================= */}
-          {/* VIEW 1: LIVE DISPATCH DESK                                */}
+          {/* VIEW 1: LIVE DISPATCH DESK (4-STAGE PIPELINE)             */}
           {/* ========================================================= */}
           {activeNav === 'dispatch' && (
             <div className="space-y-5 animate-fadeIn">
-              {/* Metric Counters Banner */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs">
-                  <div className="text-[11px] font-bold text-slate-500 uppercase">Total Trips</div>
-                  <div className="text-2xl font-extrabold text-slate-900 font-mono mt-0.5">{trips.length}</div>
-                </div>
+              {/* Metric Counters Banner (4 Stages) */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 <div className="bg-white p-3.5 rounded-2xl border border-amber-200 shadow-xs">
-                  <div className="text-[11px] font-bold text-amber-700 uppercase flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                    Needs Driver
+                  <div className="text-[11px] font-bold text-amber-700 uppercase flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                    1. Quotations
                   </div>
-                  <div className="text-2xl font-extrabold text-amber-600 font-mono mt-0.5">{unassignedTrips.length}</div>
+                  <div className="flex items-baseline justify-between mt-0.5">
+                    <div className="text-2xl font-extrabold text-amber-600 font-mono">{quotationTrips.length}</div>
+                    <span className="text-[10px] font-semibold text-slate-500">Speak &amp; Collect Adv</span>
+                  </div>
+                </div>
+                <div className="bg-white p-3.5 rounded-2xl border border-indigo-200 shadow-xs">
+                  <div className="text-[11px] font-bold text-indigo-700 uppercase flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                    2. Confirmed
+                  </div>
+                  <div className="flex items-baseline justify-between mt-0.5">
+                    <div className="text-2xl font-extrabold text-indigo-600 font-mono">{confirmedTrips.length}</div>
+                    <span className={`text-[10px] font-bold ${needsDriverCount > 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
+                      {needsDriverCount > 0 ? `${needsDriverCount} Needs Driver` : 'All Drivers Ready'}
+                    </span>
+                  </div>
                 </div>
                 <div className="bg-white p-3.5 rounded-2xl border border-emerald-200 shadow-xs">
-                  <div className="text-[11px] font-bold text-emerald-700 uppercase flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    On Road / Running
+                  <div className="text-[11px] font-bold text-emerald-700 uppercase flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    3. On Trip (Live)
                   </div>
-                  <div className="text-2xl font-extrabold text-emerald-600 font-mono mt-0.5">{activeTrips.length}</div>
+                  <div className="flex items-baseline justify-between mt-0.5">
+                    <div className="text-2xl font-extrabold text-emerald-600 font-mono">{activeTrips.length}</div>
+                    <span className="text-[10px] font-semibold text-slate-500">Auto at Pickup IST</span>
+                  </div>
                 </div>
                 <div className="bg-white p-3.5 rounded-2xl border border-blue-200 shadow-xs">
-                  <div className="text-[11px] font-bold text-blue-700 uppercase">Settled / Closed</div>
-                  <div className="text-2xl font-extrabold text-blue-600 font-mono mt-0.5">{settledTrips.length}</div>
+                  <div className="text-[11px] font-bold text-blue-700 uppercase flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                    4. Payment &amp; Review
+                  </div>
+                  <div className="flex items-baseline justify-between mt-0.5">
+                    <div className="text-2xl font-extrabold text-blue-600 font-mono">{settledTrips.length}</div>
+                    <span className="text-[10px] font-semibold text-slate-500">
+                      {settledTrips.length - closedCompletedCount} Pending Action
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -1828,471 +2202,603 @@ Warm regards,
                 </div>
               </div>
 
-              {/* Pending / Follow-up Inquiries Queue (Unconfirmed Leads) */}
-              {followUpTrips.length > 0 && (
-                <div className="bg-amber-50/80 border border-amber-200 rounded-2xl p-4 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-amber-600 text-lg">schedule_send</span>
-                      <h3 className="font-bold text-sm text-amber-950">Pending / Follow-up Inquiries</h3>
-                      <span className="px-2 py-0.5 text-xs font-bold bg-amber-200 text-amber-900 rounded-full">
-                        {followUpTrips.length}
+              {/* 4-Column Operations Pipeline */}
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                {/* STAGE 1: QUOTATION / ENQUIRY */}
+                <div className="bg-slate-50/80 border border-amber-200/80 rounded-2xl p-3.5 flex flex-col min-h-[520px]">
+                  <div className="flex items-center justify-between pb-3 border-b border-amber-200/70 mb-3 gap-2">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
+                      <h3 className="font-bold text-xs text-slate-800 tracking-wide truncate">1. QUOTATION</h3>
+                      <span className="px-2 py-0.5 text-[11px] font-bold bg-amber-100 text-amber-800 rounded-full shrink-0">
+                        {quotationTrips.length}
                       </span>
                     </div>
-                    <span className="text-[11px] font-semibold text-amber-800">
-                      Not yet confirmed — click Confirm once customer locks dates
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {followUpTrips.map(trip => (
-                      <div key={trip.id} className="bg-white border border-amber-200/80 rounded-xl p-3 space-y-2 shadow-2xs">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                              <h4 className="font-bold text-xs text-slate-900 truncate">{trip.customerName}</h4>
-                              {trip.quoteRef && (
-                                <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-mono text-[10px] font-bold">
-                                  {trip.quoteRef}
-                                </span>
-                              )}
-                            </div>
-                            <a href={`tel:${trip.phone}`} className="text-[11px] font-mono text-blue-600 hover:underline">
-                              {formatPhoneForDisplay(trip.phone)}
-                            </a>
-                          </div>
-                          {Number(trip.agreedRate) > 0 && (
-                            <span className="font-mono font-bold text-xs text-slate-900 shrink-0">
-                              ₹{Number(trip.agreedRate).toLocaleString('en-IN')}
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-[11px] text-slate-600 space-y-0.5">
-                          <div className="font-semibold text-slate-800 truncate">
-                            {trip.vehicle} • {trip.tripCategory}
-                          </div>
-                          <div className="truncate">
-                            {trip.pickupDate ? formatShortDate(trip.pickupDate, true) : 'Date TBD'} • {trip.dropLocation || trip.route}
-                          </div>
-                          {getCleanNotes(trip.notes) && (
-                            <div className="text-amber-700 italic truncate">{getCleanNotes(trip.notes)}</div>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-1.5 pt-1">
-                          <button
-                            type="button"
-                            onClick={() => handlePromoteFollowUpToDispatch(trip)}
-                            className="flex-1 py-1.5 px-2.5 bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold rounded-lg transition flex items-center justify-center gap-1"
-                          >
-                            <span className="material-symbols-outlined text-xs">check_circle</span>
-                            <span>Confirm → Dispatch</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleSendFollowUpWA(trip)}
-                            className="py-1.5 px-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-[11px] font-bold rounded-lg transition"
-                            title="Send WhatsApp Follow-up"
-                          >
-                            WA
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleOpenEditTrip(trip)}
-                            className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
-                            title="Edit inquiry"
-                          >
-                            <span className="material-symbols-outlined text-xs">edit</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteTrip(trip.id)}
-                            className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg"
-                            title="Delete inquiry"
-                          >
-                            <span className="material-symbols-outlined text-xs">delete</span>
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* 3-Column Kanban Board */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* 1. UNASSIGNED */}
-                <div className="bg-slate-50/80 border border-amber-200/70 rounded-2xl p-4 flex flex-col min-h-[500px]">
-                  <div className="flex items-center justify-between pb-3 border-b border-amber-200/70 mb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                      <h3 className="font-bold text-sm text-slate-800 tracking-wide">1. UNASSIGNED</h3>
-                      <span className="px-2 py-0.5 text-xs font-bold bg-amber-100 text-amber-800 rounded-full">
-                        {unassignedTrips.length}
-                      </span>
-                    </div>
-                    <span className="text-[11px] font-semibold text-amber-700">Needs Cab</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setBookingPrefill({ _nonce: Date.now(), manifestStatus: 'Quotation' });
+                        navigateTo('new-booking');
+                      }}
+                      className="text-[10px] font-bold text-amber-800 bg-amber-100 hover:bg-amber-200 px-2 py-1 rounded-lg transition shrink-0"
+                      title="Paste a new WhatsApp quotation"
+                    >
+                      + Paste Quote
+                    </button>
                   </div>
 
                   <div className="space-y-3 flex-1 overflow-y-auto max-h-[720px] pr-1">
-                    {unassignedTrips.length === 0 ? (
-                      <div className="h-44 border border-dashed border-amber-200 rounded-xl flex flex-col items-center justify-center text-slate-400 text-xs gap-1.5">
-                        <span className="material-symbols-outlined text-2xl text-amber-300">task_alt</span>
-                        <span>No unassigned trips pending</span>
+                    {quotationTrips.length === 0 ? (
+                      <div className="h-44 border border-dashed border-amber-200 rounded-xl flex flex-col items-center justify-center text-slate-400 text-xs gap-1.5 text-center px-3">
+                        <span className="material-symbols-outlined text-2xl text-amber-300">request_quote</span>
+                        <span>Website &amp; WhatsApp enquiries appear here</span>
                       </div>
                     ) : (
-                      unassignedTrips.map(trip => {
-                        const termsSummary = buildCompactTermsSummary(trip);
+                      quotationTrips.map(trip => {
                         const cleanNote = getCleanNotes(trip.notes);
-                        const isMultiDay = trip.returnDate && trip.returnDate !== trip.pickupDate;
                         return (
-                        <div
-                          key={trip.id}
-                          className="bg-white border border-amber-100 hover:border-amber-300 rounded-xl p-3.5 shadow-xs space-y-2.5 transition"
-                        >
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-1.5 flex-wrap">
-                                <h4 className="font-bold text-sm text-slate-900">{trip.customerName}</h4>
-                                <span className="text-[10px] font-mono text-slate-400">#{trip.id}</span>
-                                {trip.quoteRef && (
-                                  <span className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-100 text-[10px] font-mono font-bold">
-                                    {trip.quoteRef}
-                                  </span>
-                                )}
-                              </div>
-                              <div className="flex items-center gap-2 flex-wrap mt-0.5">
-                                <a
-                                  href={`tel:${trip.phone}`}
-                                  className="text-xs text-blue-600 hover:underline font-mono inline-flex items-center gap-1"
-                                >
-                                  <span className="material-symbols-outlined text-xs">call</span>
-                                  <span>{formatPhoneForDisplay(trip.phone)}</span>
-                                </a>
-                                {trip.paxCount && (
-                                  <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-bold">
-                                    {trip.paxCount}
-                                  </span>
-                                )}
-                              </div>
-                              {(trip.guestName || trip.guestPhone) && (
-                                <div className="text-[11px] text-indigo-700 font-medium mt-0.5">
-                                  Guest: {trip.guestName || 'Alt Contact'}{trip.guestPhone ? ` (${formatPhoneForDisplay(trip.guestPhone)})` : ''}
+                          <div
+                            key={trip.id}
+                            className="bg-white border border-amber-100 hover:border-amber-300 rounded-xl p-3 shadow-xs space-y-2 transition"
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                  <h4 className="font-bold text-xs text-slate-900 truncate">{trip.customerName}</h4>
+                                  <span className="text-[10px] font-mono text-slate-400">#{trip.id}</span>
                                 </div>
-                              )}
-                            </div>
-                            <div className="text-right shrink-0">
-                              <span className="font-mono font-bold text-sm text-slate-900">
-                                ₹{Number(trip.agreedRate).toLocaleString('en-IN')}
-                              </span>
-                              <div className="text-[10px] text-slate-500 font-mono">
-                                Adv: ₹{Number(trip.advance).toLocaleString('en-IN')}
+                                {trip.phone ? (
+                                  <a
+                                    href={`tel:${trip.phone}`}
+                                    className="text-[11px] text-blue-600 hover:underline font-mono inline-flex items-center gap-0.5 mt-0.5"
+                                  >
+                                    <span className="material-symbols-outlined text-xs">call</span>
+                                    <span>{formatPhoneForDisplay(trip.phone)}</span>
+                                  </a>
+                                ) : (
+                                  <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded inline-block mt-0.5">
+                                    Phone on WhatsApp
+                                  </span>
+                                )}
                               </div>
-                            </div>
-                          </div>
-
-                          <div className="text-xs text-slate-600 space-y-1 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                            <div className="flex items-center justify-between gap-1.5 font-semibold text-slate-800">
-                              <span className="flex items-center gap-1.5 truncate">
-                                <span className="material-symbols-outlined text-xs text-blue-600">directions_car</span>
-                                <span className="truncate">{trip.vehicle} • {trip.tripCategory}</span>
-                              </span>
-                              {isMultiDay && (
-                                <span className="px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-800 text-[10px] font-extrabold shrink-0">
-                                  {trip.days || computeTripDays(trip.pickupDate, trip.returnDate)}D
+                              {Number(trip.agreedRate) > 0 && (
+                                <span className="font-mono font-bold text-xs text-slate-900 shrink-0">
+                                  ₹{Number(trip.agreedRate).toLocaleString('en-IN')}
                                 </span>
                               )}
                             </div>
-                            <div className="flex items-center gap-1.5">
-                              <span className="material-symbols-outlined text-xs text-slate-400">schedule</span>
-                              <span>
-                                {isMultiDay
-                                  ? `${formatShortDate(trip.pickupDate)} → ${formatShortDate(trip.returnDate)}`
-                                  : trip.pickupDate}
-                                {trip.pickupTime ? ` @ ${trip.pickupTime}` : ''}
-                              </span>
+
+                            <div className="text-[11px] text-slate-600 space-y-1 bg-slate-50 p-2 rounded-lg border border-slate-100">
+                              <div className="font-semibold text-slate-800 truncate">
+                                {trip.vehicle} • {trip.tripCategory}
+                              </div>
+                              <div className="flex items-center gap-1 text-slate-600">
+                                <span className="material-symbols-outlined text-xs text-slate-400">schedule</span>
+                                <span className="truncate">
+                                  {trip.pickupDate ? formatShortDate(trip.pickupDate, true) : 'Date TBD'}
+                                  {trip.pickupTime ? ` @ ${trip.pickupTime}` : ''}
+                                </span>
+                              </div>
+                              <div className="flex items-start gap-1">
+                                <span className="material-symbols-outlined text-xs text-slate-400 mt-0.5">location_on</span>
+                                <span className="line-clamp-2">{trip.dropLocation || trip.route || trip.pickupLocation || 'Route TBD'}</span>
+                              </div>
+                              {cleanNote && (
+                                <div className="text-[10px] text-amber-700 italic border-t border-slate-200/60 pt-1 line-clamp-2">
+                                  {cleanNote}
+                                </div>
+                              )}
                             </div>
-                            {(trip.flightNumber || trip.terminal) && (
-                              <div className="flex items-center gap-1.5 text-[11px] text-sky-700 font-semibold">
-                                <span className="material-symbols-outlined text-xs">flight</span>
-                                <span>{[trip.airportDirection, trip.terminal, trip.flightNumber].filter(Boolean).join(' • ')}</span>
-                              </div>
-                            )}
-                            <div className="flex items-start gap-1.5">
-                              <span className="material-symbols-outlined text-xs text-slate-400 mt-0.5">location_on</span>
-                              <span className="line-clamp-2">{trip.pickupLocation || 'Chennai'} → {trip.dropLocation || trip.route}</span>
+
+                            <div className="flex items-center gap-1.5 pt-0.5">
+                              <button
+                                type="button"
+                                onClick={() => handleOpenConfirmModal(trip)}
+                                className="flex-1 py-2 px-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[11px] rounded-lg transition flex items-center justify-center gap-1 shadow-xs"
+                              >
+                                <span className="material-symbols-outlined text-xs">verified</span>
+                                <span>Collect Adv &amp; Confirm</span>
+                              </button>
+                              {trip.phone && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleSendFollowUpWA(trip)}
+                                  className="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg text-[11px] font-bold"
+                                  title="Send WhatsApp Follow-up"
+                                >
+                                  WA
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => handleOpenEditTrip(trip)}
+                                className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
+                                title="Edit quotation"
+                              >
+                                <span className="material-symbols-outlined text-xs">edit</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteTrip(trip.id)}
+                                className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg"
+                                title="Delete quotation"
+                              >
+                                <span className="material-symbols-outlined text-xs">delete</span>
+                              </button>
                             </div>
-                            {Array.isArray(trip.dayPlan) && trip.dayPlan.length > 0 && (
-                              <div className="mt-1.5 pt-1.5 border-t border-slate-200/70 space-y-1">
-                                {trip.dayPlan.map((d, idx) => (
-                                  <div key={idx} className="text-[11px] flex items-start justify-between gap-2 text-slate-700">
-                                    <span className="truncate">
-                                      <strong className="text-indigo-700">D{d.day || idx + 1}</strong>
-                                      {d.date ? ` (${formatShortDate(d.date)})` : ''}: {d.pkg ? `[${d.pkg}] ` : ''}{d.duty}
-                                    </span>
-                                    {Number(d.rate) > 0 && (
-                                      <span className="font-mono font-bold text-slate-800 shrink-0">
-                                        ₹{Number(d.rate).toLocaleString('en-IN')}
-                                      </span>
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                            {termsSummary && (
-                              <div className="text-[10px] font-semibold text-slate-600 bg-white border border-slate-200/80 rounded px-2 py-1 mt-1">
-                                {termsSummary}
-                              </div>
-                            )}
-                            {cleanNote && (
-                              <div className="text-[11px] text-amber-700 italic border-t border-slate-200/60 pt-1 mt-1">
-                                Note: {cleanNote}
-                              </div>
-                            )}
                           </div>
-
-                          {/* Actions */}
-                          <div className="flex items-center gap-1.5 pt-1">
-                            <button
-                              type="button"
-                              onClick={() => handleOpenAssignModal(trip)}
-                              className="flex-1 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition flex items-center justify-center gap-1 shadow-xs"
-                            >
-                              <span className="material-symbols-outlined text-sm">badge</span>
-                              <span>Assign Driver & Cab</span>
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => handleOpenEditTrip(trip)}
-                              className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                              title="Edit booking"
-                            >
-                              <span className="material-symbols-outlined text-sm">edit</span>
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteTrip(trip.id)}
-                              className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
-                              title="Delete booking"
-                            >
-                              <span className="material-symbols-outlined text-sm">delete</span>
-                            </button>
-                          </div>
-                        </div>
                         );
                       })
                     )}
                   </div>
                 </div>
 
-                {/* 2. ACTIVE / ON TRIP */}
-                <div className="bg-slate-50/80 border border-emerald-200/70 rounded-2xl p-4 flex flex-col min-h-[500px]">
-                  <div className="flex items-center justify-between pb-3 border-b border-emerald-200/70 mb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                      <h3 className="font-bold text-sm text-slate-800 tracking-wide">2. ACTIVE / ON TRIP</h3>
-                      <span className="px-2 py-0.5 text-xs font-bold bg-emerald-100 text-emerald-800 rounded-full">
-                        {activeTrips.length}
+                {/* STAGE 2: CONFIRMED (ADVANCE PAID) */}
+                <div className="bg-slate-50/80 border border-indigo-200/80 rounded-2xl p-3.5 flex flex-col min-h-[520px]">
+                  <div className="flex items-center justify-between pb-3 border-b border-indigo-200/70 mb-3 gap-2">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 shrink-0"></span>
+                      <h3 className="font-bold text-xs text-slate-800 tracking-wide truncate">2. CONFIRMED</h3>
+                      <span className="px-2 py-0.5 text-[11px] font-bold bg-indigo-100 text-indigo-800 rounded-full shrink-0">
+                        {confirmedTrips.length}
                       </span>
                     </div>
-                    <span className="text-[11px] font-semibold text-emerald-700">On Duty</span>
+                    <span className="text-[10px] font-semibold text-indigo-700 shrink-0">Advance Paid</span>
                   </div>
 
                   <div className="space-y-3 flex-1 overflow-y-auto max-h-[720px] pr-1">
-                    {activeTrips.length === 0 ? (
-                      <div className="h-44 border border-dashed border-emerald-200 rounded-xl flex flex-col items-center justify-center text-slate-400 text-xs gap-1.5">
-                        <span className="material-symbols-outlined text-2xl text-emerald-300">no_crash</span>
-                        <span>No active trips on road right now</span>
+                    {confirmedTrips.length === 0 ? (
+                      <div className="h-44 border border-dashed border-indigo-200 rounded-xl flex flex-col items-center justify-center text-slate-400 text-xs gap-1.5 text-center px-3">
+                        <span className="material-symbols-outlined text-2xl text-indigo-300">event_available</span>
+                        <span>Confirmed upcoming bookings appear here</span>
                       </div>
                     ) : (
-                      activeTrips.map(trip => (
-                        <div
-                          key={trip.id}
-                          className="bg-white border border-emerald-100 hover:border-emerald-300 rounded-xl p-3.5 shadow-xs space-y-2.5 transition"
-                        >
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <h4 className="font-bold text-sm text-slate-900">{trip.customerName}</h4>
-                              <div className="text-xs font-mono text-emerald-700 font-semibold flex items-center gap-1 mt-0.5">
-                                <span className="material-symbols-outlined text-xs">local_taxi</span>
-                                <span>{trip.vehicleNumber || 'Cab Assigned'}</span>
-                              </div>
+                      confirmedTrips.map(trip => {
+                        const termsSummary = buildCompactTermsSummary(trip);
+                        const cleanNote = getCleanNotes(trip.notes);
+                        const isMultiDay = trip.returnDate && trip.returnDate !== trip.pickupDate;
+                        const hasDriver = Boolean(String(trip.driverName || '').trim());
+                        const overdueNoDriver = isOverdueWithoutDriver(trip, nowTick);
+                        const math = computeSettlementMath(trip, trip.commissionPct ?? 10);
+                        return (
+                          <div
+                            key={trip.id}
+                            className={`bg-white rounded-xl p-3 shadow-xs space-y-2 transition border ${
+                              overdueNoDriver
+                                ? 'border-rose-400 ring-1 ring-rose-200'
+                                : hasDriver
+                                ? 'border-indigo-200 hover:border-indigo-400'
+                                : 'border-amber-200 hover:border-amber-400'
+                            }`}
+                          >
+                            {/* Driver Readiness Status Pill */}
+                            <div className="flex items-center justify-between gap-1.5">
+                              {overdueNoDriver ? (
+                                <span className="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 text-[10px] font-extrabold flex items-center gap-1 animate-pulse">
+                                  <span className="material-symbols-outlined text-xs">warning</span>
+                                  Needs Driver Urgently!
+                                </span>
+                              ) : hasDriver ? (
+                                <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold flex items-center gap-1">
+                                  <span className="material-symbols-outlined text-xs">check_circle</span>
+                                  Driver Ready • Auto-starts at Pickup
+                                </span>
+                              ) : (
+                                <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold">
+                                  Needs Driver Assignment
+                                </span>
+                              )}
+                              <span className="text-[10px] font-mono text-slate-400 shrink-0">#{trip.id}</span>
                             </div>
-                            <div className="text-right">
-                              <span className="font-mono font-bold text-sm text-slate-900">
-                                Bal: ₹{Number(trip.balance).toLocaleString('en-IN')}
-                              </span>
-                              <div className="text-[10px] text-slate-500 font-mono">
-                                Total: ₹{Number(trip.agreedRate).toLocaleString('en-IN')}
-                              </div>
-                            </div>
-                          </div>
 
-                          <div className="text-xs bg-slate-50 p-2.5 rounded-lg space-y-1.5 border border-slate-100">
-                            <div className="flex items-center justify-between font-medium text-slate-800">
-                              <span className="flex items-center gap-1">
-                                <span className="material-symbols-outlined text-xs text-blue-600">person</span>
-                                <span>Chauffeur: {trip.driverName}</span>
-                              </span>
-                              <a href={`tel:${trip.driverPhone}`} className="text-blue-600 font-mono hover:underline">
-                                {trip.driverPhone}
-                              </a>
-                            </div>
-                            <div className="text-slate-600 flex items-center gap-1.5">
-                              <span className="material-symbols-outlined text-xs text-slate-400">schedule</span>
-                              <span>
-                                {trip.returnDate && trip.returnDate !== trip.pickupDate
-                                  ? `${formatShortDate(trip.pickupDate)} → ${formatShortDate(trip.returnDate)} (${trip.days || computeTripDays(trip.pickupDate, trip.returnDate)}D)`
-                                  : trip.pickupDate}
-                                {trip.pickupTime ? ` @ ${trip.pickupTime}` : ''}
-                              </span>
-                            </div>
-                            {(trip.guestName || trip.guestPhone) && (
-                              <div className="text-[11px] text-indigo-700 font-medium">
-                                Guest: {trip.guestName || 'Alt Contact'}{trip.guestPhone ? ` (${formatPhoneForDisplay(trip.guestPhone)})` : ''}{trip.paxCount ? ` • ${trip.paxCount}` : ''}
-                              </div>
-                            )}
-                            <div className="text-slate-600 flex items-start gap-1.5">
-                              <span className="material-symbols-outlined text-xs text-slate-400 mt-0.5">location_on</span>
-                              <span className="line-clamp-2">{trip.route}</span>
-                            </div>
-                            {Array.isArray(trip.dayPlan) && trip.dayPlan.length > 0 && (
-                              <div className="pt-1 border-t border-slate-200/60 space-y-0.5 text-[11px] text-slate-700">
-                                {trip.dayPlan.map((d, idx) => (
-                                  <div key={idx} className="truncate">
-                                    <strong className="text-indigo-700">D{d.day || idx + 1}</strong>
-                                    {d.date ? ` (${formatShortDate(d.date)})` : ''}: {d.duty}
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="min-w-0">
+                                <h4 className="font-bold text-xs text-slate-900 truncate">{trip.customerName}</h4>
+                                <a
+                                  href={`tel:${trip.phone}`}
+                                  className="text-[11px] text-blue-600 hover:underline font-mono inline-flex items-center gap-0.5"
+                                >
+                                  <span className="material-symbols-outlined text-xs">call</span>
+                                  <span>{formatPhoneForDisplay(trip.phone)}</span>
+                                </a>
+                                {(trip.guestName || trip.guestPhone) && (
+                                  <div className="text-[10px] text-indigo-700 font-medium mt-0.5 truncate">
+                                    Guest: {trip.guestName || 'Alt'}{trip.guestPhone ? ` (${formatPhoneForDisplay(trip.guestPhone)})` : ''}
                                   </div>
-                                ))}
+                                )}
+                              </div>
+                              <div className="text-right shrink-0">
+                                <span className="font-mono font-bold text-xs text-slate-900">
+                                  Bal: ₹{Number(trip.balance).toLocaleString('en-IN')}
+                                </span>
+                                <div className="text-[10px] text-emerald-700 font-mono font-semibold">
+                                  Adv: ₹{Number(trip.advance).toLocaleString('en-IN')} / ₹{Number(trip.agreedRate).toLocaleString('en-IN')}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="text-[11px] text-slate-600 space-y-1 bg-slate-50 p-2 rounded-lg border border-slate-100">
+                              <div className="flex items-center justify-between gap-1 font-semibold text-slate-800">
+                                <span className="truncate">{trip.vehicle} • {trip.tripCategory}</span>
+                                {isMultiDay && (
+                                  <span className="px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-800 text-[10px] font-extrabold shrink-0">
+                                    {trip.days || computeTripDays(trip.pickupDate, trip.returnDate)}D
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <span className="material-symbols-outlined text-xs text-slate-400">schedule</span>
+                                <span>
+                                  {isMultiDay
+                                    ? `${formatShortDate(trip.pickupDate)} → ${formatShortDate(trip.returnDate)}`
+                                    : formatShortDate(trip.pickupDate, true) || trip.pickupDate}
+                                  {trip.pickupTime ? ` @ ${trip.pickupTime}` : ''}
+                                </span>
+                              </div>
+                              <div className="flex items-start gap-1">
+                                <span className="material-symbols-outlined text-xs text-slate-400 mt-0.5">location_on</span>
+                                <span className="line-clamp-2">{trip.pickupLocation || 'Chennai'} → {trip.dropLocation || trip.route}</span>
+                              </div>
+                              {hasDriver && (
+                                <div className="pt-1 mt-1 border-t border-slate-200/70 space-y-0.5">
+                                  <div className="flex items-center justify-between text-slate-800 font-semibold">
+                                    <span className="truncate">Chauffeur: {trip.driverName}</span>
+                                    <span className="font-mono text-[10px] text-emerald-700 shrink-0">{trip.vehicleNumber || 'Cab'}</span>
+                                  </div>
+                                  <div className="flex items-center justify-between text-[10px] text-slate-500">
+                                    <span>Comm ({math.pct}%): ₹{math.commissionAmt.toLocaleString('en-IN')}</span>
+                                    <a href={`tel:${trip.driverPhone}`} className="text-blue-600 font-mono hover:underline">
+                                      {trip.driverPhone}
+                                    </a>
+                                  </div>
+                                </div>
+                              )}
+                              {termsSummary && (
+                                <div className="text-[10px] font-semibold text-slate-600 bg-white border border-slate-200/80 rounded px-1.5 py-0.5">
+                                  {termsSummary}
+                                </div>
+                              )}
+                              {cleanNote && (
+                                <div className="text-[10px] text-amber-700 italic border-t border-slate-200/60 pt-1 line-clamp-2">
+                                  Note: {cleanNote}
+                                </div>
+                              )}
+                            </div>
+
+                            {hasDriver ? (
+                              <div className="space-y-1.5 pt-0.5">
+                                <div className="grid grid-cols-2 gap-1.5">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleSendDriverDutySlip(trip)}
+                                    className="py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 transition"
+                                  >
+                                    <span className="material-symbols-outlined text-xs">send</span>
+                                    <span>Duty Slip</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleSendCustomerConfirmation(trip)}
+                                    className="py-1.5 px-2 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-300 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 transition"
+                                  >
+                                    <span className="material-symbols-outlined text-xs">chat</span>
+                                    <span>Guest Info</span>
+                                  </button>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleStartTripNow(trip)}
+                                    className="flex-1 py-1.5 px-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] rounded-lg transition flex items-center justify-center gap-1 shadow-xs"
+                                    title="Manually move to On Trip right now"
+                                  >
+                                    <span className="material-symbols-outlined text-xs">play_arrow</span>
+                                    <span>Start Trip</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleOpenAssignModal(trip)}
+                                    className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+                                    title="Change driver"
+                                  >
+                                    <span className="material-symbols-outlined text-xs">swap_horiz</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleOpenEditTrip(trip)}
+                                    className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                                    title="Edit booking"
+                                  >
+                                    <span className="material-symbols-outlined text-xs">edit</span>
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center gap-1.5 pt-0.5">
+                                <button
+                                  type="button"
+                                  onClick={() => handleOpenAssignModal(trip)}
+                                  className={`flex-1 py-2 font-bold text-[11px] rounded-lg transition flex items-center justify-center gap-1 shadow-xs ${
+                                    overdueNoDriver
+                                      ? 'bg-rose-600 hover:bg-rose-500 text-white'
+                                      : 'bg-indigo-600 hover:bg-indigo-500 text-white'
+                                  }`}
+                                >
+                                  <span className="material-symbols-outlined text-xs">badge</span>
+                                  <span>Assign Driver &amp; Cab</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleOpenEditTrip(trip)}
+                                  className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                                  title="Edit booking"
+                                >
+                                  <span className="material-symbols-outlined text-xs">edit</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteTrip(trip.id)}
+                                  className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
+                                  title="Delete booking"
+                                >
+                                  <span className="material-symbols-outlined text-xs">delete</span>
+                                </button>
                               </div>
                             )}
-                            {(() => {
-                              const math = computeSettlementMath(trip, trip.commissionPct ?? 10);
-                              return (
-                                <div className="pt-1.5 mt-1 border-t border-slate-200/70 flex items-center justify-between text-[11px]">
-                                  <span className="text-slate-500 font-medium">
-                                    Comm ({math.pct}%): <strong className="text-slate-800">₹{math.commissionAmt.toLocaleString('en-IN')}</strong>
-                                  </span>
-                                  <span className={`px-2 py-0.5 rounded font-bold font-mono ${
-                                    math.settlementDirection === 'DRIVER_PAYS_OFFICE'
-                                      ? 'bg-amber-100 text-amber-900'
-                                      : 'bg-purple-100 text-purple-900'
-                                  }`}>
-                                    {math.settlementDirection === 'DRIVER_PAYS_OFFICE'
-                                      ? `Driver Pays Office: ₹${math.settlementAmount.toLocaleString('en-IN')}`
-                                      : `Office Pays Driver: ₹${math.settlementAmount.toLocaleString('en-IN')}`}
-                                  </span>
-                                </div>
-                              );
-                            })()}
                           </div>
-
-                          <div className="grid grid-cols-2 gap-2 pt-0.5">
-                            <button
-                              type="button"
-                              onClick={() => handleSendDriverDutySlip(trip)}
-                              className="py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition"
-                            >
-                              <span className="material-symbols-outlined text-xs">send</span>
-                              <span>Duty Slip (WA)</span>
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => handleSendCustomerConfirmation(trip)}
-                              className="py-1.5 px-2 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-300 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition"
-                            >
-                              <span className="material-symbols-outlined text-xs">chat</span>
-                              <span>Guest Info (WA)</span>
-                            </button>
-                          </div>
-
-                          <div className="flex items-center gap-1.5 pt-1">
-                            <button
-                              type="button"
-                              onClick={() => handleCompleteTrip(trip)}
-                              className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg transition flex items-center justify-center gap-1 shadow-xs"
-                            >
-                              <span className="material-symbols-outlined text-sm">done_all</span>
-                              <span>Mark Completed & Settle</span>
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleOpenEditTrip(trip)}
-                              className="p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                              title="Edit booking"
-                            >
-                              <span className="material-symbols-outlined text-sm">edit</span>
-                            </button>
-                          </div>
-                        </div>
-                      ))
+                        );
+                      })
                     )}
                   </div>
                 </div>
 
-                {/* 3. SETTLEMENT & REVIEW */}
-                <div className="bg-slate-50/80 border border-blue-200/70 rounded-2xl p-4 flex flex-col min-h-[500px]">
-                  <div className="flex items-center justify-between pb-3 border-b border-blue-200/70 mb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-                      <h3 className="font-bold text-sm text-slate-800 tracking-wide">3. SETTLEMENT & REVIEW</h3>
-                      <span className="px-2 py-0.5 text-xs font-bold bg-blue-100 text-blue-800 rounded-full">
-                        {settledTrips.length}
+                {/* STAGE 3: ON TRIP (LIVE — AUTO AT PICKUP TIME) */}
+                <div className="bg-slate-50/80 border border-emerald-200/80 rounded-2xl p-3.5 flex flex-col min-h-[520px]">
+                  <div className="flex items-center justify-between pb-3 border-b border-emerald-200/70 mb-3 gap-2">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                      <h3 className="font-bold text-xs text-slate-800 tracking-wide truncate">3. ON TRIP</h3>
+                      <span className="px-2 py-0.5 text-[11px] font-bold bg-emerald-100 text-emerald-800 rounded-full shrink-0">
+                        {activeTrips.length}
                       </span>
                     </div>
-                    <span className="text-[11px] font-semibold text-blue-700">Finished</span>
+                    <span className="text-[10px] font-semibold text-emerald-700 shrink-0">On Road</span>
                   </div>
 
                   <div className="space-y-3 flex-1 overflow-y-auto max-h-[720px] pr-1">
-                    {settledTrips.length === 0 ? (
-                      <div className="h-44 border border-dashed border-blue-200 rounded-xl flex flex-col items-center justify-center text-slate-400 text-xs gap-1.5">
-                        <span className="material-symbols-outlined text-2xl text-blue-300">verified</span>
-                        <span>Completed trips will appear here</span>
+                    {activeTrips.length === 0 ? (
+                      <div className="h-44 border border-dashed border-emerald-200 rounded-xl flex flex-col items-center justify-center text-slate-400 text-xs gap-1.5 text-center px-3">
+                        <span className="material-symbols-outlined text-2xl text-emerald-300">no_crash</span>
+                        <span>Assigned trips auto-move here at pickup time</span>
                       </div>
                     ) : (
-                      settledTrips.map(trip => (
-                        <div
-                          key={trip.id}
-                          className="bg-white border border-blue-100 rounded-xl p-3.5 shadow-xs space-y-2.5"
-                        >
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <h4 className="font-bold text-sm text-slate-900">{trip.customerName}</h4>
-                              <span className="text-xs text-slate-500 font-mono">#{trip.id} • {trip.vehicle}</span>
+                      activeTrips.map(trip => {
+                        const math = computeSettlementMath(trip, trip.commissionPct ?? 10);
+                        return (
+                          <div
+                            key={trip.id}
+                            className="bg-white border border-emerald-200 hover:border-emerald-400 rounded-xl p-3 shadow-xs space-y-2 transition"
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="min-w-0">
+                                <h4 className="font-bold text-xs text-slate-900 truncate">{trip.customerName}</h4>
+                                <div className="text-[11px] font-mono text-emerald-700 font-semibold flex items-center gap-1 mt-0.5">
+                                  <span className="material-symbols-outlined text-xs">local_taxi</span>
+                                  <span className="truncate">{trip.vehicleNumber || 'Cab Assigned'}</span>
+                                </div>
+                              </div>
+                              <div className="text-right shrink-0">
+                                <span className="font-mono font-bold text-xs text-slate-900">
+                                  Bal: ₹{Number(trip.balance).toLocaleString('en-IN')}
+                                </span>
+                                <div className="text-[10px] text-slate-500 font-mono">
+                                  Total: ₹{Number(trip.agreedRate).toLocaleString('en-IN')}
+                                </div>
+                              </div>
                             </div>
-                            <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold text-[11px] rounded font-mono">
-                              Paid ₹{Number(trip.agreedRate).toLocaleString('en-IN')}
-                            </span>
-                          </div>
 
-                          <div className="text-xs text-slate-600 bg-slate-50 p-2 rounded-lg">
-                            <div>Chauffeur: {trip.driverName || 'Chauffeur'} ({trip.vehicleNumber || 'Cab'})</div>
-                            <div className="line-clamp-1 mt-0.5 text-slate-500">{trip.route}</div>
-                          </div>
+                            <div className="text-[11px] bg-slate-50 p-2 rounded-lg space-y-1 border border-slate-100">
+                              <div className="flex items-center justify-between font-medium text-slate-800 gap-1">
+                                <span className="truncate">Chauffeur: {trip.driverName || 'Assigned'}</span>
+                                <a href={`tel:${trip.driverPhone}`} className="text-blue-600 font-mono hover:underline shrink-0">
+                                  {trip.driverPhone}
+                                </a>
+                              </div>
+                              <div className="text-slate-600 flex items-center gap-1">
+                                <span className="material-symbols-outlined text-xs text-slate-400">schedule</span>
+                                <span className="truncate">
+                                  {trip.returnDate && trip.returnDate !== trip.pickupDate
+                                    ? `${formatShortDate(trip.pickupDate)} → ${formatShortDate(trip.returnDate)} (${trip.days || computeTripDays(trip.pickupDate, trip.returnDate)}D)`
+                                    : formatShortDate(trip.pickupDate, true) || trip.pickupDate}
+                                  {trip.pickupTime ? ` @ ${trip.pickupTime}` : ''}
+                                </span>
+                              </div>
+                              <div className="text-slate-600 flex items-start gap-1">
+                                <span className="material-symbols-outlined text-xs text-slate-400 mt-0.5">location_on</span>
+                                <span className="line-clamp-2">{trip.route}</span>
+                              </div>
+                              <div className="pt-1 mt-1 border-t border-slate-200/70 flex items-center justify-between text-[10px] gap-1">
+                                <span className="text-slate-500 font-medium">
+                                  Comm ({math.pct}%): <strong className="text-slate-800">₹{math.commissionAmt.toLocaleString('en-IN')}</strong>
+                                </span>
+                                <span className={`px-1.5 py-0.5 rounded font-bold font-mono shrink-0 ${
+                                  math.settlementDirection === 'DRIVER_PAYS_OFFICE'
+                                    ? 'bg-amber-100 text-amber-900'
+                                    : 'bg-purple-100 text-purple-900'
+                                }`}>
+                                  {math.settlementDirection === 'DRIVER_PAYS_OFFICE'
+                                    ? `Drv→Off ₹${math.settlementAmount.toLocaleString('en-IN')}`
+                                    : `Off→Drv ₹${math.settlementAmount.toLocaleString('en-IN')}`}
+                                </span>
+                              </div>
+                            </div>
 
-                          <div className="flex items-center gap-2 pt-1">
-                            <button
-                              type="button"
-                              onClick={() => handleSendGoogleReviewRequest(trip)}
-                              className="flex-1 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-lg transition flex items-center justify-center gap-1.5 shadow-xs"
-                            >
-                              <span className="material-symbols-outlined text-sm text-yellow-300">star</span>
-                              <span>Send Review Link</span>
-                            </button>
+                            <div className="grid grid-cols-2 gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => handleSendDriverDutySlip(trip)}
+                                className="py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 transition"
+                              >
+                                <span className="material-symbols-outlined text-xs">send</span>
+                                <span>Duty Slip</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleSendCustomerConfirmation(trip)}
+                                className="py-1.5 px-2 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-300 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 transition"
+                              >
+                                <span className="material-symbols-outlined text-xs">chat</span>
+                                <span>Guest Info</span>
+                              </button>
+                            </div>
 
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteTrip(trip.id)}
-                              className="p-2 text-slate-400 hover:text-slate-600 rounded-lg transition"
-                              title="Archive / Remove"
-                            >
-                              <span className="material-symbols-outlined text-sm">archive</span>
-                            </button>
+                            <div className="flex items-center gap-1.5 pt-0.5">
+                              <button
+                                type="button"
+                                onClick={() => handleOpenCompleteModal(trip)}
+                                className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] rounded-lg transition flex items-center justify-center gap-1 shadow-xs"
+                              >
+                                <span className="material-symbols-outlined text-xs">payments</span>
+                                <span>End Trip &amp; Collect Payment</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleOpenEditTrip(trip)}
+                                className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                                title="Edit booking"
+                              >
+                                <span className="material-symbols-outlined text-xs">edit</span>
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      ))
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+
+                {/* STAGE 4: PAYMENT & REVIEW */}
+                <div className="bg-slate-50/80 border border-blue-200/80 rounded-2xl p-3.5 flex flex-col min-h-[520px]">
+                  <div className="flex items-center justify-between pb-3 border-b border-blue-200/70 mb-3 gap-2">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0"></span>
+                      <h3 className="font-bold text-xs text-slate-800 tracking-wide truncate">4. PAYMENT &amp; REVIEW</h3>
+                      <span className="px-2 py-0.5 text-[11px] font-bold bg-blue-100 text-blue-800 rounded-full shrink-0">
+                        {visibleCompletedTrips.length}
+                      </span>
+                    </div>
+                    {closedCompletedCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setHideClosedTrips(v => !v)}
+                        className={`text-[10px] font-bold px-2 py-1 rounded-lg border transition shrink-0 ${
+                          hideClosedTrips
+                            ? 'bg-blue-600 text-white border-blue-600'
+                            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
+                        }`}
+                        title="Toggle fully closed trips (Commission Settled + Review Sent)"
+                      >
+                        {hideClosedTrips ? `Show Closed (${closedCompletedCount})` : `Hide Closed (${closedCompletedCount})`}
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="space-y-3 flex-1 overflow-y-auto max-h-[720px] pr-1">
+                    {visibleCompletedTrips.length === 0 ? (
+                      <div className="h-44 border border-dashed border-blue-200 rounded-xl flex flex-col items-center justify-center text-slate-400 text-xs gap-1.5 text-center px-3">
+                        <span className="material-symbols-outlined text-2xl text-blue-300">verified</span>
+                        <span>
+                          {hideClosedTrips && closedCompletedCount > 0
+                            ? `All ${closedCompletedCount} completed trips are fully closed!`
+                            : 'Completed trips awaiting commission & review appear here'}
+                        </span>
+                      </div>
+                    ) : (
+                      visibleCompletedTrips.map(trip => {
+                        const math = computeSettlementMath(trip, trip.commissionPct ?? 10);
+                        const totalPaid = (Number(trip.agreedRate) || 0) + (Number(trip.extraCharges) || 0);
+                        const isFullyClosed = Boolean(trip.commissionSettled && trip.reviewSent);
+                        return (
+                          <div
+                            key={trip.id}
+                            className={`bg-white rounded-xl p-3 shadow-xs space-y-2 border transition ${
+                              isFullyClosed ? 'border-emerald-200 bg-emerald-50/20' : 'border-blue-100'
+                            }`}
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="min-w-0">
+                                <h4 className="font-bold text-xs text-slate-900 truncate">{trip.customerName}</h4>
+                                <span className="text-[10px] text-slate-500 font-mono">#{trip.id} • {trip.vehicle}</span>
+                              </div>
+                              <div className="text-right shrink-0">
+                                <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-bold text-[10px] rounded font-mono">
+                                  Paid ₹{totalPaid.toLocaleString('en-IN')}
+                                </span>
+                                <div className="text-[10px] text-slate-500 mt-0.5">
+                                  By {trip.paymentCollector || 'Driver'}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="text-[11px] text-slate-600 bg-slate-50 p-2 rounded-lg space-y-1 border border-slate-100">
+                              <div className="truncate font-medium text-slate-800">
+                                {trip.driverName || 'Chauffeur'} ({trip.vehicleNumber || 'Cab'})
+                              </div>
+                              <div className="line-clamp-1 text-slate-500">{trip.route}</div>
+                              {Number(trip.extraCharges) > 0 && (
+                                <div className="text-[10px] text-amber-800 font-semibold">
+                                  Extras: +₹{Number(trip.extraCharges).toLocaleString('en-IN')}
+                                  {trip.extraChargesNote ? ` (${trip.extraChargesNote})` : ''}
+                                </div>
+                              )}
+                              <div className="flex items-center justify-between text-[10px] pt-1 border-t border-slate-200/60">
+                                <span className="text-slate-500">
+                                  {math.settlementDirection === 'DRIVER_PAYS_OFFICE'
+                                    ? `Drv→Off: ₹${math.settlementAmount.toLocaleString('en-IN')}`
+                                    : `Off→Drv: ₹${math.settlementAmount.toLocaleString('en-IN')}`}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => handleToggleCommissionSettled(trip)}
+                                  className={`px-2 py-0.5 rounded font-bold transition ${
+                                    trip.commissionSettled
+                                      ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200'
+                                      : 'bg-amber-100 text-amber-900 hover:bg-amber-200'
+                                  }`}
+                                >
+                                  {trip.commissionSettled ? 'Comm. Settled ✓' : 'Mark Comm. Settled'}
+                                </button>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-1.5 pt-0.5">
+                              <button
+                                type="button"
+                                onClick={() => handleSendGoogleReviewRequest(trip)}
+                                className={`flex-1 py-2 font-bold text-[11px] rounded-lg transition flex items-center justify-center gap-1 shadow-xs ${
+                                  trip.reviewSent
+                                    ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300'
+                                    : 'bg-blue-600 hover:bg-blue-500 text-white'
+                                }`}
+                              >
+                                <span className={`material-symbols-outlined text-xs ${trip.reviewSent ? 'text-emerald-600' : 'text-yellow-300'}`}>
+                                  {trip.reviewSent ? 'task_alt' : 'star'}
+                                </span>
+                                <span>{trip.reviewSent ? 'Review Sent ✓ (Resend)' : 'Send Review Link'}</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteTrip(trip.id)}
+                                className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
+                                title="Delete / Archive"
+                              >
+                                <span className="material-symbols-outlined text-xs">delete</span>
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
                     )}
                   </div>
                 </div>
@@ -2491,26 +2997,43 @@ Warm regards,
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
-                    <div>
-                      <label className="block text-xs font-medium text-slate-600 mb-1">Customer Name (Optional)</label>
-                      <input
-                        type="text"
-                        value={calcCustName}
-                        onChange={(e) => setCalcCustName(e.target.value)}
-                        placeholder="e.g. Ramesh"
-                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800"
+                  <div className="space-y-2.5 pt-2 border-t border-slate-100">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold uppercase text-slate-400 tracking-wider">Customer Details (Optional)</span>
+                      <ContactPickerControl
+                        contacts={savedContacts}
+                        onImportedContactsChange={setImportedContacts}
+                        showToast={showToast}
+                        defaultFilter="Customer"
+                        buttonLabel="Phonebook"
+                        compact
+                        onSelect={({ name, phone: pickedPhone }) => {
+                          if (name) setCalcCustName(name);
+                          if (pickedPhone) setCalcCustPhone(pickedPhone);
+                        }}
                       />
                     </div>
-                    <div>
-                      <label className="block text-xs font-medium text-slate-600 mb-1">Customer WhatsApp (Optional)</label>
-                      <input
-                        type="tel"
-                        value={calcCustPhone}
-                        onChange={(e) => setCalcCustPhone(e.target.value)}
-                        placeholder="e.g. 9840100000"
-                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800"
-                      />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-medium text-slate-600 mb-1">Customer Name (Optional)</label>
+                        <input
+                          type="text"
+                          value={calcCustName}
+                          onChange={(e) => setCalcCustName(e.target.value)}
+                          placeholder="e.g. Ramesh"
+                          className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-slate-600 mb-1">Customer WhatsApp (Optional)</label>
+                        <input
+                          type="tel"
+                          value={calcCustPhone}
+                          onChange={(e) => setCalcCustPhone(e.target.value)}
+                          placeholder="e.g. 9840100000"
+                          className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2554,14 +3077,14 @@ Warm regards,
                         <div className="flex items-center gap-1.5">
                           <button
                             type="button"
-                            onClick={() => handleCopyQuote(calcOption1Text, 'Option 1 Micro-Receipt')}
+                            onClick={() => handleCopyQuote(calcOption1Text, 'Option 1 Micro-Receipt', true)}
                             className="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] font-bold text-white border border-slate-700 cursor-pointer"
                           >
                             📋 Copy Opt 1
                           </button>
                           <button
                             type="button"
-                            onClick={() => handleSendWhatsAppQuote(calcOption1Text)}
+                            onClick={() => handleSendWhatsAppQuote(calcOption1Text, true)}
                             className="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-[11px] font-bold text-white cursor-pointer"
                           >
                             📲 WA
@@ -2634,6 +3157,8 @@ Warm regards,
             <DirectBookingIntakeForm
               tariffConfig={tariffConfig}
               prefill={bookingPrefill}
+              savedContacts={savedContacts}
+              onImportedContactsChange={setImportedContacts}
               onSaveBooking={handleSaveNewBooking}
               onCancel={() => navigateTo('dispatch')}
               showToast={showToast}
@@ -2817,7 +3342,22 @@ Warm regards,
                       Just enter Name, Phone, Vehicle, Area &amp; Languages — extra details are optional.
                     </p>
                   </div>
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <ContactPickerControl
+                      contacts={savedContacts}
+                      onImportedContactsChange={setImportedContacts}
+                      showToast={showToast}
+                      defaultFilter="Phonebook"
+                      buttonLabel="Pick from Phonebook"
+                      compact
+                      onSelect={({ name, phone: pickedPhone }) => {
+                        if (name) setNewDriverName(name);
+                        if (pickedPhone) {
+                          const digits = String(pickedPhone).replace(/\D/g, '');
+                          setNewDriverPhone(digits.length >= 10 ? digits.slice(-10) : digits);
+                        }
+                      }}
+                    />
                     {['Owner-Driver', 'Fleet Partner', 'Acting Driver'].map((pt) => (
                       <button
                         key={pt}
@@ -3238,7 +3778,7 @@ Warm regards,
                             <span>Call</span>
                           </a>
                           <a
-                            href={`https://wa.me/91${driver.phone.replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(`Namaskaram ${driver.name} (${driver.vehicle}${driver.plate ? ` • ${driver.plate}` : ''}), checking your availability for a Kalidass Travels trip near ${driver.area || 'Chennai'}.`)}`}
+                            href={buildWhatsAppUrl(driver.phone, `Namaskaram ${driver.name} (${driver.vehicle}${driver.plate ? ` - ${driver.plate}` : ''}), checking your availability for a Kalidass Travels trip near ${driver.area || 'Chennai'}.`)}
                             target="_blank"
                             rel="noreferrer"
                             className="flex-1 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg text-xs font-bold flex items-center justify-center gap-1 transition"
@@ -3346,36 +3886,67 @@ Warm regards,
                           <th className="py-3 px-4">Customer</th>
                           <th className="py-3 px-4">Vehicle & Route</th>
                           <th className="py-3 px-4">Chauffeur</th>
-                          <th className="py-3 px-4 text-right">Amount Settled</th>
-                          <th className="py-3 px-4 text-center">Google Review Action</th>
+                          <th className="py-3 px-4 text-right">Total Paid</th>
+                          <th className="py-3 px-4 text-center">Commission</th>
+                          <th className="py-3 px-4 text-center">Google Review</th>
                           <th className="py-3 px-4 text-center">Actions</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
-                        {settledTrips.map(trip => (
+                        {settledTrips.map(trip => {
+                          const totalPaid = (Number(trip.agreedRate) || 0) + (Number(trip.extraCharges) || 0);
+                          const math = computeSettlementMath(trip, trip.commissionPct ?? 10);
+                          return (
                           <tr key={trip.id} className="hover:bg-slate-50/70 transition">
                             <td className="py-3 px-4 font-mono font-bold text-slate-900">#{trip.id}</td>
                             <td className="py-3 px-4">
                               <div className="font-bold text-slate-900">{trip.customerName}</div>
-                              <div className="text-slate-500 font-mono text-[11px]">{trip.phone}</div>
+                              <div className="text-slate-500 font-mono text-[11px]">{formatPhoneForDisplay(trip.phone)}</div>
                             </td>
                             <td className="py-3 px-4">
                               <div className="font-medium text-slate-800">{trip.vehicle}</div>
                               <div className="text-slate-500 line-clamp-1 text-[11px]">{trip.route}</div>
+                              {Number(trip.extraCharges) > 0 && (
+                                <div className="text-[10px] text-amber-700 font-semibold">
+                                  +₹{Number(trip.extraCharges).toLocaleString('en-IN')} extras
+                                </div>
+                              )}
                             </td>
                             <td className="py-3 px-4 font-medium text-slate-700">
-                              {trip.driverName || 'Verified'} ({trip.vehicleNumber || 'Cab'})
+                              <div>{trip.driverName || 'Verified'} ({trip.vehicleNumber || 'Cab'})</div>
+                              <div className="text-[10px] text-slate-500">Collected by {trip.paymentCollector || 'Driver'}</div>
                             </td>
                             <td className="py-3 px-4 text-right font-mono font-bold text-emerald-600">
-                              ₹{Number(trip.agreedRate).toLocaleString('en-IN')}
+                              ₹{totalPaid.toLocaleString('en-IN')}
+                            </td>
+                            <td className="py-3 px-4 text-center">
+                              <button
+                                type="button"
+                                onClick={() => handleToggleCommissionSettled(trip)}
+                                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition ${
+                                  trip.commissionSettled
+                                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                                    : 'bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100'
+                                }`}
+                              >
+                                {trip.commissionSettled
+                                  ? 'Settled ✓'
+                                  : `${math.settlementDirection === 'DRIVER_PAYS_OFFICE' ? 'Drv→Off' : 'Off→Drv'} ₹${math.settlementAmount.toLocaleString('en-IN')}`}
+                              </button>
                             </td>
                             <td className="py-3 px-4 text-center">
                               <button
                                 onClick={() => handleSendGoogleReviewRequest(trip)}
-                                className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-lg border border-blue-200 inline-flex items-center gap-1 transition"
+                                className={`px-3 py-1.5 font-bold rounded-lg border inline-flex items-center gap-1 transition ${
+                                  trip.reviewSent
+                                    ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'
+                                    : 'bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200'
+                                }`}
                               >
-                                <span className="material-symbols-outlined text-xs text-yellow-500">star</span>
-                                <span>Send WhatsApp Review Link</span>
+                                <span className={`material-symbols-outlined text-xs ${trip.reviewSent ? 'text-emerald-600' : 'text-yellow-500'}`}>
+                                  {trip.reviewSent ? 'task_alt' : 'star'}
+                                </span>
+                                <span>{trip.reviewSent ? 'Review Sent ✓' : 'Send Review Link'}</span>
                               </button>
                             </td>
                             <td className="py-3 px-4 text-center">
@@ -3388,7 +3959,8 @@ Warm regards,
                               </button>
                             </td>
                           </tr>
-                        ))}
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
@@ -3737,7 +4309,7 @@ Warm regards,
                     {modalDrivers.map((d) => {
                       const activeDuty = trips.find(
                         (t) =>
-                          t.manifestStatus === 'Active' &&
+                          normalizeManifestStatus(t.manifestStatus) === 'On Trip' &&
                           t.id !== assigningTrip.id &&
                           ((t.driverPhone && d.phone && t.driverPhone.slice(-10) === d.phone.slice(-10)) ||
                             (t.vehicleNumber && d.plate && t.vehicleNumber === d.plate))
@@ -4129,14 +4701,14 @@ Warm regards,
                 <div>
                   <label className="block text-[11px] font-bold text-slate-600 mb-1">Booking Status</label>
                   <select
-                    value={editingTrip.manifestStatus || 'Unassigned'}
+                    value={normalizeManifestStatus(editingTrip.manifestStatus)}
                     onChange={(e) => setEditingTrip({ ...editingTrip, manifestStatus: e.target.value })}
                     className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-semibold"
                   >
-                    <option value="Follow-up">Pending / Follow-up</option>
-                    <option value="Unassigned">Unassigned (Needs Driver)</option>
-                    <option value="Active">Active / On Trip</option>
-                    <option value="Settled">Settled / Closed</option>
+                    <option value="Quotation">1. Quotation / Enquiry</option>
+                    <option value="Confirmed">2. Confirmed (Advance Paid)</option>
+                    <option value="On Trip">3. On Trip (Live)</option>
+                    <option value="Completed">4. Payment &amp; Review</option>
                   </select>
                 </div>
                 <div>
@@ -4250,6 +4822,303 @@ Warm regards,
           </div>
         </div>
       )}
+
+      {/* STAGE 1 -> STAGE 2: COLLECT ADVANCE & CONFIRM QUOTATION MODAL */}
+      {confirmingTrip && (
+        <div className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 max-w-lg w-full shadow-2xl space-y-4 animate-fadeIn my-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div>
+                <h3 className="font-bold text-base text-slate-900">Collect Advance &amp; Confirm #{confirmingTrip.id}</h3>
+                <p className="text-[11px] text-slate-500">Paste customer&apos;s WhatsApp quote or enter Name, Phone &amp; Advance to confirm booking.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setConfirmingTrip(null)}
+                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"
+              >
+                <span className="material-symbols-outlined text-lg">close</span>
+              </button>
+            </div>
+
+            {/* Paste Customer WhatsApp Quote Auto-Fill */}
+            <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-emerald-900 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm text-emerald-600">content_paste_go</span>
+                  Paste WhatsApp Quote (Optional Auto-Fill)
+                </span>
+                <button
+                  type="button"
+                  onClick={handleParseConfirmWhatsApp}
+                  className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[11px] font-bold transition"
+                >
+                  Auto-Fill Fields
+                </button>
+              </div>
+              <textarea
+                rows={2}
+                value={confirmWaPaste}
+                onChange={(e) => setConfirmWaPaste(e.target.value)}
+                placeholder="Paste the quotation message the customer sent on WhatsApp..."
+                className="w-full text-xs bg-white border border-emerald-200 rounded-lg p-2 font-mono text-slate-800 focus:outline-none focus:border-emerald-500"
+              />
+            </div>
+
+            <form onSubmit={(e) => handleSubmitConfirmQuotation(e, { sendWhatsApp: false })} className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Customer Name *</label>
+                  <input
+                    type="text"
+                    required
+                    value={confirmingTrip.customerName || ''}
+                    onChange={(e) => setConfirmingTrip({ ...confirmingTrip, customerName: e.target.value })}
+                    placeholder="e.g. Rajesh Kumar"
+                    className="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Customer Phone *</label>
+                  <input
+                    type="tel"
+                    required
+                    value={confirmingTrip.phone || ''}
+                    onChange={(e) => setConfirmingTrip({ ...confirmingTrip, phone: e.target.value })}
+                    placeholder="e.g. 9840123456"
+                    className="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 font-mono font-semibold focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Pickup Date</label>
+                  <input
+                    type="date"
+                    value={confirmingTrip.pickupDate || ''}
+                    onChange={(e) => setConfirmingTrip({ ...confirmingTrip, pickupDate: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Pickup Time</label>
+                  <input
+                    type="text"
+                    value={confirmingTrip.pickupTime || ''}
+                    onChange={(e) => setConfirmingTrip({ ...confirmingTrip, pickupTime: e.target.value })}
+                    placeholder="e.g. 06:00 AM"
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Pickup Address</label>
+                  <input
+                    type="text"
+                    value={confirmingTrip.pickupLocation || ''}
+                    onChange={(e) => setConfirmingTrip({ ...confirmingTrip, pickupLocation: e.target.value })}
+                    placeholder="Exact Chennai address / landmark"
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Drop / Destination</label>
+                  <input
+                    type="text"
+                    value={confirmingTrip.dropLocation || ''}
+                    onChange={(e) => setConfirmingTrip({ ...confirmingTrip, dropLocation: e.target.value })}
+                    placeholder="e.g. Tirupati Balaji"
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Agreed Fare (₹)</label>
+                  <input
+                    type="number"
+                    value={confirmingTrip.agreedRate}
+                    onChange={(e) => setConfirmingTrip({ ...confirmingTrip, agreedRate: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-mono font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-emerald-700 mb-1">Advance Collected (₹)</label>
+                  <input
+                    type="number"
+                    value={confirmingTrip.advance}
+                    onChange={(e) => setConfirmingTrip({ ...confirmingTrip, advance: e.target.value })}
+                    className="w-full text-xs bg-emerald-50 border border-emerald-300 rounded-xl px-3 py-2 font-mono font-bold text-emerald-900"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs">
+                <span className="font-semibold text-slate-600">Balance to Collect by Driver:</span>
+                <span className="font-mono font-extrabold text-slate-900">
+                  ₹{Math.max(0, (Number(confirmingTrip.agreedRate) || 0) - (Number(confirmingTrip.advance) || 0)).toLocaleString('en-IN')}
+                </span>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setConfirmingTrip(null)}
+                  className="py-2 px-4 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => handleSubmitConfirmQuotation(e, { sendWhatsApp: true })}
+                  className="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5"
+                >
+                  <span className="material-symbols-outlined text-sm">send</span>
+                  <span>Confirm &amp; Send WA</span>
+                </button>
+                <button
+                  type="submit"
+                  className="py-2.5 px-5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5"
+                >
+                  <span className="material-symbols-outlined text-sm">verified</span>
+                  <span>Confirm Booking</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* STAGE 3 -> STAGE 4: END TRIP & COLLECT PAYMENT MODAL */}
+      {completingTrip && (() => {
+        const math = computeSettlementMath(completingTrip, completingTrip.commissionPct ?? 10, {
+          extraCharges: Number(completingTrip.extraCharges) || 0,
+          paymentCollector: completingTrip.paymentCollector || 'Driver'
+        });
+        const totalEndCollection = math.customerBalanceToDriver;
+        return (
+          <div className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 max-w-md w-full shadow-2xl space-y-4 animate-fadeIn my-auto">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div>
+                  <h3 className="font-bold text-base text-slate-900">End Trip &amp; Record Payment</h3>
+                  <p className="text-[11px] text-slate-500">
+                    #{completingTrip.id} • {completingTrip.customerName} • {completingTrip.driverName || 'Driver'}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setCompletingTrip(null)}
+                  className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"
+                >
+                  <span className="material-symbols-outlined text-lg">close</span>
+                </button>
+              </div>
+
+              <form onSubmit={handleSubmitCompleteTrip} className="space-y-3.5">
+                <div className="grid grid-cols-2 gap-2.5 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+                  <div>
+                    <span className="text-slate-500 block text-[10px] font-bold uppercase">Agreed Fare</span>
+                    <span className="font-mono font-bold text-slate-900">₹{Number(completingTrip.agreedRate || 0).toLocaleString('en-IN')}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 block text-[10px] font-bold uppercase">Advance Paid</span>
+                    <span className="font-mono font-bold text-emerald-700">₹{Number(completingTrip.advance || 0).toLocaleString('en-IN')}</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Extra Charges (₹)</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={completingTrip.extraCharges}
+                      onChange={(e) => setCompletingTrip({ ...completingTrip, extraCharges: e.target.value })}
+                      placeholder="0"
+                      className="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 font-mono font-bold focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Extras Note (Optional)</label>
+                    <input
+                      type="text"
+                      value={completingTrip.extraChargesNote || ''}
+                      onChange={(e) => setCompletingTrip({ ...completingTrip, extraChargesNote: e.target.value })}
+                      placeholder="e.g. +20km, 1hr wait"
+                      className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1.5">Payment Collected By</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { id: 'Driver', label: 'Driver (Cash / UPI)' },
+                      { id: 'Office', label: 'Office (UPI / Bank)' }
+                    ].map(opt => (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => setCompletingTrip({ ...completingTrip, paymentCollector: opt.id })}
+                        className={`py-2 px-3 rounded-xl text-xs font-bold border transition ${
+                          (completingTrip.paymentCollector || 'Driver') === opt.id
+                            ? 'bg-slate-900 text-white border-slate-900'
+                            : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 space-y-1.5 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-emerald-900">Final Balance Collected:</span>
+                    <span className="font-mono font-extrabold text-base text-emerald-800">
+                      ₹{totalEndCollection.toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] text-slate-600 border-t border-emerald-200/70 pt-1.5">
+                    <span>Office Commission ({math.pct}%): ₹{math.commissionAmt.toLocaleString('en-IN')}</span>
+                    <span className="font-mono font-bold text-slate-900">
+                      {math.settlementDirection === 'DRIVER_PAYS_OFFICE'
+                        ? `Driver Pays Office: ₹${math.settlementAmount.toLocaleString('en-IN')}`
+                        : `Office Pays Driver: ₹${math.settlementAmount.toLocaleString('en-IN')}`}
+                    </span>
+                  </div>
+                </div>
+
+                <label className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={Boolean(completingTrip.commissionSettled)}
+                    onChange={(e) => setCompletingTrip({ ...completingTrip, commissionSettled: e.target.checked })}
+                    className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500"
+                  />
+                  <span className="text-xs font-semibold text-slate-800">
+                    Driver–Office Commission Already Settled
+                  </span>
+                </label>
+
+                <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                  <button
+                    type="button"
+                    onClick={() => setCompletingTrip(null)}
+                    className="py-2 px-4 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="py-2.5 px-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5"
+                  >
+                    <span className="material-symbols-outlined text-sm">done_all</span>
+                    <span>Complete &amp; Move to Review</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }

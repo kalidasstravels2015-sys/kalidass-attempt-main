@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import ContactPickerControl from './ContactPickerControl.jsx';
 import {
   TRIP_CATEGORIES,
   LOCAL_PACKAGES,
@@ -36,6 +37,8 @@ function getTodayIso() {
 export default function DirectBookingIntakeForm({
   tariffConfig,
   prefill = null,
+  savedContacts = [],
+  onImportedContactsChange,
   onSaveBooking,
   onCancel,
   showToast
@@ -43,10 +46,11 @@ export default function DirectBookingIntakeForm({
   // Quick Paste WhatsApp Box
   const [waPasteText, setWaPasteText] = useState('');
   const [parseHighlights, setParseHighlights] = useState([]);
+  const [suggestedAdvance, setSuggestedAdvance] = useState(0);
   const [showPasteBox, setShowPasteBox] = useState(true);
 
-  // Booking Status: 'Unassigned' (Confirmed -> Dispatch) | 'Follow-up' (Pending Inquiry)
-  const [bookingStatus, setBookingStatus] = useState('Unassigned');
+  // Booking Status: 'Confirmed' (Advance Paid -> Stage 2) | 'Quotation' (Stage 1 Enquiry)
+  const [bookingStatus, setBookingStatus] = useState('Confirmed');
   const [tripCategory, setTripCategory] = useState('Local Chennai Rental');
 
   // Section 1: Booker, Guest & Quote Ref
@@ -139,6 +143,7 @@ export default function DirectBookingIntakeForm({
     if (prefill.includedKm) setIncludedKm(Number(prefill.includedKm) || 0);
     if (prefill.statePermit) setStatePermit(Number(prefill.statePermit) || 0);
     if (prefill.driverBata) setDriverBata(Number(prefill.driverBata) || 0);
+    if (prefill.manifestStatus) setBookingStatus(prefill.manifestStatus);
   }, [prefill]);
 
   // Helper: apply vehicle defaults for Local Package
@@ -309,6 +314,7 @@ export default function DirectBookingIntakeForm({
     const { parsed, highlights } = parseWhatsAppBookingText(waPasteText, tariffConfig);
     setParseHighlights(highlights);
 
+    const effectiveStatus = parsed.bookingStatus || bookingStatus;
     if (parsed.bookingStatus) setBookingStatus(parsed.bookingStatus);
     if (parsed.tripCategory) setTripCategory(parsed.tripCategory);
     if (parsed.vehicle) setVehicle(parsed.vehicle);
@@ -355,9 +361,21 @@ export default function DirectBookingIntakeForm({
     if (parsed.nightStayCharge) setNightStayCharge(parsed.nightStayCharge);
     if (parsed.tollPolicy) setTollPolicy(parsed.tollPolicy);
 
+    const nextHighlights = [...highlights];
+    if (parsed.suggestedAdvance > 0) {
+      setSuggestedAdvance(parsed.suggestedAdvance);
+      if (effectiveStatus === 'Confirmed') {
+        setAdvance(parsed.suggestedAdvance);
+        nextHighlights.push(`Adv: ₹${parsed.suggestedAdvance.toLocaleString('en-IN')}`);
+      }
+    } else {
+      setSuggestedAdvance(0);
+    }
+    setParseHighlights(nextHighlights);
+
     showToast?.(
-      highlights.length > 0
-        ? `Auto-filled from WhatsApp (${highlights.slice(0, 3).join(' • ')})`
+      nextHighlights.length > 0
+        ? `Auto-filled from WhatsApp (${nextHighlights.slice(0, 4).join(' • ')})`
         : 'Parsed WhatsApp text — review fields below!'
     );
   };
@@ -365,7 +383,7 @@ export default function DirectBookingIntakeForm({
   const resetForm = () => {
     setWaPasteText('');
     setParseHighlights([]);
-    setBookingStatus('Unassigned');
+    setBookingStatus('Confirmed');
     setCustomerName('');
     setPhone('');
     setQuoteRef('');
@@ -474,31 +492,36 @@ export default function DirectBookingIntakeForm({
           </p>
         </div>
 
-        {/* Confirmed vs Pending/Follow-up Toggle */}
+        {/* Stage 1 Quotation vs Stage 2 Confirmed Toggle */}
         <div className="inline-flex rounded-xl bg-slate-100 p-1 border border-slate-200 self-start sm:self-auto">
           <button
             type="button"
-            onClick={() => setBookingStatus('Unassigned')}
+            onClick={() => setBookingStatus('Quotation')}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
-              bookingStatus === 'Unassigned'
+              bookingStatus === 'Quotation'
+                ? 'bg-amber-500 text-slate-950 shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <span className="material-symbols-outlined text-sm">request_quote</span>
+            <span>1. Quotation / Enquiry</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setBookingStatus('Confirmed');
+              if (Number(advance) === 0 && suggestedAdvance > 0) {
+                setAdvance(suggestedAdvance);
+              }
+            }}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+              bookingStatus === 'Confirmed'
                 ? 'bg-blue-600 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             <span className="material-symbols-outlined text-sm">verified</span>
-            <span>Confirmed (Dispatch)</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setBookingStatus('Follow-up')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
-              bookingStatus === 'Follow-up'
-                ? 'bg-amber-500 text-slate-950 shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            <span className="material-symbols-outlined text-sm">schedule_send</span>
-            <span>Pending / Follow-up</span>
+            <span>2. Confirmed (Advance Paid)</span>
           </button>
         </div>
       </div>
@@ -550,6 +573,18 @@ export default function DirectBookingIntakeForm({
                     ✓ {h}
                   </span>
                 ))}
+                {suggestedAdvance > 0 && Number(advance) === 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAdvance(suggestedAdvance);
+                      showToast?.(`Applied ₹${suggestedAdvance.toLocaleString('en-IN')} advance`);
+                    }}
+                    className="px-2.5 py-0.5 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 text-[11px] font-bold transition"
+                  >
+                    + Apply ₹{suggestedAdvance.toLocaleString('en-IN')} Advance
+                  </button>
+                )}
               </div>
               <button
                 type="button"
@@ -601,20 +636,34 @@ export default function DirectBookingIntakeForm({
       <form onSubmit={(e) => submitBooking(e, { sendWhatsApp: false })} className="space-y-6">
         {/* SECTION 1: BOOKER & PASSENGER INFORMATION */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <h4 className="text-xs font-bold uppercase text-slate-400 tracking-wider">
               1. Booker &amp; Passenger Details
             </h4>
-            <button
-              type="button"
-              onClick={() => setShowGuestFields(v => !v)}
-              className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1"
-            >
-              <span className="material-symbols-outlined text-sm">
-                {showGuestFields ? 'remove_circle_outline' : 'person_add'}
-              </span>
-              <span>{showGuestFields ? 'Hide Guest / Alt Contact' : '+ Different Guest / Alt Phone / Pax'}</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <ContactPickerControl
+                contacts={savedContacts}
+                onImportedContactsChange={onImportedContactsChange}
+                showToast={showToast}
+                defaultFilter="All"
+                buttonLabel="Phonebook"
+                compact
+                onSelect={({ name, phone: pickedPhone }) => {
+                  if (name) setCustomerName(name);
+                  if (pickedPhone) setPhone(pickedPhone);
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowGuestFields(v => !v)}
+                className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1"
+              >
+                <span className="material-symbols-outlined text-sm">
+                  {showGuestFields ? 'remove_circle_outline' : 'person_add'}
+                </span>
+                <span>{showGuestFields ? 'Hide Guest / Alt Contact' : '+ Different Guest / Alt Phone / Pax'}</span>
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
@@ -661,7 +710,23 @@ export default function DirectBookingIntakeForm({
           </div>
 
           {showGuestFields && (
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 bg-slate-50 border border-slate-200 rounded-xl p-3.5 animate-fadeIn">
+            <div className="space-y-2.5 bg-slate-50 border border-slate-200 rounded-xl p-3.5 animate-fadeIn">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold uppercase text-slate-500">On-Ground Guest / Alternate Contact</span>
+                <ContactPickerControl
+                  contacts={savedContacts}
+                  onImportedContactsChange={onImportedContactsChange}
+                  showToast={showToast}
+                  defaultFilter="All"
+                  buttonLabel="Pick Guest"
+                  compact
+                  onSelect={({ name, phone: pickedPhone }) => {
+                    if (name) setGuestName(name);
+                    if (pickedPhone) setGuestPhone(pickedPhone);
+                  }}
+                />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
               <div>
                 <label className="block text-[11px] font-bold text-slate-600 mb-1">On-Ground Guest Name</label>
                 <input
@@ -701,6 +766,7 @@ export default function DirectBookingIntakeForm({
                   placeholder="e.g. GT Grande, T. Nagar"
                   className="w-full text-xs bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
                 />
+              </div>
               </div>
             </div>
           )}
@@ -1226,16 +1292,16 @@ export default function DirectBookingIntakeForm({
           <button
             type="submit"
             className={`py-3 px-7 font-bold text-sm rounded-xl transition shadow-lg flex items-center gap-2 ${
-              bookingStatus === 'Follow-up'
+              bookingStatus === 'Quotation'
                 ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/25'
                 : 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-600/30'
             }`}
           >
             <span className="material-symbols-outlined text-lg">
-              {bookingStatus === 'Follow-up' ? 'schedule_send' : 'check'}
+              {bookingStatus === 'Quotation' ? 'request_quote' : 'verified'}
             </span>
             <span>
-              {bookingStatus === 'Follow-up' ? 'Save as Pending Follow-up' : 'Save & Add to Dispatch Desk'}
+              {bookingStatus === 'Quotation' ? 'Save to 1. Quotation / Enquiry' : 'Save to 2. Confirmed'}
             </span>
           </button>
         </div>

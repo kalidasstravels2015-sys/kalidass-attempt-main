@@ -230,7 +230,7 @@ export default function DriverFeeEstimator({
   useEffect(() => {
     setQuoteRefId(peekNextQuotationId());
     if (typeof fetch === 'function') {
-      fetch('/api/next-quote-id?claim=true')
+      fetch('/api/next-quote-id')
         .then(res => res.json())
         .then(data => {
           if (data && data.quoteId) setQuoteRefId(data.quoteId);

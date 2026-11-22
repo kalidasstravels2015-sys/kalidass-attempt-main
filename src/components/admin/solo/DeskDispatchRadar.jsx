@@ -143,18 +143,18 @@ export default function DeskDispatchRadar({
     const adv = Number(booking.advancePaid) || 0;
     const balance = Math.max(0, totalFare - adv);
 
-    const message = `🚖 *KALIDASS TRAVELS — CAB & DRIVER DETAILS*\n` +
+    const message = `*KALIDASS TRAVELS — CAB & DRIVER DETAILS*\n` +
       `Booking ID: *${booking.bookingId}*\n\n` +
-      `👨‍✈️ *Driver & Cab:* ${booking.assignedChauffeur}\n` +
-      `🚗 *Vehicle:* ${booking.vehicleCategory}\n` +
-      `🗓 *Pickup Time:* ${booking.travelDateTime}\n` +
-      `📍 *Route:* ${booking.pickupAddress}\n\n` +
-      `💰 *Total Fare:* ₹${totalFare.toLocaleString('en-IN')}\n` +
-      `🟢 *Advance Paid:* ₹${adv.toLocaleString('en-IN')}\n` +
-      `🔴 *Balance to Pay Driver:* ₹${balance.toLocaleString('en-IN')}\n\n` +
-      `📱 *Open Live Digital Duty Slip:*\n${tripUrl}\n\n` +
-      `Have a safe and pleasant journey! ✨\n` +
-      `📞 24/7 Helpline: +91 89395 39211`;
+      `*Driver & Cab:* ${booking.assignedChauffeur}\n` +
+      `*Vehicle:* ${booking.vehicleCategory}\n` +
+      `*Pickup Time:* ${booking.travelDateTime}\n` +
+      `*Route:* ${booking.pickupAddress}\n\n` +
+      `*Total Fare:* ₹${totalFare.toLocaleString('en-IN')}\n` +
+      `*Advance Paid:* ₹${adv.toLocaleString('en-IN')}\n` +
+      `*Balance to Pay Driver:* ₹${balance.toLocaleString('en-IN')}\n\n` +
+      `*Open Live Digital Duty Slip:*\n${tripUrl}\n\n` +
+      `Have a safe and pleasant journey.\n` +
+      `24/7 Helpline: +91 89395 39211`;
 
     const cleanPhone = guestPhone.length >= 10 ? guestPhone.slice(-10) : '';
     const url = cleanPhone
@@ -167,23 +167,20 @@ export default function DeskDispatchRadar({
   const handleSendDutySlipToDriver = (booking) => {
     const driverPhoneMatch = (booking.assignedChauffeur || '').match(/(?:\+91[\-\s]?)?[6-9]\d{9}/);
     const driverPhone = driverPhoneMatch ? driverPhoneMatch[0].replace(/[^0-9]/g, '') : '';
-    const driverName = booking.assignedChauffeur?.split('(')[0]?.trim() || 'Driver';
     const tripUrl = getTripUrl(booking);
     const totalFare = Number(booking.terminalFare) || 0;
     const adv = Number(booking.advancePaid) || 0;
     const balanceToCollect = Math.max(0, totalFare - adv);
-    const driverShare = Number(booking.chauffeurPayout) || Math.round(totalFare * 0.82);
     const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(booking.pickupAddress || 'Chennai')}`;
 
-    const message = `🚕 *KALIDASS TRAVELS — DRIVER DUTY SLIP*\n` +
+    const message = `*KALIDASS TRAVELS — DRIVER DUTY SLIP*\n` +
       `Trip ID: *${booking.bookingId}*\n\n` +
-      `👤 *Passenger:* ${booking.guestNamePhone}\n` +
-      `🗓 *Pickup Date & Time:* ${booking.travelDateTime}\n` +
-      `📍 *Pickup & Route:* ${booking.pickupAddress}\n` +
-      `🗺️ *Google Maps Pin:* ${mapsLink}\n\n` +
-      `💵 *Collect Balance from Customer at Drop:* *₹${balanceToCollect.toLocaleString('en-IN')}*\n` +
-      `🤝 *Your Net Driver Share:* ₹${driverShare.toLocaleString('en-IN')}\n\n` +
-      `📱 *Enter Start/End KM & Close Bill Here:*\n${tripUrl}`;
+      `*Passenger:* ${booking.guestNamePhone}\n` +
+      `*Pickup Date & Time:* ${booking.travelDateTime}\n` +
+      `*Pickup & Route:* ${booking.pickupAddress}\n` +
+      `*Google Maps Pin:* ${mapsLink}\n\n` +
+      `*Amount to Collect:* *₹${balanceToCollect.toLocaleString('en-IN')} + Toll & Parking (Actuals)*\n\n` +
+      `*Enter Start/End KM & Close Bill Here:*\n${tripUrl}`;
 
     const cleanPhone = driverPhone.length >= 10 ? driverPhone.slice(-10) : '';
     const url = cleanPhone
@@ -195,7 +192,7 @@ export default function DeskDispatchRadar({
   // 1-Tap "Send Trip Link to Both"
   const handleSendTripLinkToBoth = (booking) => {
     const tripUrl = getTripUrl(booking);
-    const text = `*KALIDASS TRAVELS — DIGITAL TRIP SHEET*\nTrip Ref: *${booking.bookingId}*\nRoute: ${booking.pickupAddress}\n\n📱 Live Trip Details: ${tripUrl}`;
+    const text = `*KALIDASS TRAVELS — DIGITAL TRIP SHEET*\nTrip Ref: *${booking.bookingId}*\nRoute: ${booking.pickupAddress}\n\nLive Trip Details: ${tripUrl}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
   };
 

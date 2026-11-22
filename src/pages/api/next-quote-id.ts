@@ -32,29 +32,58 @@ function getTripsWebhookUrl(): string {
   return DEFAULT_TRIPS_WEBHOOK_URL;
 }
 
-async function getSheetMaxSequence(dateCode: string): Promise<number> {
+const MONTH_SHORT_UPPER = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+function getRefPrefixFromDateCode(dateCode: string): string {
+  const dd = dateCode.slice(0, 2);
+  const mmIdx = Math.max(0, Math.min(11, parseInt(dateCode.slice(2, 4), 10) - 1));
+  return `KT/${dd}${MONTH_SHORT_UPPER[mmIdx] || 'NOV'}/`;
+}
+
+async function fetchSheetQuoteSequence(dateCode: string, claim = false): Promise<{ currentSeq: number; nextSeq: number; quoteId: string; claimed: boolean } | null> {
   try {
     const webhookUrl = getTripsWebhookUrl();
-    const res = await fetch(webhookUrl, { method: 'GET', redirect: 'follow' });
+    const target = `${webhookUrl}?action=next_quote_id&dateCode=${dateCode}${claim ? '&claim=true' : ''}`;
+    const res = await fetch(target, { method: 'GET', redirect: 'follow' });
     if (res.ok) {
       const data = await res.json();
+      if (data && data.success && data.quoteId) {
+        return {
+          currentSeq: Number(data.currentSeq || 0),
+          nextSeq: Number(data.nextSeq || 1),
+          quoteId: String(data.quoteId),
+          claimed: Boolean(data.claimed ?? claim)
+        };
+      }
       if (data && Array.isArray(data.trips)) {
         let maxSeq = 0;
-        const regex = new RegExp(`Q-${dateCode}-(\\d+)`, 'gi');
+        const qRegex = new RegExp(`Q-${dateCode}-(\\d+)`, 'gi');
+        const refPrefix = getRefPrefixFromDateCode(dateCode).replace(/\//g, '\\/');
+        const ktRegex = new RegExp(`${refPrefix}0*(\\d+)`, 'gi');
         for (const row of data.trips) {
-          const searchStr = `${row?.id || ''} ${row?.notes || ''}`;
+          const searchStr = `${row?.id || ''} ${row?.quoteRef || ''} ${row?.notes || ''}`;
           let m;
-          regex.lastIndex = 0;
-          while ((m = regex.exec(searchStr)) !== null) {
+          qRegex.lastIndex = 0;
+          while ((m = qRegex.exec(searchStr)) !== null) {
+            const val = parseInt(m[1], 10);
+            if (!isNaN(val) && val > maxSeq) maxSeq = val;
+          }
+          ktRegex.lastIndex = 0;
+          while ((m = ktRegex.exec(searchStr)) !== null) {
             const val = parseInt(m[1], 10);
             if (!isNaN(val) && val > maxSeq) maxSeq = val;
           }
         }
-        return maxSeq;
+        return {
+          currentSeq: maxSeq,
+          nextSeq: maxSeq + 1,
+          quoteId: `Q-${dateCode}-${maxSeq + 1}`,
+          claimed: false
+        };
       }
     }
   } catch (_) {}
-  return 0;
+  return null;
 }
 
 export function getDailySequence(dateCode: string): number {
@@ -100,10 +129,29 @@ export function saveDailySequence(dateCode: string, seq: number): void {
 
 export const GET: APIRoute = async ({ url }) => {
   const dateCode = getDateCode();
-  const localMax = getDailySequence(dateCode);
-  const sheetMax = await getSheetMaxSequence(dateCode);
-  const currentMax = Math.max(localMax, sheetMax);
   const claim = url.searchParams.get('claim') === 'true' || url.searchParams.get('advance') === 'true';
+  const sheetRes = await fetchSheetQuoteSequence(dateCode, claim);
+  const localMax = getDailySequence(dateCode);
+
+  if (sheetRes && sheetRes.claimed) {
+    saveDailySequence(dateCode, sheetRes.nextSeq);
+    return new Response(JSON.stringify({
+      success: true,
+      dateCode,
+      currentSeq: sheetRes.currentSeq,
+      nextSeq: sheetRes.nextSeq,
+      quoteId: sheetRes.quoteId,
+      claimed: true
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
+      }
+    });
+  }
+
+  const currentMax = Math.max(localMax, sheetRes?.currentSeq || 0);
   const nextSeq = currentMax + 1;
   if (claim) {
     saveDailySequence(dateCode, nextSeq);
@@ -114,7 +162,7 @@ export const GET: APIRoute = async ({ url }) => {
     success: true,
     dateCode,
     currentSeq: currentMax,
-    nextSeq: claim ? nextSeq : nextSeq,
+    nextSeq,
     quoteId,
     claimed: claim
   }), {
@@ -128,9 +176,26 @@ export const GET: APIRoute = async ({ url }) => {
 
 export const POST: APIRoute = async () => {
   const dateCode = getDateCode();
+  const sheetRes = await fetchSheetQuoteSequence(dateCode, true);
+  if (sheetRes && sheetRes.claimed) {
+    saveDailySequence(dateCode, sheetRes.nextSeq);
+    return new Response(JSON.stringify({
+      success: true,
+      dateCode,
+      seq: sheetRes.nextSeq,
+      quoteId: sheetRes.quoteId,
+      nextQuoteId: `Q-${dateCode}-${sheetRes.nextSeq + 1}`
+    }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
+      }
+    });
+  }
+
   const localMax = getDailySequence(dateCode);
-  const sheetMax = await getSheetMaxSequence(dateCode);
-  const currentMax = Math.max(localMax, sheetMax);
+  const currentMax = Math.max(localMax, sheetRes?.currentSeq || 0);
   const newSeq = currentMax + 1;
   saveDailySequence(dateCode, newSeq);
   const quoteId = `Q-${dateCode}-${newSeq}`;

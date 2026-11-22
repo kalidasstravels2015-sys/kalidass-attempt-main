@@ -142,16 +142,18 @@ export default function ActiveTripsView({
   // Broadcast to Driver Group
   const handleBroadcastToDriverGroup = (b) => {
     const fare = Number(b.terminalFare) || 0;
-    const payout = Number(b.chauffeurPayout) || 0;
-    const driverNet = payout > 0 ? payout : Math.max(0, fare - Math.round(fare * 0.18));
+    const adv = Number(b.advancePaid) || 0;
+    const collectAmt = b.driverCollectionAmount !== undefined && b.driverCollectionAmount !== ''
+      ? Number(b.driverCollectionAmount)
+      : Math.max(0, fare - adv);
     const msg =
-      `🚕 *DUTY AVAILABLE — KALIDASS TRAVELS*\n` +
+      `*DUTY AVAILABLE — KALIDASS TRAVELS*\n` +
       `Trip ID: *${b.bookingId}*\n` +
-      `🗓 *Pickup Time:* ${b.travelDateTime}\n` +
-      `📍 *Route:* ${b.pickupAddress}\n` +
-      `🚗 *Vehicle:* ${b.vehicleCategory}\n` +
-      `💰 *Driver Net Payment:* *₹${driverNet.toLocaleString('en-IN')} Net* (+ Tolls/Parking paid by customer)\n` +
-      `📱 *Reply with Driver Name & Car Plate to take this duty!*`;
+      `*Pickup Time:* ${b.travelDateTime}\n` +
+      `*Route:* ${b.pickupAddress}\n` +
+      `*Vehicle:* ${b.vehicleCategory}\n` +
+      `*Amount to Collect:* *₹${collectAmt.toLocaleString('en-IN')} + Toll & Parking (Actuals)*\n` +
+      `*Reply with Driver Name & Car Plate to take this duty.*`;
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
@@ -166,23 +168,23 @@ export default function ActiveTripsView({
       ? Number(b.driverCollectionAmount)
       : Math.max(0, fare - adv);
     const msg =
-      `🚖 *KALIDASS TRAVELS — CAB & DRIVER DETAILS*\n` +
+      `*KALIDASS TRAVELS — CAB & DRIVER DETAILS*\n` +
       `Booking ID: *${b.bookingId}*\n\n` +
-      `👨‍✈️ *Driver & Cab:* ${b.assignedChauffeur}\n` +
-      `🚗 *Vehicle:* ${b.vehicleCategory}\n` +
-      `🗓 *Pickup Time:* ${b.travelDateTime}\n` +
-      `📍 *Route:* ${b.pickupAddress}\n\n` +
-      `💰 *Total Fare:* ₹${fare.toLocaleString('en-IN')}\n` +
-      `🟢 *Advance Paid:* ₹${adv.toLocaleString('en-IN')}${adv === 0 ? ' (Regular Customer)' : ''}\n` +
-      `🔴 *Balance to Pay Driver:* ₹${bal.toLocaleString('en-IN')}${bal === 0 ? ' (Nil - Paid / Office Direct)' : ''}\n\n` +
-      `📱 *Open Live Digital Duty Slip:*\n${tripUrl}\n\n` +
-      `Have a safe and pleasant journey! ✨\n` +
-      `📞 24/7 Helpline: +91 89395 39211`;
+      `*Driver & Cab:* ${b.assignedChauffeur}\n` +
+      `*Vehicle:* ${b.vehicleCategory}\n` +
+      `*Pickup Time:* ${b.travelDateTime}\n` +
+      `*Route:* ${b.pickupAddress}\n\n` +
+      `*Total Fare:* ₹${fare.toLocaleString('en-IN')}\n` +
+      `*Advance Paid:* ₹${adv.toLocaleString('en-IN')}${adv === 0 ? ' (Regular Customer)' : ''}\n` +
+      `*Balance to Pay Driver:* ₹${bal.toLocaleString('en-IN')}${bal === 0 ? ' (Nil - Paid / Office Direct)' : ''}\n\n` +
+      `*Open Live Digital Duty Slip:*\n${tripUrl}\n\n` +
+      `Have a safe and pleasant journey.\n` +
+      `24/7 Helpline: +91 89395 39211`;
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     showToast?.(`Duty slip sent to customer ${guestName}!`, 'success');
   };
 
-  // Driver Duty Slip (with custom collection & settlement instructions)
+  // Driver Duty Slip (shows only Amount to Collect)
   const handleSendDriverDutySlip = (b) => {
     const phoneMatch = (b.assignedChauffeur || '').match(/[6-9]\d{9}/);
     const cleanPhone = phoneMatch ? phoneMatch[0] : '';
@@ -192,26 +194,24 @@ export default function ActiveTripsView({
     const collectAmt = b.driverCollectionAmount !== undefined && b.driverCollectionAmount !== ''
       ? Number(b.driverCollectionAmount)
       : Math.max(0, fare - adv);
-    const driverShare = Number(b.chauffeurPayout) || (fare > 0 ? Math.round(fare * 0.82) : 0);
     const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.pickupAddress || 'Chennai')}`;
     
     const collectionLine = collectAmt === 0
-      ? `💵 *Collect from Customer:* *₹0 (NIL - Customer pays Office directly via UPI)*\n`
-      : `💵 *Collect from Customer at Drop:* *₹${collectAmt.toLocaleString('en-IN')}*\n`;
+      ? `*Amount to Collect:* *₹0 (NIL - Customer pays Office directly via UPI)*\n`
+      : `*Amount to Collect:* *₹${collectAmt.toLocaleString('en-IN')} + Toll & Parking (Actuals)*\n`;
 
-    const noteLine = b.settlementNote ? `📝 *Settlement Note:* ${b.settlementNote}\n\n` : '\n';
+    const noteLine = b.settlementNote ? `*Note:* ${b.settlementNote}\n\n` : '\n';
 
     const msg =
-      `🚕 *KALIDASS TRAVELS — DRIVER DUTY SLIP*\n` +
+      `*KALIDASS TRAVELS — DRIVER DUTY SLIP*\n` +
       `Trip ID: *${b.bookingId}*\n\n` +
-      `👤 *Passenger:* ${b.guestNamePhone}\n` +
-      `🗓 *Pickup Time:* ${b.travelDateTime}\n` +
-      `📍 *Route:* ${b.pickupAddress}\n` +
-      `🗺️ *Google Maps Pin:* ${mapsLink}\n\n` +
+      `*Passenger:* ${b.guestNamePhone}\n` +
+      `*Pickup Time:* ${b.travelDateTime}\n` +
+      `*Route:* ${b.pickupAddress}\n` +
+      `*Google Maps Pin:* ${mapsLink}\n\n` +
       collectionLine +
-      `🤝 *Your Net Driver Share:* ₹${driverShare.toLocaleString('en-IN')}\n` +
       noteLine +
-      `📱 *Enter Start/End KM & Close Bill Here:*\n${tripUrl}`;
+      `*Enter Start/End KM & Close Bill Here:*\n${tripUrl}`;
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     showToast?.(`Duty slip sent to driver!`, 'success');
   };
