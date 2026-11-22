@@ -1482,9 +1482,12 @@ Warm regards,
     if (window.confirm('Are you sure you want to delete this trip record?')) {
       const updatedList = trips.filter(t => t.id !== id);
       setTrips(updatedList);
+      if (editingTrip?.id === id) setEditingTrip(null);
       deleteTripFromGoogleSheet(id);
       showToast('Trip record deleted.');
+      return true;
     }
+    return false;
   };
 
   // Filtered Trips for Dispatch Desk (Multi-Day Aware)
@@ -2576,6 +2579,14 @@ Warm regards,
                                   >
                                     <span className="material-symbols-outlined text-xs">edit</span>
                                   </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteTrip(trip.id)}
+                                    className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
+                                    title="Delete booking"
+                                  >
+                                    <span className="material-symbols-outlined text-xs">delete</span>
+                                  </button>
                                 </div>
                               </div>
                             ) : (
@@ -2733,6 +2744,14 @@ Warm regards,
                                 title="Edit booking"
                               >
                                 <span className="material-symbols-outlined text-xs">edit</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteTrip(trip.id)}
+                                className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
+                                title="Delete booking"
+                              >
+                                <span className="material-symbols-outlined text-xs">delete</span>
                               </button>
                             </div>
                           </div>
@@ -4867,21 +4886,31 @@ Warm regards,
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-between gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
-                  onClick={() => setEditingTrip(null)}
-                  className="py-2 px-4 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100"
+                  onClick={() => handleDeleteTrip(editingTrip.id)}
+                  className="py-2 px-3 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 border border-red-200/80 flex items-center gap-1 transition"
                 >
-                  Cancel
+                  <span className="material-symbols-outlined text-sm">delete</span>
+                  <span>Delete</span>
                 </button>
-                <button
-                  type="submit"
-                  className="py-2.5 px-5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5"
-                >
-                  <span className="material-symbols-outlined text-sm">save</span>
-                  <span>Save Booking</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setEditingTrip(null)}
+                    className="py-2 px-4 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="py-2.5 px-5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5"
+                  >
+                    <span className="material-symbols-outlined text-sm">save</span>
+                    <span>Save Booking</span>
+                  </button>
+                </div>
               </div>
             </form>
           </div>
