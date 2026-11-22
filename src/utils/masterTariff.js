@@ -223,9 +223,8 @@ export function estimateRoadExtrasFromMaster(
   const permitInfo = getStatePermitForRoute(text, vehicle, isRoundTrip, distanceKm, master);
   const statePermitEst = permitInfo.permitCost;
   const tollsEst = permitInfo.tollsEst;
-  const nightStayRate = Number(master?.acting_drivers?.outstation_cab_driver_night_stay || 450);
-  const driverNightStayEst = nights * nightStayRate;
-  const roadExtrasEst = tollsEst + statePermitEst + driverNightStayEst;
+  const driverNightStayEst = 0;
+  const roadExtrasEst = tollsEst + statePermitEst;
 
   return {
     stateCode: permitInfo.stateCode,

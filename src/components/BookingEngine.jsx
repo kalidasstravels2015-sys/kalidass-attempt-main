@@ -23,7 +23,6 @@ import { buildWhatsAppUrl, WHATSAPP_CONFIG } from '../utils/whatsapp';
 import tariffConfig from '../data/tariff_config.json';
 import { peekNextQuotationId, getNextQuotationId, getFormattedDateCode, formatWhatsAppRefId } from '../utils/sequenceGenerator';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
-import { logBookingToGoogleSheet } from '../utils/recordWebsiteBooking.js';
 import { getFleetImageDimensions } from '../utils/vehicleMetadata';
 
 // ── Master database of known outstation destinations from Chennai ──────────
@@ -1482,26 +1481,6 @@ export default function BookingEngine({
 
       logCalculationEvent(vehicleName, fare);
 
-      const bookingPayload = {
-        bookingId: confirmedId,
-        route: currentBreakdown.routeSummary || `${outstationPickup || 'Chennai'} ➔ ${outstationDrop || 'Outstation'}`,
-        pickup: outstationPickup || 'Chennai',
-        drop: outstationDrop || 'Outstation',
-        travelDateTime: (activeTab === 'outstation' && outstationTripType === 'round' && formattedReturnDate)
-          ? `${formattedPickupDate} to ${formattedReturnDate}`
-          : `${formattedPickupDate || 'Tomorrow'}`,
-        pickupDate: formattedPickupDate,
-        returnDate: (activeTab === 'outstation' && outstationTripType === 'round') ? formattedReturnDate : '',
-        vehicle: vehicleName,
-        passengers: selectedVehicle?.seats ? `${selectedVehicle.seats} Seats` : '4 Seats',
-        fare: fare || currentBreakdown.totalFare,
-        advance: 500,
-        advancePaid: 0,
-        manifestStatus: 'Need Driver',
-        name: 'Website WhatsApp Lead',
-        notes: `Website WhatsApp Click: ${confirmedId} (${currentBreakdown.routeSummary || 'Outstation'})`
-      };
-
       // Report Google Ads conversion event (Request quote)
       if (typeof window !== 'undefined') {
         const finalFare = Number(fare || currentBreakdown.totalFare || 1.0);
@@ -1522,19 +1501,8 @@ export default function BookingEngine({
         }
       }
 
-      // Direct Cloud Sync to Google Sheets Live Operations Desk
-      logBookingToGoogleSheet(bookingPayload);
-
-      if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
-        navigator.sendBeacon('/api/record-booking', JSON.stringify(bookingPayload));
-      } else {
-        fetch('/api/record-booking', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(bookingPayload),
-          keepalive: true
-        }).catch(() => {});
-      }
+      // Website WhatsApp quotations are intentionally NOT auto-pushed to Live Dispatch.
+      // Confirmed quotes are pasted manually via Admin -> New Booking.
     } catch (_) {}
   };
 
@@ -1634,10 +1602,6 @@ Ref: ${cleanRef}`;
       ? `\n(Pickup to drop + local visits)`
       : `\n(Pickup to drop one-way)`;
 
-    const nightStayLine = isRound
-      ? `\n• Night drive (10 PM–6 AM): ₹350`
-      : '';
-
     return `*KALIDASS TRAVELS*
 ${currentBreakdown.routeSummary || 'Outstation Trip'} (${tripModeStr})
 Pickup: ${formattedPickupDate || 'As requested'}${returnLine}
@@ -1652,7 +1616,7 @@ Vehicle: ${selectedVehicle.name} AC
 • Toll & Parking
 
 *Over-limit (Only if > ${billedKm} km):*
-• Extra km: ₹${currentBreakdown.extraKmRate || ratePerKm} / km${nightStayLine}
+• Extra km: ₹${currentBreakdown.extraKmRate || ratePerKm} / km
 
 *To Confirm:*
 • Advance now: ${advanceAmount}
@@ -2885,9 +2849,6 @@ Ref: ${cleanRef}`;
                 </div>
                 <div className="space-y-0.5 text-slate-700 dark:text-gray-300">
                   <div>• Extra Distance: ₹{currentBreakdown.extraKmRate || 14} / km</div>
-                  {outstationTripType === 'round' && (
-                    <div>• Driver Night Stay: ₹350 (only if 10 PM - 6 AM)</div>
-                  )}
                 </div>
               </div>
 

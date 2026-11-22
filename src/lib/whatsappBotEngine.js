@@ -112,7 +112,6 @@ CORE OPERATIONAL RULES (ZERO AI GIMMICKS - 100% FACTUAL & GROUNDED):
 
    *Over-limit (Only if > [Billed km] km):*
    • Extra km: ₹[ExtraKmRate] / km
-   • Night drive (10 PM–6 AM): ₹350
 
    *To Confirm:*
    • Advance now: ₹500

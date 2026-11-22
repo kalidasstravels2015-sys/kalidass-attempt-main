@@ -28,7 +28,6 @@ import tnBusFares from '../data/tnBusFares.json';
 import tripsData from '../data/trips.json';
 import tariffConfig from '../data/tariff_config.json';
 import { estimateRoadExtrasFromMaster } from '../utils/masterTariff';
-import { logBookingToGoogleSheet } from '../utils/recordWebsiteBooking.js';
 
 // Distance lookup table for South India routes from Chennai
 const COMMON_DISTANCES_FROM_CHENNAI = {
@@ -793,45 +792,8 @@ export default function OutstationQuotationModal() {
       quote_id: bookingId
     });
 
-    // Record booking in operations system & Google Sheets Live Desk
-    try {
-      logBookingToGoogleSheet({
-        bookingId: bookingId,
-        name: 'Direct WhatsApp Guest',
-        phone: '',
-        pickupAddress: pickup,
-        vehicle: vehicle.name,
-        passengers: vehicle.capacity,
-        package: `Outstation Cab (${tripType === 'round' ? 'Round Trip' : 'One Way'})`,
-        days: days,
-        pickupDate: formattedPickupDate,
-        pickupTime: '',
-        returnDate: formattedReturnDate,
-        fare: finalEstimate,
-        route: `${pickup} ➔ ${drop}`
-      });
-
-      fetch('/api/record-booking', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          bookingId: bookingId,
-          name: 'Direct WhatsApp Guest',
-          phone: '',
-          pickupAddress: pickup,
-          vehicle: vehicle.name,
-          passengers: vehicle.capacity,
-          package: `Outstation Cab (${tripType === 'round' ? 'Round Trip' : 'One Way'})`,
-          days: days,
-          pickupDate: formattedPickupDate,
-          pickupTime: '',
-          returnDate: formattedReturnDate,
-          fare: `₹${finalEstimate.toLocaleString('en-IN')}`,
-          slug: 'outstation-cabs',
-          route: `${pickup} ➔ ${drop}`
-        })
-      });
-    } catch (e) {}
+    // Website WhatsApp quotations are intentionally NOT auto-pushed to Live Dispatch.
+    // Confirmed quotes are pasted manually via Admin -> New Booking.
 
     // Google Maps navigation links
     const { pickupPin: omPickupPin, directions: omDirections } = buildMapsLinks(pickup, drop, tripType);

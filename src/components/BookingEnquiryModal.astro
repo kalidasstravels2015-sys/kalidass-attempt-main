@@ -737,68 +737,8 @@ Address: ${area}${flightNo ? ' (Flight: ' + flightNo + ')' : ''}
 
 Ref: ${quickBookingContext.bookingId}`;
 
-        // Background POST to Google Sheets Operations Desk & CSV
-        try {
-          var sheetPayload = {
-            action: 'SAVE_TRIP',
-            trip: {
-              id: quickBookingContext.bookingId,
-              customerName: name,
-              phone: rawPhone,
-              tripCategory: quickBookingContext.packageTitle || 'Enquiry Package',
-              vehicle: quickBookingContext.vehicleName || 'Sedan',
-              route: area,
-              pickupDate: formattedPickupDate,
-              pickupTime: formattedPickupTime,
-              pickupLocation: area + (flightNo ? ' [Flight: ' + flightNo + ']' : ''),
-              dropLocation: '',
-              agreedRate: numFare,
-              advance: advAmt,
-              balance: Math.max(0, numFare - advAmt),
-              driverName: '',
-              driverPhone: '',
-              vehicleNumber: '',
-              manifestStatus: 'Unassigned',
-              notes: 'Quick Enquiry Modal' + (flightNo ? ' | Flight: ' + flightNo : ''),
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString()
-            }
-          };
-
-          var targetSheetUrl = (window.localStorage && window.localStorage.getItem('kt_admin_google_sheet_webhook_v1')) || 'https://script.google.com/macros/s/AKfycbzyfKwbaG83dNG3EAWf719-UWbWxWpEoBQoRoRbJsHjD-Bx8uKUfytP5Eb2RXaJfgDz/exec';
-          if (navigator.sendBeacon) {
-            navigator.sendBeacon(targetSheetUrl, new Blob([JSON.stringify(sheetPayload)], { type: 'text/plain;charset=utf-8' }));
-          } else {
-            fetch(targetSheetUrl, {
-              method: 'POST',
-              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify(sheetPayload),
-              keepalive: true
-            }).catch(function() {});
-          }
-
-          fetch('/api/record-booking', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              bookingId: quickBookingContext.bookingId,
-              name: name,
-              phone: rawPhone,
-              pickupAddress: area + (flightNo ? ' [Flight: ' + flightNo + ']' : ''),
-              vehicle: quickBookingContext.vehicleName,
-              passengers: quickBookingContext.passengers || '4 Seats',
-              package: quickBookingContext.packageTitle,
-              days: quickBookingContext.days,
-              pickupDate: formattedPickupDate,
-              pickupTime: formattedPickupTime,
-              returnDate: formattedReturnDate,
-              fare: quickBookingContext.price,
-              advance: advAmt,
-              advancePaid: advAmt,
-              balance: Math.max(0, numFare - advAmt)
-            })
-          }).catch(function () {});
-        } catch (err) {}
+        // Website WhatsApp enquiries are intentionally NOT auto-pushed to Live Dispatch.
+        // Confirmed quotes are pasted manually via Admin -> New Booking.
 
         // Google Sheet Webhook backup
         try {

@@ -102,7 +102,6 @@ Vehicle: [Short Vehicle Name] AC
 
 *Over-limit (Only if > [BilledKm] km):*
 • Extra km: ₹[ExtraKmRate] / km
-• Night drive (10 PM–6 AM): ₹350
 
 *To Confirm:*
 • Advance now: ₹500

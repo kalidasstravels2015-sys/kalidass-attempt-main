@@ -14,7 +14,6 @@ import tnBusFares from '../data/tnBusFares.json';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { trackCalculatorQuote, markQuoteConverted } from '../lib/analytics';
 import { getNextQuotationId } from '../utils/sequenceGenerator';
-import { logBookingToGoogleSheet } from '../utils/recordWebsiteBooking';
 import WhatsAppButton from './react/WhatsAppButton.jsx';
 import { buildWhatsAppUrl, buildMapsLinks } from '../utils/whatsapp';
 
@@ -686,28 +685,6 @@ export default function VehicleRelocationCalculator({ currentLang = 'en' }) {
               })())}
               onClick={() => {
                 const quoteId = getNextQuotationId();
-                const bookingPayload = {
-                  bookingId: quoteId,
-                  package: 'Vehicle Relocation',
-                  tripCategory: 'Vehicle Relocation',
-                  route: `${pickup} ➔ ${drop}`,
-                  pickup,
-                  drop,
-                  vehicle: 'Customer Vehicle Relocation',
-                  fare: result.total,
-                  advance: 0,
-                  name: 'Vehicle Relocation WhatsApp Lead',
-                  notes: `Vehicle Relocation Quote: ${quoteId} (${pickup} ➔ ${drop}, ~${result.dist} km)`
-                };
-                logBookingToGoogleSheet(bookingPayload);
-                if (typeof fetch === 'function') {
-                  fetch('/api/record-booking', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(bookingPayload),
-                    keepalive: true
-                  }).catch(() => {});
-                }
                 markQuoteConverted(quoteId, {
                   calculatorId: 'vehicle_relocation',
                   tripType: 'Vehicle Relocation',

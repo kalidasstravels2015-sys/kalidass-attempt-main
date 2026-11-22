@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import ContactPickerControl from './ContactPickerControl.jsx';
 import {
   TRIP_CATEGORIES,
@@ -6,6 +6,7 @@ import {
   parseWhatsAppBookingText,
   addDaysToIsoDate,
   computeTripDays,
+  formatShortDate,
   normalizePhoneNumber
 } from '../../utils/adminBookingHelper.js';
 
@@ -43,15 +44,20 @@ export default function DirectBookingIntakeForm({
   onCancel,
   showToast
 }) {
-  // Quick Paste WhatsApp Box
+  // WhatsApp-First Paste State
   const [waPasteText, setWaPasteText] = useState('');
+  const [hasParsedQuote, setHasParsedQuote] = useState(false);
   const [parseHighlights, setParseHighlights] = useState([]);
   const [suggestedAdvance, setSuggestedAdvance] = useState(0);
-  const [showPasteBox, setShowPasteBox] = useState(true);
+  const [showFullDetails, setShowFullDetails] = useState(false);
+
+  const customerNameRef = useRef(null);
+  const phoneRef = useRef(null);
+  const pickupLocRef = useRef(null);
 
   // Booking Status: 'Confirmed' (Advance Paid -> Stage 2) | 'Quotation' (Stage 1 Enquiry)
   const [bookingStatus, setBookingStatus] = useState('Confirmed');
-  const [tripCategory, setTripCategory] = useState('Local Chennai Rental');
+  const [tripCategory, setTripCategory] = useState('Outstation Round Trip');
 
   // Section 1: Booker, Guest & Quote Ref
   const [customerName, setCustomerName] = useState('');
@@ -73,9 +79,9 @@ export default function DirectBookingIntakeForm({
 
   // Local Package
   const [localPkgId, setLocalPkgId] = useState('8hr_80km');
-  const [packageLabel, setPackageLabel] = useState('8 Hr / 80 Km');
-  const [includedHrs, setIncludedHrs] = useState(8);
-  const [includedKm, setIncludedKm] = useState(80);
+  const [packageLabel, setPackageLabel] = useState('');
+  const [includedHrs, setIncludedHrs] = useState(0);
+  const [includedKm, setIncludedKm] = useState(0);
 
   // Outstation & Tour
   const [driverBata, setDriverBata] = useState(0);
@@ -99,8 +105,8 @@ export default function DirectBookingIntakeForm({
   const [agreedRate, setAgreedRate] = useState('');
   const [advance, setAdvance] = useState(0);
   const [tollPolicy, setTollPolicy] = useState('Extra at Actuals');
-  const [extraKmRate, setExtraKmRate] = useState(15);
-  const [extraHrRate, setExtraHrRate] = useState(150);
+  const [extraKmRate, setExtraKmRate] = useState(0);
+  const [extraHrRate, setExtraHrRate] = useState(0);
   const [nightStayCharge, setNightStayCharge] = useState(0);
   const [notes, setNotes] = useState('');
 
@@ -125,6 +131,7 @@ export default function DirectBookingIntakeForm({
   // Hydrate when pushed from Rate & Quote Generator or Mobile Co-Pilot
   useEffect(() => {
     if (!prefill) return;
+    setShowFullDetails(true);
     if (prefill.customerName) setCustomerName(prefill.customerName);
     if (prefill.phone) setPhone(prefill.phone);
     if (prefill.vehicle && tariffConfig?.vehicles?.[prefill.vehicle]) setVehicle(prefill.vehicle);
@@ -181,7 +188,6 @@ export default function DirectBookingIntakeForm({
     const rate = vPkg?.rates?.[String(daysCount)] || vPkg?.rates?.['1'] || 0;
     if (rate > 0) setAgreedRate(rate);
     if (pkg.roundTripKm) setIncludedKm(pkg.roundTripKm);
-    // Tirupati package is commonly all-inclusive
     if (tKey === 'tirupati-package') {
       setTollPolicy('All-Inclusive');
     }
@@ -205,7 +211,7 @@ export default function DirectBookingIntakeForm({
       setDriverBata((v.driver_bata || 500) * days);
       setExtraKmRate(v.round_trip_rate || v.extra_km_rate || 14);
       setExtraHrRate(0);
-      setNightStayCharge(350);
+      setNightStayCharge(0);
       setTollPolicy('Extra at Actuals');
       setPackageLabel(`${(v.min_km_per_day || 250) * days} Km Round Trip`);
     } else if (newCat === 'Outstation One-Way Drop') {
@@ -305,21 +311,41 @@ export default function DirectBookingIntakeForm({
     });
   };
 
-  // Smart WhatsApp Paste Parser Handler
-  const handleSmartParseWhatsApp = () => {
-    if (!waPasteText.trim()) {
-      showToast?.('Paste a WhatsApp quote or chat message first', 'error');
+  // Core WhatsApp Parser — cleanly resets stale trip fields before applying newly pasted quote
+  const parseAndApplyWhatsAppText = (rawInput, { silent = false } = {}) => {
+    const text = String(rawInput || '').trim();
+    if (!text) {
+      if (!silent) showToast?.('Paste a WhatsApp quote or chat message first', 'error');
       return;
     }
-    const { parsed, highlights } = parseWhatsAppBookingText(waPasteText, tariffConfig);
-    setParseHighlights(highlights);
+
+    const { parsed, highlights } = parseWhatsAppBookingText(text, tariffConfig);
+    setHasParsedQuote(true);
+
+    // Cleanly reset quote-derived trip fields so previous paste / default values never leak in
+    setReturnDate('');
+    setPickupTime('');
+    setPickupLocation('');
+    setDropLocation('');
+    setQuoteRef('');
+    setPackageLabel('');
+    setIncludedKm(0);
+    setIncludedHrs(0);
+    setDriverBata(0);
+    setStatePermit(0);
+    setQuotedFare('');
+    setAgreedRate('');
+    setExtraKmRate(0);
+    setExtraHrRate(0);
+    setNightStayCharge(0);
+    setTollPolicy('Extra at Actuals');
 
     const effectiveStatus = parsed.bookingStatus || bookingStatus;
     if (parsed.bookingStatus) setBookingStatus(parsed.bookingStatus);
     if (parsed.tripCategory) setTripCategory(parsed.tripCategory);
     if (parsed.vehicle) setVehicle(parsed.vehicle);
     if (parsed.quoteRef) setQuoteRef(parsed.quoteRef);
-    if (parsed.customerName && !customerName) setCustomerName(parsed.customerName);
+    if (parsed.customerName) setCustomerName(parsed.customerName);
     if (parsed.phone) setPhone(parsed.phone);
 
     if (parsed.guestName || parsed.guestPhone || parsed.paxCount || parsed.hotelName) {
@@ -354,7 +380,12 @@ export default function DirectBookingIntakeForm({
     if (parsed.includedHrs) setIncludedHrs(parsed.includedHrs);
     if (parsed.driverBata) setDriverBata(parsed.driverBata);
     if (parsed.statePermit) setStatePermit(parsed.statePermit);
-    if (parsed.quotedFare) setQuotedFare(parsed.quotedFare);
+    if (parsed.quotedFare) {
+      setQuotedFare(parsed.quotedFare);
+    } else if (parsed.agreedRate) {
+      // Preserve original pasted quote as Quoted Base so any negotiation/discount is tracked automatically
+      setQuotedFare(parsed.agreedRate);
+    }
     if (parsed.agreedRate) setAgreedRate(parsed.agreedRate);
     if (parsed.extraKmRate) setExtraKmRate(parsed.extraKmRate);
     if (parsed.extraHrRate) setExtraHrRate(parsed.extraHrRate);
@@ -367,22 +398,49 @@ export default function DirectBookingIntakeForm({
       if (effectiveStatus === 'Confirmed') {
         setAdvance(parsed.suggestedAdvance);
         nextHighlights.push(`Adv: ₹${parsed.suggestedAdvance.toLocaleString('en-IN')}`);
+      } else {
+        setAdvance(0);
       }
     } else {
       setSuggestedAdvance(0);
+      setAdvance(0);
     }
     setParseHighlights(nextHighlights);
 
-    showToast?.(
-      nextHighlights.length > 0
-        ? `Auto-filled from WhatsApp (${nextHighlights.slice(0, 4).join(' • ')})`
-        : 'Parsed WhatsApp text — review fields below!'
-    );
+    // Keep full details collapsed when WhatsApp quote parsed cleanly so user focuses on Customer + Pickup + Save
+    if (parsed.agreedRate && parsed.pickupDate) {
+      setShowFullDetails(false);
+    }
+
+    if (!silent) {
+      showToast?.(
+        nextHighlights.length > 0
+          ? `Auto-filled from WhatsApp (${nextHighlights.slice(0, 4).join(' • ')})`
+          : 'Parsed WhatsApp text — review details below!'
+      );
+    }
+  };
+
+  // 1-Click Paste from Clipboard button
+  const handleClipboardPaste = async () => {
+    try {
+      const clipText = await navigator.clipboard.readText();
+      if (!clipText || !clipText.trim()) {
+        showToast?.('Clipboard is empty — copy a WhatsApp quotation first!', 'error');
+        return;
+      }
+      setWaPasteText(clipText);
+      parseAndApplyWhatsAppText(clipText);
+    } catch (_) {
+      showToast?.('Tap inside the green box and press Ctrl+V / Paste', 'error');
+    }
   };
 
   const resetForm = () => {
     setWaPasteText('');
+    setHasParsedQuote(false);
     setParseHighlights([]);
+    setSuggestedAdvance(0);
     setBookingStatus('Confirmed');
     setCustomerName('');
     setPhone('');
@@ -392,13 +450,21 @@ export default function DirectBookingIntakeForm({
     setPaxCount('');
     setHotelName('');
     setShowGuestFields(false);
+    setPickupDate(getTodayIso());
     setPickupTime('');
     setPickupLocation('');
     setDropLocation('');
     setReturnDate('');
+    setIncludedKm(0);
+    setIncludedHrs(0);
+    setDriverBata(0);
+    setStatePermit(0);
     setQuotedFare('');
     setAgreedRate('');
     setAdvance(0);
+    setExtraKmRate(0);
+    setExtraHrRate(0);
+    setNightStayCharge(0);
     setNotes('');
     setFlightNumber('');
   };
@@ -407,10 +473,12 @@ export default function DirectBookingIntakeForm({
     if (e) e.preventDefault();
     if (!customerName.trim()) {
       showToast?.('Please enter Customer / Booker Name', 'error');
+      customerNameRef.current?.focus();
       return;
     }
     if (!phone.trim()) {
       showToast?.('Please enter Mobile / WhatsApp Number', 'error');
+      phoneRef.current?.focus();
       return;
     }
 
@@ -481,14 +549,36 @@ export default function DirectBookingIntakeForm({
   const balanceAmt = Math.max(0, (Number(agreedRate) || 0) - (Number(advance) || 0));
   const negotiatedDiff = Number(quotedFare) > 0 && Number(agreedRate) > 0 ? Number(quotedFare) - Number(agreedRate) : 0;
 
+  // Identify what's still missing after WhatsApp paste so operator can complete it in seconds
+  const missingItems = useMemo(() => {
+    const items = [];
+    if (!customerName.trim()) items.push({ label: 'Customer Name', ref: customerNameRef });
+    if (!phone.trim()) items.push({ label: 'Mobile Number', ref: phoneRef });
+    if (!pickupLocation.trim() || /^chennai$/i.test(pickupLocation.trim())) {
+      items.push({ label: 'Exact Pickup Address', ref: pickupLocRef, optional: true });
+    }
+    return items;
+  }, [customerName, phone, pickupLocation]);
+
+  const scheduleSummary = useMemo(() => {
+    const startStr = formatShortDate(pickupDate, true);
+    if (returnDate && returnDate !== pickupDate) {
+      return `${formatShortDate(pickupDate)} – ${formatShortDate(returnDate, true)} (${computedDays}D)`;
+    }
+    return startStr || pickupDate;
+  }, [pickupDate, returnDate, computedDays]);
+
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-7 animate-fadeIn max-w-4xl mx-auto space-y-6">
-      {/* Header + Booking Status Toggle */}
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 animate-fadeIn max-w-4xl mx-auto space-y-5">
+      {/* HEADER + STAGE TOGGLE */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
         <div>
-          <h3 className="text-lg font-bold text-slate-900">Direct Booking Intake</h3>
+          <h3 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+            <span className="material-symbols-outlined text-emerald-600">content_paste_go</span>
+            <span>WhatsApp-First New Booking</span>
+          </h3>
           <p className="text-xs text-slate-500">
-            Paste a WhatsApp quote to auto-fill, or pick a trip type below — syncs live to Google Sheets.
+            Paste any WhatsApp quotation below — auto-parses instantly. Just add Customer &amp; Pickup, then Save!
           </p>
         </div>
 
@@ -504,7 +594,7 @@ export default function DirectBookingIntakeForm({
             }`}
           >
             <span className="material-symbols-outlined text-sm">request_quote</span>
-            <span>1. Quotation / Enquiry</span>
+            <span>1. Quotation</span>
           </button>
           <button
             type="button"
@@ -521,125 +611,217 @@ export default function DirectBookingIntakeForm({
             }`}
           >
             <span className="material-symbols-outlined text-sm">verified</span>
-            <span>2. Confirmed (Advance Paid)</span>
+            <span>2. Confirmed</span>
           </button>
         </div>
       </div>
 
-      {/* QUICK PASTE WHATSAPP QUOTE / CHAT AUTO-FILL */}
-      <div className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-4 space-y-2.5">
-        <div className="flex items-center justify-between gap-2">
-          <button
-            type="button"
-            onClick={() => setShowPasteBox(v => !v)}
-            className="flex items-center gap-2 text-xs font-bold text-emerald-900"
-          >
-            <span className="material-symbols-outlined text-base text-emerald-600">content_paste_go</span>
-            <span>Quick Paste WhatsApp Quote / Chat (Auto-Fill)</span>
-            <span className="material-symbols-outlined text-sm text-emerald-600">
-              {showPasteBox ? 'expand_less' : 'expand_more'}
+      {/* STEP 1: HERO WHATSAPP QUOTE PASTE ZONE (INSTANT AUTO-PARSE ON PASTE) */}
+      <div className="rounded-2xl border-2 border-emerald-300/80 bg-gradient-to-br from-emerald-50/90 via-white to-emerald-50/40 p-4 space-y-3 shadow-xs">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-extrabold flex items-center justify-center">
+              1
             </span>
-          </button>
-          {waPasteText && (
-            <button
-              type="button"
-              onClick={() => {
-                setWaPasteText('');
-                setParseHighlights([]);
-              }}
-              className="text-[11px] font-semibold text-slate-500 hover:text-slate-800"
-            >
-              Clear
-            </button>
-          )}
-        </div>
-
-        {showPasteBox && (
-          <div className="space-y-2">
-            <textarea
-              rows={3}
-              value={waPasteText}
-              onChange={(e) => setWaPasteText(e.target.value)}
-              placeholder="Paste any Kalidass Travels WhatsApp quote (Multi-Day Revised Tariff, Outstation Q-Ref, 10Hr/100Km Local, Tirupati Tour, or Customer Chat)..."
-              className="w-full text-xs bg-white border border-emerald-200 rounded-xl p-3 text-slate-800 font-mono focus:outline-none focus:border-emerald-500 resize-y"
-            />
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex flex-wrap items-center gap-1.5">
-                {parseHighlights.map((h, i) => (
-                  <span
-                    key={i}
-                    className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 text-[11px] font-bold"
-                  >
-                    ✓ {h}
-                  </span>
-                ))}
-                {suggestedAdvance > 0 && Number(advance) === 0 && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAdvance(suggestedAdvance);
-                      showToast?.(`Applied ₹${suggestedAdvance.toLocaleString('en-IN')} advance`);
-                    }}
-                    className="px-2.5 py-0.5 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 text-[11px] font-bold transition"
-                  >
-                    + Apply ₹{suggestedAdvance.toLocaleString('en-IN')} Advance
-                  </button>
-                )}
+            <div>
+              <div className="text-xs font-extrabold text-emerald-950">
+                Paste WhatsApp Quotation (Auto-Fills Instantly)
               </div>
-              <button
-                type="button"
-                onClick={handleSmartParseWhatsApp}
-                className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 transition"
-              >
-                <span className="material-symbols-outlined text-sm">auto_fix_high</span>
-                <span>Smart Parse &amp; Auto-Fill</span>
-              </button>
+              <div className="text-[11px] text-emerald-700/80">
+                Copy any Kalidass quote from WhatsApp Web or Mobile and paste here — no extra click needed.
+              </div>
             </div>
           </div>
-        )}
-      </div>
 
-      {/* TRIP TYPE SELECTOR PILLS */}
-      <div>
-        <label className="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-2.5">
-          Select Booking Type
-        </label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-          {TRIP_TYPE_META.map(t => {
-            const active = tripCategory === t.id;
-            return (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleClipboardPaste}
+              className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 transition"
+            >
+              <span className="material-symbols-outlined text-sm">content_paste</span>
+              <span>Paste from Clipboard</span>
+            </button>
+            {waPasteText && (
               <button
-                key={t.id}
                 type="button"
-                onClick={() => handleSelectTripCategory(t.id)}
-                className={`p-2.5 rounded-xl border text-left transition flex flex-col gap-0.5 ${
-                  active
-                    ? 'bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-600/20'
-                    : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-white hover:border-blue-300'
-                }`}
+                onClick={resetForm}
+                className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 text-xs font-bold transition"
               >
-                <div className="flex items-center gap-1.5">
-                  <span className={`material-symbols-outlined text-base ${active ? 'text-white' : 'text-blue-600'}`}>
-                    {t.icon}
-                  </span>
-                  <span className="text-xs font-bold leading-tight truncate">{t.short}</span>
-                </div>
-                <span className={`text-[10px] leading-tight truncate ${active ? 'text-blue-100' : 'text-slate-400'}`}>
-                  {t.hint}
-                </span>
+                Clear
               </button>
-            );
-          })}
+            )}
+          </div>
+        </div>
+
+        <textarea
+          rows={hasParsedQuote ? 2 : 4}
+          value={waPasteText}
+          onChange={(e) => setWaPasteText(e.target.value)}
+          onPaste={(e) => {
+            const pasted = e.clipboardData?.getData('text');
+            if (pasted && pasted.trim()) {
+              e.preventDefault();
+              setWaPasteText(pasted);
+              parseAndApplyWhatsAppText(pasted);
+            }
+          }}
+          placeholder="Paste WhatsApp quotation here (Ctrl+V)...&#10;Example: KALIDASS TRAVELS - Chennai ⇄ HVXP+RRW (3 Days), Pickup: Thu, 26 Nov, 06:00 AM, Return: Sat, 28 Nov, 09:00 PM..."
+          className="w-full text-xs bg-white border border-emerald-200 rounded-xl p-3 text-slate-800 font-mono focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/15 resize-y transition-all"
+        />
+
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-1.5">
+            {parseHighlights.map((h, i) => (
+              <span
+                key={i}
+                className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-200 text-[11px] font-bold"
+              >
+                ✓ {h}
+              </span>
+            ))}
+            {suggestedAdvance > 0 && Number(advance) === 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setAdvance(suggestedAdvance);
+                  showToast?.(`Applied ₹${suggestedAdvance.toLocaleString('en-IN')} advance`);
+                }}
+                className="px-2.5 py-0.5 rounded-full bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 text-[11px] font-bold transition"
+              >
+                + Apply ₹{suggestedAdvance.toLocaleString('en-IN')} Advance
+              </button>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2 ml-auto">
+            {waPasteText.trim() && (
+              <button
+                type="button"
+                onClick={() => parseAndApplyWhatsAppText(waPasteText)}
+                className="px-3 py-1 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-900 text-[11px] font-bold flex items-center gap-1 transition"
+              >
+                <span className="material-symbols-outlined text-sm">auto_fix_high</span>
+                <span>Re-Parse</span>
+              </button>
+            )}
+            {!hasParsedQuote && (
+              <button
+                type="button"
+                onClick={() => setShowFullDetails(v => !v)}
+                className="text-[11px] font-bold text-slate-500 hover:text-blue-600 underline"
+              >
+                {showFullDetails ? 'Hide Manual Form' : 'Enter Manually (No Paste)'}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      <form onSubmit={(e) => submitBooking(e, { sendWhatsApp: false })} className="space-y-6">
-        {/* SECTION 1: BOOKER & PASSENGER INFORMATION */}
-        <div className="space-y-3">
+      {/* PARSED QUOTE LIVE SUMMARY CARD (Instant visual confirmation of everything extracted) */}
+      {(hasParsedQuote || Number(agreedRate) > 0) && (
+        <div className="rounded-2xl border border-slate-200 bg-slate-900 text-white p-4 space-y-3 shadow-sm">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="space-y-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-2 py-0.5 rounded-md bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[10px] font-extrabold uppercase tracking-wider">
+                  {tripCategory}
+                </span>
+                {quoteRef && (
+                  <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[11px] font-mono font-bold">
+                    {quoteRef}
+                  </span>
+                )}
+              </div>
+              <div className="text-base font-extrabold text-white">
+                {pickupLocation || 'Chennai'} <span className="text-emerald-400">→</span> {dropLocation || 'Destination'}
+              </div>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-300">
+                <span className="flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm text-emerald-400">calendar_month</span>
+                  <strong>{scheduleSummary}</strong>
+                  {pickupTime ? ` @ ${pickupTime}` : ''}
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm text-blue-400">directions_car</span>
+                  <strong>{vehicle}</strong>
+                </span>
+              </div>
+            </div>
+
+            <div className="text-right shrink-0">
+              <div className="text-[10px] uppercase font-bold text-slate-400">
+                Agreed / Balance
+                {negotiatedDiff > 0 && (
+                  <span className="ml-1.5 text-amber-300">(-₹{negotiatedDiff.toLocaleString('en-IN')} disc.)</span>
+                )}
+              </div>
+              <div className="text-xl font-extrabold font-mono text-emerald-400">
+                ₹{(Number(agreedRate) || 0).toLocaleString('en-IN')}
+              </div>
+              <div className="text-[11px] font-mono text-slate-300">
+                {Number(advance) > 0
+                  ? <>Adv ₹{Number(advance).toLocaleString('en-IN')} • Bal <strong className="text-white">₹{balanceAmt.toLocaleString('en-IN')}</strong></>
+                  : <>No Adv • Full <strong className="text-white">₹{balanceAmt.toLocaleString('en-IN')}</strong> to Driver</>}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-2.5 border-t border-slate-800 text-[11px] text-slate-300">
+            <div className="flex flex-wrap items-center gap-2 font-mono">
+              {Number(includedKm) > 0 && <span className="px-2 py-0.5 rounded bg-slate-800">{includedKm} km pkg</span>}
+              {Number(driverBata) > 0 && <span className="px-2 py-0.5 rounded bg-slate-800">Bata ₹{driverBata}</span>}
+              {Number(statePermit) > 0 && <span className="px-2 py-0.5 rounded bg-slate-800">Permit ₹{statePermit}</span>}
+              {Number(extraKmRate) > 0 && <span className="px-2 py-0.5 rounded bg-slate-800">ExKm ₹{extraKmRate}</span>}
+              {Number(nightStayCharge) > 0 && <span className="px-2 py-0.5 rounded bg-slate-800">Night ₹{nightStayCharge}</span>}
+              <span className="px-2 py-0.5 rounded bg-slate-800 font-sans">{tollPolicy}</span>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowFullDetails(v => !v)}
+              className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-blue-300 font-bold text-[11px] flex items-center gap-1 transition"
+            >
+              <span className="material-symbols-outlined text-sm">edit</span>
+              <span>{showFullDetails ? 'Hide Trip Details' : 'Edit Dates / Vehicle / Terms'}</span>
+            </button>
+          </div>
+
+          {/* Missing items nudge */}
+          {missingItems.length > 0 && (
+            <div className="flex flex-wrap items-center gap-1.5 pt-1">
+              <span className="text-[10px] font-bold uppercase text-amber-300">Next to fill:</span>
+              {missingItems.map((m, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => m.ref?.current?.focus()}
+                  className={`px-2 py-0.5 rounded-full text-[11px] font-bold transition ${
+                    m.optional
+                      ? 'bg-slate-800 text-amber-200 border border-amber-400/30 hover:bg-slate-700'
+                      : 'bg-amber-500 text-slate-950 hover:bg-amber-400'
+                  }`}
+                >
+                  + {m.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      <form onSubmit={(e) => submitBooking(e, { sendWhatsApp: false })} className="space-y-5">
+        {/* STEP 2: CUSTOMER, PICKUP & ADVANCE (ALWAYS IN VIEW — ZERO SCROLLING!) */}
+        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h4 className="text-xs font-bold uppercase text-slate-400 tracking-wider">
-              1. Booker &amp; Passenger Details
-            </h4>
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-blue-600 text-white text-xs font-extrabold flex items-center justify-center">
+                2
+              </span>
+              <h4 className="text-xs font-extrabold uppercase text-slate-700 tracking-wider">
+                Customer, Exact Pickup &amp; Payment
+              </h4>
+            </div>
             <div className="flex items-center gap-2">
               <ContactPickerControl
                 contacts={savedContacts}
@@ -661,22 +843,24 @@ export default function DirectBookingIntakeForm({
                 <span className="material-symbols-outlined text-sm">
                   {showGuestFields ? 'remove_circle_outline' : 'person_add'}
                 </span>
-                <span>{showGuestFields ? 'Hide Guest / Alt Contact' : '+ Different Guest / Alt Phone / Pax'}</span>
+                <span>{showGuestFields ? 'Hide Guest / Pax' : '+ Alt Guest / Pax'}</span>
               </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          {/* Row 1: Customer Name, Mobile, Quote Ref */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
                 Booker / Customer Name <span className="text-red-500">*</span>
               </label>
               <input
+                ref={customerNameRef}
                 type="text"
                 required
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
-                placeholder="e.g. Vivek USA / Aarti"
+                placeholder="e.g. Riddhi Gandhi / Vivek USA"
                 className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
               />
             </div>
@@ -686,31 +870,182 @@ export default function DirectBookingIntakeForm({
                 WhatsApp / Mobile <span className="text-red-500">*</span>
               </label>
               <input
+                ref={phoneRef}
                 type="tel"
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="e.g. 9840100000 or +1 / +880..."
+                placeholder="e.g. 9840100000 or +1 / +44..."
                 className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-mono font-medium focus:outline-none focus:border-blue-500"
               />
             </div>
 
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Existing Quote Ref <span className="text-slate-400 font-normal">(Optional)</span>
+                Quote Ref <span className="text-slate-400 font-normal">(Auto-filled)</span>
               </label>
               <input
                 type="text"
                 value={quoteRef}
                 onChange={(e) => setQuoteRef(e.target.value)}
-                placeholder="e.g. Q-141126-4 / KT/19NOV/02"
+                placeholder="e.g. KT/22NOV/07"
                 className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-mono font-medium focus:outline-none focus:border-blue-500"
               />
             </div>
           </div>
 
+          {/* Row 2: Exact Pickup Address & Destination */}
+          {tripCategory !== 'Multi-Day Custom Itinerary' && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Exact Pickup Address / Landmark
+                </label>
+                <input
+                  ref={pickupLocRef}
+                  type="text"
+                  value={pickupLocation}
+                  onChange={(e) => setPickupLocation(e.target.value)}
+                  placeholder="e.g. New Avadi Rd, Kilpauk / Airport T2"
+                  className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Destination / Route</label>
+                <input
+                  type="text"
+                  value={dropLocation}
+                  onChange={(e) => setDropLocation(e.target.value)}
+                  placeholder="e.g. Tirupati / HVXP+RRW / Madurai"
+                  className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Row 3: Financials + Quick Negotiation & Advance Chips */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+            <div>
+              <div className="flex items-center justify-between gap-1 mb-1">
+                <label className="text-xs font-bold text-slate-700">
+                  Agreed Fare (₹) <span className="text-red-500">*</span>
+                </label>
+                {Number(agreedRate) > 0 && (
+                  <div className="flex items-center gap-1">
+                    {[200, 500, 1000].map(disc => (
+                      <button
+                        key={disc}
+                        type="button"
+                        onClick={() => {
+                          if (!quotedFare) setQuotedFare(Number(agreedRate));
+                          setAgreedRate(Math.max(0, Number(agreedRate) - disc));
+                        }}
+                        title={`Negotiate -₹${disc}`}
+                        className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 transition"
+                      >
+                        -{disc}
+                      </button>
+                    ))}
+                    {negotiatedDiff !== 0 && Number(quotedFare) > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setAgreedRate(Number(quotedFare))}
+                        title="Reset to original quoted fare"
+                        className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 transition"
+                      >
+                        ↺
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+              <input
+                type="number"
+                required
+                value={agreedRate}
+                onChange={(e) => setAgreedRate(e.target.value === '' ? '' : Number(e.target.value))}
+                placeholder="e.g. 23100"
+                className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 font-mono font-bold focus:outline-none focus:border-blue-500"
+              />
+              {negotiatedDiff > 0 && (
+                <div className="mt-1 text-[11px] font-bold text-emerald-700">
+                  Quoted ₹{Number(quotedFare).toLocaleString('en-IN')} → Negotiated -₹{negotiatedDiff.toLocaleString('en-IN')}
+                </div>
+              )}
+              {negotiatedDiff < 0 && Number(quotedFare) > 0 && (
+                <div className="mt-1 text-[11px] font-bold text-blue-700">
+                  Quoted ₹{Number(quotedFare).toLocaleString('en-IN')} → +₹{Math.abs(negotiatedDiff).toLocaleString('en-IN')} added
+                </div>
+              )}
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-xs font-bold text-slate-700">Advance (₹)</label>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setAdvance(0)}
+                    className={`px-1.5 py-0.5 rounded text-[10px] font-bold border transition ${
+                      Number(advance) === 0
+                        ? 'bg-slate-800 text-white border-slate-800'
+                        : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
+                    }`}
+                  >
+                    No Adv
+                  </button>
+                  {[500, 1000].map(amt => (
+                    <button
+                      key={amt}
+                      type="button"
+                      onClick={() => setAdvance(amt)}
+                      className={`px-1.5 py-0.5 rounded text-[10px] font-bold border transition ${
+                        Number(advance) === amt
+                          ? 'bg-blue-600 text-white border-blue-600'
+                          : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
+                      }`}
+                    >
+                      ₹{amt}
+                    </button>
+                  ))}
+                  {Number(agreedRate) > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setAdvance(Number(agreedRate))}
+                      className={`px-1.5 py-0.5 rounded text-[10px] font-bold border transition ${
+                        Number(advance) === Number(agreedRate)
+                          ? 'bg-emerald-600 text-white border-emerald-600'
+                          : 'bg-white text-emerald-700 border-emerald-200 hover:bg-emerald-50'
+                      }`}
+                    >
+                      Full
+                    </button>
+                  )}
+                </div>
+              </div>
+              <input
+                type="number"
+                value={advance}
+                onChange={(e) => setAdvance(Number(e.target.value) || 0)}
+                className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-mono font-bold focus:outline-none focus:border-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Balance To Driver</label>
+              <div className="w-full text-sm bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-mono font-extrabold flex items-center justify-between">
+                <span>₹{balanceAmt.toLocaleString('en-IN')}</span>
+                <span className="text-[10px] font-sans font-semibold text-slate-400">
+                  {Number(advance) === 0 ? 'Full to Driver' : (tollPolicy === 'All-Inclusive' ? 'All-Incl.' : '+ Tolls')}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Optional Alt Guest / Pax Drawer */}
           {showGuestFields && (
-            <div className="space-y-2.5 bg-slate-50 border border-slate-200 rounded-xl p-3.5 animate-fadeIn">
+            <div className="space-y-2.5 bg-white border border-slate-200 rounded-xl p-3.5 animate-fadeIn">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold uppercase text-slate-500">On-Ground Guest / Alternate Contact</span>
                 <ContactPickerControl
@@ -727,551 +1062,511 @@ export default function DirectBookingIntakeForm({
                 />
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
-              <div>
-                <label className="block text-[11px] font-bold text-slate-600 mb-1">On-Ground Guest Name</label>
-                <input
-                  type="text"
-                  value={guestName}
-                  onChange={(e) => setGuestName(e.target.value)}
-                  placeholder="e.g. Mr. Ved Parkash"
-                  className="w-full text-xs bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold text-slate-600 mb-1">Alt / Passenger Phone</label>
-                <input
-                  type="tel"
-                  value={guestPhone}
-                  onChange={(e) => setGuestPhone(e.target.value)}
-                  placeholder="e.g. 9382155220"
-                  className="w-full text-xs bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-mono font-medium focus:outline-none focus:border-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold text-slate-600 mb-1">Pax Count</label>
-                <input
-                  type="text"
-                  value={paxCount}
-                  onChange={(e) => setPaxCount(e.target.value)}
-                  placeholder="e.g. 3 Pax / 6+2 kids"
-                  className="w-full text-xs bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold text-slate-600 mb-1">Hotel / Stay Landmark</label>
-                <input
-                  type="text"
-                  value={hotelName}
-                  onChange={(e) => setHotelName(e.target.value)}
-                  placeholder="e.g. GT Grande, T. Nagar"
-                  className="w-full text-xs bg-white border border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                />
-              </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* SECTION 2: VEHICLE, SCHEDULE & TYPE-ADAPTIVE ITINERARY */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h4 className="text-xs font-bold uppercase text-slate-400 tracking-wider">
-              2. Vehicle &amp; {tripCategory} Details
-            </h4>
-            {computedDays > 1 && (
-              <span className="px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold">
-                {computedDays} Days Trip
-              </span>
-            )}
-          </div>
-
-          {/* Vehicle + Local/Tour/Airport Specific Controls */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Vehicle Type</label>
-              <select
-                value={vehicle}
-                onChange={(e) => handleVehicleChange(e.target.value)}
-                className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-              >
-                {Object.keys(tariffConfig?.vehicles || {}).map(vKey => (
-                  <option key={vKey} value={vKey}>{vKey}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Pickup Date</label>
-              <input
-                type="date"
-                value={pickupDate}
-                onChange={(e) => {
-                  setPickupDate(e.target.value);
-                  if (tripCategory === 'Tour Package' && tourDays > 1) {
-                    setReturnDate(addDaysToIsoDate(e.target.value, tourDays - 1));
-                  }
-                }}
-                className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-              />
-            </div>
-
-            {['Outstation Round Trip', 'Tour Package', 'Multi-Day Custom Itinerary'].includes(tripCategory) ? (
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Return / End Date <span className="text-slate-400 font-normal">({computedDays}D)</span>
-                </label>
-                <input
-                  type="date"
-                  value={returnDate}
-                  min={pickupDate}
-                  onChange={(e) => {
-                    const newRet = e.target.value;
-                    setReturnDate(newRet);
-                    if (tripCategory === 'Outstation Round Trip' && newRet && pickupDate) {
-                      const d = computeTripDays(pickupDate, newRet);
-                      setIncludedKm((vehicleInfo.min_km_per_day || 250) * d);
-                      setDriverBata((vehicleInfo.driver_bata || 500) * d);
-                    }
-                  }}
-                  className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                />
-              </div>
-            ) : (
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Pickup Time</label>
-                <input
-                  type="text"
-                  value={pickupTime}
-                  onChange={(e) => setPickupTime(e.target.value)}
-                  placeholder="e.g. 06:00 AM"
-                  className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                />
-              </div>
-            )}
-          </div>
-
-          {/* LOCAL CHENNAI RENTAL PRESETS */}
-          {tripCategory === 'Local Chennai Rental' && (
-            <div className="bg-blue-50/50 border border-blue-100 rounded-xl p-3.5 space-y-2.5">
-              <div className="text-xs font-bold text-blue-900">Select Local Package (Auto-fills Fare &amp; Over-Limit)</div>
-              <div className="flex flex-wrap gap-2">
-                {LOCAL_PACKAGES.map(pkg => {
-                  const active = localPkgId === pkg.id;
-                  const price = pkg.key ? vehicleInfo[pkg.key] : null;
-                  return (
-                    <button
-                      key={pkg.id}
-                      type="button"
-                      onClick={() => applyLocalPackagePreset(pkg.id)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition ${
-                        active
-                          ? 'bg-blue-600 text-white border-blue-600'
-                          : 'bg-white text-slate-700 border-slate-200 hover:border-blue-300'
-                      }`}
-                    >
-                      {pkg.label}{price ? ` • ₹${price.toLocaleString('en-IN')}` : ''}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* TOUR PACKAGE PRESETS */}
-          {tripCategory === 'Tour Package' && (
-            <div className="bg-amber-50/60 border border-amber-200/80 rounded-xl p-3.5 grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div>
-                <label className="block text-[11px] font-bold text-amber-900 mb-1">Tour Package Preset</label>
-                <select
-                  value={tourKey}
-                  onChange={(e) => applyTourPreset(e.target.value, tourDays, vehicle)}
-                  className="w-full text-xs bg-white border border-amber-200 rounded-lg px-3 py-2 font-semibold text-slate-800"
-                >
-                  {Object.entries(tariffConfig?.tour_packages || {}).map(([key, pkg]) => (
-                    <option key={key} value={key}>{pkg.name}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold text-amber-900 mb-1">Package Duration</label>
-                <div className="flex gap-1.5">
-                  {[1, 2, 3].map(d => (
-                    <button
-                      key={d}
-                      type="button"
-                      onClick={() => applyTourPreset(tourKey, d, vehicle)}
-                      className={`flex-1 py-2 rounded-lg text-xs font-bold border transition ${
-                        tourDays === d
-                          ? 'bg-amber-500 text-slate-950 border-amber-500'
-                          : 'bg-white text-slate-700 border-amber-200 hover:bg-amber-50'
-                      }`}
-                    >
-                      {d} Day{d > 1 ? 's' : ''}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold text-amber-900 mb-1">Pickup Time</label>
-                <input
-                  type="text"
-                  value={pickupTime}
-                  onChange={(e) => setPickupTime(e.target.value)}
-                  placeholder="e.g. 05:00 AM"
-                  className="w-full text-xs bg-white border border-amber-200 rounded-lg px-3 py-2 font-medium text-slate-800"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* AIRPORT TRANSFER FIELDS */}
-          {tripCategory === 'Airport Transfer' && (
-            <div className="bg-sky-50/60 border border-sky-200/80 rounded-xl p-3.5 grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div>
-                <label className="block text-[11px] font-bold text-sky-900 mb-1">Transfer Direction</label>
-                <div className="flex gap-1.5">
-                  {['Pickup', 'Drop'].map(dir => (
-                    <button
-                      key={dir}
-                      type="button"
-                      onClick={() => {
-                        setAirportDirection(dir);
-                        setPackageLabel(`Airport ${dir}`);
-                      }}
-                      className={`flex-1 py-2 rounded-lg text-xs font-bold border transition ${
-                        airportDirection === dir
-                          ? 'bg-sky-600 text-white border-sky-600'
-                          : 'bg-white text-slate-700 border-sky-200'
-                      }`}
-                    >
-                      {dir === 'Pickup' ? '🛬 Arrival Pickup' : '🛫 Departure Drop'}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold text-sky-900 mb-1">Terminal</label>
-                <select
-                  value={terminal}
-                  onChange={(e) => setTerminal(e.target.value)}
-                  className="w-full text-xs bg-white border border-sky-200 rounded-lg px-3 py-2 font-semibold text-slate-800"
-                >
-                  <option value="T1 Domestic">T1 Domestic</option>
-                  <option value="T2 International">T2 International</option>
-                  <option value="T4 Domestic">T4 Domestic</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold text-sky-900 mb-1">Flight Number</label>
-                <input
-                  type="text"
-                  value={flightNumber}
-                  onChange={(e) => setFlightNumber(e.target.value)}
-                  placeholder="e.g. 6E-243 / EK-544"
-                  className="w-full text-xs bg-white border border-sky-200 rounded-lg px-3 py-2 font-mono font-bold uppercase text-slate-800"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* OUTSTATION EXTRA PARAMETERS (Km, Bata, Permit, Pickup Time) */}
-          {(tripCategory === 'Outstation Round Trip' || tripCategory === 'Outstation One-Way Drop') && (
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {tripCategory === 'Outstation Round Trip' && (
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Pickup Time</label>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">On-Ground Guest Name</label>
                   <input
                     type="text"
-                    value={pickupTime}
-                    onChange={(e) => setPickupTime(e.target.value)}
-                    placeholder="e.g. 06:00 AM"
-                    className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-medium"
-                  />
-                </div>
-              )}
-              <div>
-                <label className="block text-[11px] font-bold text-slate-600 mb-1">Included Km</label>
-                <input
-                  type="number"
-                  value={includedKm}
-                  onChange={(e) => setIncludedKm(Number(e.target.value) || 0)}
-                  placeholder="e.g. 900"
-                  className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-mono font-bold"
-                />
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold text-slate-600 mb-1">Driver Bata (₹)</label>
-                <input
-                  type="number"
-                  value={driverBata}
-                  onChange={(e) => setDriverBata(Number(e.target.value) || 0)}
-                  placeholder="e.g. 2000"
-                  className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-mono"
-                />
-              </div>
-              <div>
-                <label className="block text-[11px] font-bold text-slate-600 mb-1">State Permit (₹)</label>
-                <input
-                  type="number"
-                  value={statePermit}
-                  onChange={(e) => setStatePermit(Number(e.target.value) || 0)}
-                  placeholder="e.g. 500"
-                  className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-mono"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* MULTI-DAY CUSTOM ITINERARY BUILDER (Vivek USA style) */}
-          {tripCategory === 'Multi-Day Custom Itinerary' && (
-            <div className="bg-indigo-50/50 border border-indigo-200 rounded-xl p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-xs font-bold text-indigo-950">Day-by-Day Itinerary &amp; Rate Breakdown</div>
-                  <div className="text-[11px] text-indigo-700">
-                    Daily rates automatically sum into Total Agreed Fare.
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={addDayRow}
-                  className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-1 transition"
-                >
-                  <span className="material-symbols-outlined text-sm">add</span>
-                  <span>Add Day</span>
-                </button>
-              </div>
-
-              <div className="space-y-2">
-                {dayPlan.map((row, idx) => (
-                  <div
-                    key={idx}
-                    className="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center bg-white border border-indigo-100 rounded-xl p-2.5"
-                  >
-                    <div className="sm:col-span-2 flex items-center gap-1.5">
-                      <span className="px-2 py-1 rounded-md bg-indigo-100 text-indigo-800 text-[11px] font-extrabold shrink-0">
-                        D{idx + 1}
-                      </span>
-                      <input
-                        type="date"
-                        value={row.date}
-                        onChange={(e) => updateDayRow(idx, 'date', e.target.value)}
-                        className="w-full text-[11px] bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 font-medium"
-                      />
-                    </div>
-                    <div className="sm:col-span-2">
-                      <input
-                        type="text"
-                        value={row.pkg}
-                        onChange={(e) => updateDayRow(idx, 'pkg', e.target.value)}
-                        placeholder="8 Hr / 80 Km"
-                        className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium"
-                      />
-                    </div>
-                    <div className="sm:col-span-5">
-                      <input
-                        type="text"
-                        value={row.duty}
-                        onChange={(e) => updateDayRow(idx, 'duty', e.target.value)}
-                        placeholder="e.g. Airport T1 Pickup (11:20 AM) + Chennai Local"
-                        className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium"
-                      />
-                    </div>
-                    <div className="sm:col-span-2">
-                      <input
-                        type="number"
-                        value={row.rate || ''}
-                        onChange={(e) => updateDayRow(idx, 'rate', Number(e.target.value) || 0)}
-                        placeholder="₹ Rate"
-                        className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-mono font-bold text-slate-900"
-                      />
-                    </div>
-                    <div className="sm:col-span-1 flex justify-end">
-                      <button
-                        type="button"
-                        onClick={() => removeDayRow(idx)}
-                        disabled={dayPlan.length <= 1}
-                        className="p-1.5 text-slate-400 hover:text-red-500 disabled:opacity-30 rounded-lg"
-                        title="Remove day"
-                      >
-                        <span className="material-symbols-outlined text-sm">close</span>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                <div>
-                  <label className="block text-[11px] font-bold text-indigo-900 mb-1">Day 1 Pickup Time</label>
-                  <input
-                    type="text"
-                    value={pickupTime}
-                    onChange={(e) => setPickupTime(e.target.value)}
-                    placeholder="e.g. 11:20 AM"
-                    className="w-full text-xs bg-white border border-indigo-200 rounded-lg px-3 py-2 font-medium"
+                    value={guestName}
+                    onChange={(e) => setGuestName(e.target.value)}
+                    placeholder="e.g. Mr. Ved Parkash"
+                    className="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-indigo-900 mb-1">Primary Pickup / Hotel</label>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Alt / Passenger Phone</label>
+                  <input
+                    type="tel"
+                    value={guestPhone}
+                    onChange={(e) => setGuestPhone(e.target.value)}
+                    placeholder="e.g. 9382155220"
+                    className="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-mono font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Pax Count</label>
                   <input
                     type="text"
-                    value={pickupLocation}
-                    onChange={(e) => setPickupLocation(e.target.value)}
-                    placeholder="e.g. Airport T1 / GT Grande Hotel, T. Nagar"
-                    className="w-full text-xs bg-white border border-indigo-200 rounded-lg px-3 py-2 font-medium"
+                    value={paxCount}
+                    onChange={(e) => setPaxCount(e.target.value)}
+                    placeholder="e.g. 10 Pax"
+                    className="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Hotel / Stay Landmark</label>
+                  <input
+                    type="text"
+                    value={hotelName}
+                    onChange={(e) => setHotelName(e.target.value)}
+                    placeholder="e.g. GT Grande, T. Nagar"
+                    className="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
                   />
                 </div>
               </div>
             </div>
           )}
 
-          {/* STANDARD PICKUP & DROP ADDRESSES (for non-Custom Day-by-Day) */}
-          {tripCategory !== 'Multi-Day Custom Itinerary' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Pickup Address / Landmark</label>
-                <input
-                  type="text"
-                  value={pickupLocation}
-                  onChange={(e) => setPickupLocation(e.target.value)}
-                  placeholder="e.g. Airport T2 Arrival / Anna Nagar East"
-                  className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Destination / Route</label>
-                <input
-                  type="text"
-                  value={dropLocation}
-                  onChange={(e) => setDropLocation(e.target.value)}
-                  placeholder="e.g. Puducherry → Pichavaram → Chennai Airport"
-                  className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
-                />
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* SECTION 3: FARE, BILLING TERMS & FINANCIALS */}
-        <div className="space-y-3.5">
-          <div className="flex items-center justify-between">
-            <h4 className="text-xs font-bold uppercase text-slate-400 tracking-wider">
-              3. Fare, Billing Terms &amp; Financials
-            </h4>
-            {negotiatedDiff > 0 && (
-              <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold">
-                Negotiated Discount: -₹{negotiatedDiff.toLocaleString('en-IN')}
-              </span>
-            )}
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                Agreed Rate (₹) <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                required
-                value={agreedRate}
-                onChange={(e) => setAgreedRate(e.target.value === '' ? '' : Number(e.target.value))}
-                placeholder="e.g. 8000"
-                className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-900 font-mono font-bold focus:outline-none focus:border-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-500 mb-1">
-                Quoted Base (₹) <span className="text-[10px] font-normal">(Opt.)</span>
-              </label>
-              <input
-                type="number"
-                value={quotedFare}
-                onChange={(e) => setQuotedFare(e.target.value === '' ? '' : Number(e.target.value))}
-                placeholder="Before discount"
-                className="w-full text-sm bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-600 font-mono focus:outline-none focus:border-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Advance Received (₹)</label>
-              <input
-                type="number"
-                value={advance}
-                onChange={(e) => setAdvance(Number(e.target.value) || 0)}
-                className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-mono font-medium focus:outline-none focus:border-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Balance To Collect</label>
-              <div className="w-full text-sm bg-slate-100 border border-slate-200 rounded-xl px-3.5 py-2.5 text-slate-900 font-mono font-extrabold">
-                ₹{balanceAmt.toLocaleString('en-IN')}
-              </div>
-            </div>
-          </div>
-
-          {/* Compact Billing Terms Strip */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 border border-slate-200 rounded-xl p-3">
-            <div>
-              <label className="block text-[11px] font-bold text-slate-600 mb-1">Toll &amp; Parking Policy</label>
-              <select
-                value={tollPolicy}
-                onChange={(e) => setTollPolicy(e.target.value)}
-                className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-semibold text-slate-800"
-              >
-                <option value="Extra at Actuals">Extra at Actuals</option>
-                <option value="All-Inclusive">All-Inclusive (Included)</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-[11px] font-bold text-slate-600 mb-1">Extra Km Rate (₹/km)</label>
-              <input
-                type="number"
-                value={extraKmRate}
-                onChange={(e) => setExtraKmRate(Number(e.target.value) || 0)}
-                className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-mono font-semibold"
-              />
-            </div>
-            <div>
-              <label className="block text-[11px] font-bold text-slate-600 mb-1">Extra Hr Rate (₹/hr)</label>
-              <input
-                type="number"
-                value={extraHrRate}
-                onChange={(e) => setExtraHrRate(Number(e.target.value) || 0)}
-                className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-mono font-semibold"
-              />
-            </div>
-            <div>
-              <label className="block text-[11px] font-bold text-slate-600 mb-1">Night Stay (₹)</label>
-              <input
-                type="number"
-                value={nightStayCharge}
-                onChange={(e) => setNightStayCharge(Number(e.target.value) || 0)}
-                placeholder="e.g. 350"
-                className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-mono font-semibold"
-              />
-            </div>
-          </div>
-
+          {/* Notes */}
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1">
-              Special Instructions / Passenger Notes
+              Special Instructions / Notes <span className="text-slate-400 font-normal">(Optional)</span>
             </label>
-            <textarea
-              rows={2}
+            <input
+              type="text"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. Needs Hindi-speaking driver, baby seat, waiting at US Consulate, darshan pending till Feb..."
-              className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500 resize-y"
+              placeholder="e.g. Needs Hindi-speaking driver, luggage carrier, waiting at gate..."
+              className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
             />
           </div>
         </div>
 
+        {/* STEP 3: COLLAPSIBLE FULL TRIP, DATES, VEHICLE & BILLING TERMS */}
+        <div className="rounded-2xl border border-slate-200 overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setShowFullDetails(v => !v)}
+            className="w-full px-4 py-3 bg-slate-50 hover:bg-slate-100/80 flex items-center justify-between gap-2 transition text-left"
+          >
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-slate-200 text-slate-700 text-xs font-extrabold flex items-center justify-center">
+                3
+              </span>
+              <div>
+                <span className="text-xs font-extrabold uppercase text-slate-700 tracking-wider">
+                  Trip Type, Dates, Vehicle &amp; Billing Terms
+                </span>
+                <span className="block text-[11px] text-slate-500">
+                  {vehicle} • {scheduleSummary}{pickupTime ? ` @ ${pickupTime}` : ''}
+                  {Number(includedKm) > 0 ? ` • ${includedKm} km` : ''}
+                  {Number(driverBata) > 0 ? ` • Bata ₹${driverBata}` : ''}
+                </span>
+              </div>
+            </div>
+            <span className="text-xs font-bold text-blue-600 flex items-center gap-1 shrink-0">
+              <span>{showFullDetails ? 'Hide' : 'Edit'}</span>
+              <span className="material-symbols-outlined text-base">
+                {showFullDetails ? 'expand_less' : 'expand_more'}
+              </span>
+            </span>
+          </button>
+
+          {showFullDetails && (
+            <div className="p-4 space-y-5 bg-white border-t border-slate-100 animate-fadeIn">
+              {/* Trip Type Pills */}
+              <div>
+                <label className="block text-xs font-bold uppercase text-slate-400 tracking-wider mb-2">
+                  Booking Type
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+                  {TRIP_TYPE_META.map(t => {
+                    const active = tripCategory === t.id;
+                    return (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => handleSelectTripCategory(t.id)}
+                        className={`p-2.5 rounded-xl border text-left transition flex flex-col gap-0.5 ${
+                          active
+                            ? 'bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-600/20'
+                            : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-white hover:border-blue-300'
+                        }`}
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <span className={`material-symbols-outlined text-base ${active ? 'text-white' : 'text-blue-600'}`}>
+                            {t.icon}
+                          </span>
+                          <span className="text-xs font-bold leading-tight truncate">{t.short}</span>
+                        </div>
+                        <span className={`text-[10px] leading-tight truncate ${active ? 'text-blue-100' : 'text-slate-400'}`}>
+                          {t.hint}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Vehicle + Dates */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Vehicle Type</label>
+                  <select
+                    value={vehicle}
+                    onChange={(e) => handleVehicleChange(e.target.value)}
+                    className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
+                  >
+                    {Object.keys(tariffConfig?.vehicles || {}).map(vKey => (
+                      <option key={vKey} value={vKey}>{vKey}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Pickup Date</label>
+                  <input
+                    type="date"
+                    value={pickupDate}
+                    onChange={(e) => {
+                      setPickupDate(e.target.value);
+                      if (tripCategory === 'Tour Package' && tourDays > 1) {
+                        setReturnDate(addDaysToIsoDate(e.target.value, tourDays - 1));
+                      }
+                    }}
+                    className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                {['Outstation Round Trip', 'Tour Package', 'Multi-Day Custom Itinerary'].includes(tripCategory) ? (
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">
+                      Return / End Date <span className="text-slate-400 font-normal">({computedDays}D)</span>
+                    </label>
+                    <input
+                      type="date"
+                      value={returnDate}
+                      min={pickupDate}
+                      onChange={(e) => {
+                        const newRet = e.target.value;
+                        setReturnDate(newRet);
+                        if (tripCategory === 'Outstation Round Trip' && newRet && pickupDate) {
+                          const d = computeTripDays(pickupDate, newRet);
+                          setIncludedKm((vehicleInfo.min_km_per_day || 250) * d);
+                          setDriverBata((vehicleInfo.driver_bata || 500) * d);
+                        }
+                      }}
+                      className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Pickup Time</label>
+                    <input
+                      type="text"
+                      value={pickupTime}
+                      onChange={(e) => setPickupTime(e.target.value)}
+                      placeholder="e.g. 06:00 AM"
+                      className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* LOCAL CHENNAI RENTAL PRESETS */}
+              {tripCategory === 'Local Chennai Rental' && (
+                <div className="bg-blue-50/50 border border-blue-100 rounded-xl p-3.5 space-y-2.5">
+                  <div className="text-xs font-bold text-blue-900">Select Local Package (Auto-fills Fare &amp; Over-Limit)</div>
+                  <div className="flex flex-wrap gap-2">
+                    {LOCAL_PACKAGES.map(pkg => {
+                      const active = localPkgId === pkg.id;
+                      const price = pkg.key ? vehicleInfo[pkg.key] : null;
+                      return (
+                        <button
+                          key={pkg.id}
+                          type="button"
+                          onClick={() => applyLocalPackagePreset(pkg.id)}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition ${
+                            active
+                              ? 'bg-blue-600 text-white border-blue-600'
+                              : 'bg-white text-slate-700 border-slate-200 hover:border-blue-300'
+                          }`}
+                        >
+                          {pkg.label}{price ? ` • ₹${price.toLocaleString('en-IN')}` : ''}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* TOUR PACKAGE PRESETS */}
+              {tripCategory === 'Tour Package' && (
+                <div className="bg-amber-50/60 border border-amber-200/80 rounded-xl p-3.5 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-bold text-amber-900 mb-1">Tour Package Preset</label>
+                    <select
+                      value={tourKey}
+                      onChange={(e) => applyTourPreset(e.target.value, tourDays, vehicle)}
+                      className="w-full text-xs bg-white border border-amber-200 rounded-lg px-3 py-2 font-semibold text-slate-800"
+                    >
+                      {Object.entries(tariffConfig?.tour_packages || {}).map(([key, pkg]) => (
+                        <option key={key} value={key}>{pkg.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-amber-900 mb-1">Package Duration</label>
+                    <div className="flex gap-1.5">
+                      {[1, 2, 3].map(d => (
+                        <button
+                          key={d}
+                          type="button"
+                          onClick={() => applyTourPreset(tourKey, d, vehicle)}
+                          className={`flex-1 py-2 rounded-lg text-xs font-bold border transition ${
+                            tourDays === d
+                              ? 'bg-amber-500 text-slate-950 border-amber-500'
+                              : 'bg-white text-slate-700 border-amber-200 hover:bg-amber-50'
+                          }`}
+                        >
+                          {d} Day{d > 1 ? 's' : ''}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-amber-900 mb-1">Pickup Time</label>
+                    <input
+                      type="text"
+                      value={pickupTime}
+                      onChange={(e) => setPickupTime(e.target.value)}
+                      placeholder="e.g. 05:00 AM"
+                      className="w-full text-xs bg-white border border-amber-200 rounded-lg px-3 py-2 font-medium text-slate-800"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* AIRPORT TRANSFER FIELDS */}
+              {tripCategory === 'Airport Transfer' && (
+                <div className="bg-sky-50/60 border border-sky-200/80 rounded-xl p-3.5 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-bold text-sky-900 mb-1">Transfer Direction</label>
+                    <div className="flex gap-1.5">
+                      {['Pickup', 'Drop'].map(dir => (
+                        <button
+                          key={dir}
+                          type="button"
+                          onClick={() => {
+                            setAirportDirection(dir);
+                            setPackageLabel(`Airport ${dir}`);
+                          }}
+                          className={`flex-1 py-2 rounded-lg text-xs font-bold border transition ${
+                            airportDirection === dir
+                              ? 'bg-sky-600 text-white border-sky-600'
+                              : 'bg-white text-slate-700 border-sky-200'
+                          }`}
+                        >
+                          {dir === 'Pickup' ? '🛬 Arrival Pickup' : '🛫 Departure Drop'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-sky-900 mb-1">Terminal</label>
+                    <select
+                      value={terminal}
+                      onChange={(e) => setTerminal(e.target.value)}
+                      className="w-full text-xs bg-white border border-sky-200 rounded-lg px-3 py-2 font-semibold text-slate-800"
+                    >
+                      <option value="T1 Domestic">T1 Domestic</option>
+                      <option value="T2 International">T2 International</option>
+                      <option value="T4 Domestic">T4 Domestic</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-sky-900 mb-1">Flight Number</label>
+                    <input
+                      type="text"
+                      value={flightNumber}
+                      onChange={(e) => setFlightNumber(e.target.value)}
+                      placeholder="e.g. 6E-243 / EK-544"
+                      className="w-full text-xs bg-white border border-sky-200 rounded-lg px-3 py-2 font-mono font-bold uppercase text-slate-800"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* OUTSTATION EXTRA PARAMETERS */}
+              {(tripCategory === 'Outstation Round Trip' || tripCategory === 'Outstation One-Way Drop') && (
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {tripCategory === 'Outstation Round Trip' && (
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-600 mb-1">Pickup Time</label>
+                      <input
+                        type="text"
+                        value={pickupTime}
+                        onChange={(e) => setPickupTime(e.target.value)}
+                        placeholder="e.g. 06:00 AM"
+                        className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-medium"
+                      />
+                    </div>
+                  )}
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Included Km</label>
+                    <input
+                      type="number"
+                      value={includedKm}
+                      onChange={(e) => setIncludedKm(Number(e.target.value) || 0)}
+                      placeholder="e.g. 900"
+                      className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-mono font-bold"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Driver Bata (₹)</label>
+                    <input
+                      type="number"
+                      value={driverBata}
+                      onChange={(e) => setDriverBata(Number(e.target.value) || 0)}
+                      placeholder="e.g. 2400"
+                      className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-600 mb-1">State Permit (₹)</label>
+                    <input
+                      type="number"
+                      value={statePermit}
+                      onChange={(e) => setStatePermit(Number(e.target.value) || 0)}
+                      placeholder="e.g. 0"
+                      className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-mono"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* MULTI-DAY CUSTOM ITINERARY BUILDER */}
+              {tripCategory === 'Multi-Day Custom Itinerary' && (
+                <div className="bg-indigo-50/50 border border-indigo-200 rounded-xl p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-xs font-bold text-indigo-950">Day-by-Day Itinerary &amp; Rate Breakdown</div>
+                      <div className="text-[11px] text-indigo-700">Daily rates automatically sum into Total Agreed Fare.</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={addDayRow}
+                      className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-1 transition"
+                    >
+                      <span className="material-symbols-outlined text-sm">add</span>
+                      <span>Add Day</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-2">
+                    {dayPlan.map((row, idx) => (
+                      <div
+                        key={idx}
+                        className="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center bg-white border border-indigo-100 rounded-xl p-2.5"
+                      >
+                        <div className="sm:col-span-2 flex items-center gap-1.5">
+                          <span className="px-2 py-1 rounded-md bg-indigo-100 text-indigo-800 text-[11px] font-extrabold shrink-0">
+                            D{idx + 1}
+                          </span>
+                          <input
+                            type="date"
+                            value={row.date}
+                            onChange={(e) => updateDayRow(idx, 'date', e.target.value)}
+                            className="w-full text-[11px] bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 font-medium"
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <input
+                            type="text"
+                            value={row.pkg}
+                            onChange={(e) => updateDayRow(idx, 'pkg', e.target.value)}
+                            placeholder="8 Hr / 80 Km"
+                            className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium"
+                          />
+                        </div>
+                        <div className="sm:col-span-5">
+                          <input
+                            type="text"
+                            value={row.duty}
+                            onChange={(e) => updateDayRow(idx, 'duty', e.target.value)}
+                            placeholder="e.g. Airport T1 Pickup + Chennai Local"
+                            className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-medium"
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <input
+                            type="number"
+                            value={row.rate || ''}
+                            onChange={(e) => updateDayRow(idx, 'rate', Number(e.target.value) || 0)}
+                            placeholder="₹ Rate"
+                            className="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 font-mono font-bold text-slate-900"
+                          />
+                        </div>
+                        <div className="sm:col-span-1 flex justify-end">
+                          <button
+                            type="button"
+                            onClick={() => removeDayRow(idx)}
+                            disabled={dayPlan.length <= 1}
+                            className="p-1.5 text-slate-400 hover:text-red-500 disabled:opacity-30 rounded-lg"
+                            title="Remove day"
+                          >
+                            <span className="material-symbols-outlined text-sm">close</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Billing Terms & Quoted Base */}
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 bg-slate-50 border border-slate-200 rounded-xl p-3">
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Quoted Base (₹)</label>
+                  <input
+                    type="number"
+                    value={quotedFare}
+                    onChange={(e) => setQuotedFare(e.target.value === '' ? '' : Number(e.target.value))}
+                    placeholder="Opt."
+                    className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Toll &amp; Parking</label>
+                  <select
+                    value={tollPolicy}
+                    onChange={(e) => setTollPolicy(e.target.value)}
+                    className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-semibold text-slate-800"
+                  >
+                    <option value="Extra at Actuals">Extra at Actuals</option>
+                    <option value="All-Inclusive">All-Inclusive</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Extra Km (₹/km)</label>
+                  <input
+                    type="number"
+                    value={extraKmRate}
+                    onChange={(e) => setExtraKmRate(Number(e.target.value) || 0)}
+                    className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-mono font-semibold"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Extra Hr (₹/hr)</label>
+                  <input
+                    type="number"
+                    value={extraHrRate}
+                    onChange={(e) => setExtraHrRate(Number(e.target.value) || 0)}
+                    className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-mono font-semibold"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Night Stay (₹)</label>
+                  <input
+                    type="number"
+                    value={nightStayCharge}
+                    onChange={(e) => setNightStayCharge(Number(e.target.value) || 0)}
+                    placeholder="e.g. 350"
+                    className="w-full text-xs bg-white border border-slate-300 rounded-lg px-2.5 py-2 font-mono font-semibold"
+                  />
+                </div>
+              </div>
+
+              {negotiatedDiff > 0 && (
+                <div className="text-xs font-bold text-emerald-700">
+                  Negotiated Discount: -₹{negotiatedDiff.toLocaleString('en-IN')}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
         {/* FOOTER ACTIONS */}
-        <div className="flex flex-wrap items-center justify-end gap-2.5 pt-4 border-t border-slate-100">
+        <div className="flex flex-wrap items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
           <button
             type="button"
             onClick={onCancel}
@@ -1301,7 +1596,7 @@ export default function DirectBookingIntakeForm({
               {bookingStatus === 'Quotation' ? 'request_quote' : 'verified'}
             </span>
             <span>
-              {bookingStatus === 'Quotation' ? 'Save to 1. Quotation / Enquiry' : 'Save to 2. Confirmed'}
+              {bookingStatus === 'Quotation' ? 'Save to 1. Quotation' : 'Save to 2. Confirmed'}
             </span>
           </button>
         </div>

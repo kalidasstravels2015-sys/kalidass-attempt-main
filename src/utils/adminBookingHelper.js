@@ -478,7 +478,15 @@ function detectVehicleFromText(text, tariffConfig) {
 }
 
 export function parseWhatsAppBookingText(rawText, tariffConfig = {}) {
-  const text = String(rawText || '').trim();
+  const text = String(rawText || '')
+    // Strip invisible Unicode directional/zero-width marks injected by WhatsApp Web/Mobile
+    .replace(/[\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g, '')
+    // Normalize non-breaking / narrow spaces (e.g. "06:00\u202FAM") to regular spaces
+    .replace(/[\u00A0\u202F]/g, ' ')
+    // Strip WhatsApp bold/italic formatting markers (*text*, _text_) without breaking bullets
+    .replace(/\*([^*\n\r]+)\*/g, '$1')
+    .replace(/\b_([^_\n\r]+)_\b/g, '$1')
+    .trim();
   if (!text) return { parsed: {}, highlights: [] };
 
   const lower = text.toLowerCase();

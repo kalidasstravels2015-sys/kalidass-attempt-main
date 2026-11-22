@@ -104,7 +104,6 @@ RULES:
    - If they ask to add tolls/permits (e.g. "Add Tirumala permit ₹500", "Add AP border tax"), add it cleanly to EXTRA CHARGES or the fare breakdown.
    - If they specify pickup time or location (e.g. "Pickup at 4:30 AM Chennai Airport T2"), update the TRIP DETAILS section.
    - If they ask to change vehicle options or focus (e.g. "Only Dzire and Innova", "Remove tempo"), modify the VEHICLE FARE OPTIONS section accordingly.
-   - If they ask for a night stay charge, add driver night accommodation (₹350/night).
    - If they ask for Tamil greeting or friendly local touch, add appropriate greetings (e.g. "வணக்கம் / Hello").
    - If they ask to make it shorter/punchier, condense bullet points while retaining rates, vehicle, and booking terms.
 2. Maintain standard WhatsApp formatting:
@@ -163,13 +162,6 @@ RULES:
     const timeMatch = instruction.match(/(\d{1,2}(?::\d{2})?\s*(?:am|pm|a\.m\.|p\.m\.))/i);
     if (timeMatch && fallbackText.includes('Dates:')) {
       fallbackText = fallbackText.replace(/(Dates:[^\n]+)/, `$1\n• Reporting Time: ${timeMatch[1].toUpperCase()} sharp`);
-    }
-
-    // Check night stay
-    if (lowerInst.includes('night stay') || lowerInst.includes('lodging') || lowerInst.includes('driver stay')) {
-      if (!fallbackText.includes('Driver Night Stay: ₹350')) {
-        fallbackText = fallbackText.replace(/EXTRA CHARGES/i, 'EXTRA CHARGES\n• Driver Night Stay: ₹350 per night (payable to driver)');
-      }
     }
 
     // Check Tamil greeting
@@ -410,7 +402,6 @@ VEHICLE OPTIONS:
 ${multiVehicleLines}
 
 Toll & Parking: Extra (Pay as per actual slip)
-Driver night stay: ₹350 (only if hotel has no driver room, 10 PM - 6 AM)
 
 To confirm: Call +91 89395 39211 (₹500 advance)`;
 
@@ -436,7 +427,6 @@ Vehicle: ${extracted.vehicleKey} AC
 
 *Over-limit (Only if > ${billableKm.toLocaleString('en-IN')} km):*
 • Extra km: ₹${ratePerKm} / km
-• Night drive (10 PM–6 AM): ₹350
 
 *To Confirm:*
 • Advance now: ₹500

@@ -13,7 +13,6 @@ import tariffConfig from '../data/tariff_config.json';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { trackCalculatorQuote, markQuoteConverted, trackEvent } from '../lib/analytics';
 import { getNextQuotationId, peekNextQuotationId } from '../utils/sequenceGenerator';
-import { logBookingToGoogleSheet } from '../utils/recordWebsiteBooking';
 import { useVirtualKeyboard } from '../hooks/useVirtualKeyboard';
 
 // ── Calibrated highway distances from Chennai (km) ────────────────────────
@@ -1053,31 +1052,7 @@ export default function DriverFeeEstimator({
                 <WhatsAppButton
                   href={result.whatsapp}
                   onClick={() => {
-                    const bookingPayload = {
-                      bookingId: quoteRefId,
-                      package: 'Acting Driver',
-                      tripCategory: result.type === 'round' ? `Acting Driver Round Trip (${days} Days)` : 'Acting Driver One-Way Drop',
-                      route: `${pickup.trim() || 'Chennai'} ➔ ${drop.trim() || 'Outstation'}`,
-                      pickup: pickup.trim() || 'Chennai',
-                      drop: drop.trim() || 'Outstation',
-                      pickupDate: travelDate || new Date().toISOString().split('T')[0],
-                      pickupTime: reportingTime || '06:00 AM',
-                      travelDateTime: travelDate ? `${travelDate}${reportingTime ? ' @ ' + reportingTime : ''}` : '',
-                      vehicle: `Owner Car: ${vehicle.label} (${gear === 'automatic' ? 'Auto' : 'Manual'})`,
-                      fare: result.total,
-                      advance: 0,
-                      name: operatorCallerName || 'Acting Driver WhatsApp Lead',
-                      phone: operatorCallerPhone || '',
-                      notes: `Acting Driver Quote: ${quoteRefId} (${pickup.trim()} ➔ ${drop.trim()})`
-                    };
-                    logBookingToGoogleSheet(bookingPayload);
                     if (typeof fetch === 'function') {
-                      fetch('/api/record-booking', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(bookingPayload),
-                        keepalive: true
-                      }).catch(() => {});
                       fetch('/api/next-quote-id', { method: 'POST', keepalive: true })
                         .then(res => res.json())
                         .then(data => {

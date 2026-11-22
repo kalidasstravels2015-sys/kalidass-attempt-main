@@ -39,7 +39,6 @@ const QUICK_ADJUSTMENTS = [
   { label: '⚡ ₹300 Off', prompt: 'Give ₹300 special owner discount on the total estimate' },
   { label: '⚡ ₹500 Off', prompt: 'Give ₹500 special owner discount on the total estimate' },
   { label: '⛰️ Include FASTag Tolls (+₹400)', prompt: 'Include highway FASTag tolls (₹400) directly inside the package total' },
-  { label: '🌙 Night Stay (+₹350)', prompt: 'Add ₹350 driver night accommodation allowance under extra charges' },
   { label: '⏰ Pickup: 4:30 AM', prompt: 'Add morning 4:30 AM sharp pickup reporting time in trip details' },
   { label: '✂️ Shorter & Punchier', prompt: 'Condense this quote to be shorter, punchier, and faster to read on mobile WhatsApp' },
   { label: '🇮🇳 Tamil Greeting', prompt: 'Add polite Tamil & English opening: "வணக்கம் / Hello Sir/Madam, greetings from Kalidass Travels!"' }
@@ -282,7 +281,6 @@ VEHICLE OPTIONS:
 ${multiLines}
 
 Toll & Parking: Extra (Pay as per actual slip)
-Driver night stay: ₹350 (only if hotel has no driver room, 10 PM - 6 AM)
 
 To confirm: Call +91 89395 39211 (₹500 advance)`;
 
@@ -309,7 +307,6 @@ Vehicle: ${vehicleKey} AC
 
 *Over-limit (Only if > ${primaryCalc.billableKm.toLocaleString('en-IN')} km):*
 • Extra km: ₹${primaryCalc.rate} / km
-• Night drive (10 PM–6 AM): ₹350
 
 *To Confirm:*
 • Advance now: ₹500

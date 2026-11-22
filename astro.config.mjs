@@ -476,49 +476,8 @@ ${promptCtx}`;
             }
 
             if (req.method === 'POST' && url === '/api/record-booking') {
-              let body = '';
-              req.on('data', (chunk) => { body += chunk; });
-              req.on('end', () => {
-                try {
-                  const data = JSON.parse(body || '{}');
-                  const csvPath = path.resolve(process.cwd(), 'Kalidass_Operations_Control_2026.csv');
-                  let bookingId = data.bookingId;
-                  if (fs.existsSync(csvPath)) {
-                    const content = fs.readFileSync(csvPath, 'utf8');
-                    const lines = content.trim().split(/\r?\n/).filter(Boolean);
-                    const rowNum = lines.length;
-
-                    if (!bookingId) {
-                      bookingId = `#KT-BK-${100 + rowNum}`;
-                    }
-
-                    const guestNamePhone = `${data.name || 'Guest'} (+91 ${data.phone || '9840100000'})`;
-                    const pickupTimeAndDate = `${data.pickupDate || 'Tomorrow'} @ ${data.pickupTime || '04:30 AM'}`;
-                    const cleanAddress = (data.pickupAddress || 'Chennai').replace(/"/g, '""');
-
-                    // Vehicle normalization
-                    const vLow = (data.vehicle || '').toLowerCase();
-                    let vehCat = 'Sedan';
-                    if (vLow.includes('tempo') || vLow.includes('traveller')) vehCat = 'Tempo';
-                    else if (vLow.includes('crysta')) vehCat = 'Crysta';
-                    else if (vLow.includes('innova')) vehCat = 'Innova';
-                    else if (vLow.includes('ertiga') || vLow.includes('xl6')) vehCat = 'Ertiga';
-
-                    const partySize = data.passengers || '4 Seats';
-                    const fareNum = parseInt(String(data.fare || '').replace(/[^0-9]/g, ''), 10) || 6000;
-                    const payoutNum = Math.round(fareNum * 0.8);
-
-                    const newRow = `${bookingId},${guestNamePhone},${pickupTimeAndDate},"${cleanAddress}",${vehCat},${partySize},Pending,Pending,Unassigned,Pending,${fareNum},${payoutNum},=K${rowNum}-L${rowNum},Unreconciled\n`;
-                    fs.appendFileSync(csvPath, newRow, 'utf8');
-                  }
-                  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-                  res.end(JSON.stringify({ success: true, bookingId }));
-                } catch (err) {
-                  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-                  res.statusCode = 500;
-                  res.end(JSON.stringify({ error: err.message }));
-                }
-              });
+              res.setHeader('Content-Type', 'application/json; charset=utf-8');
+              res.end(JSON.stringify({ success: true, skipped: true, reason: 'Website lead auto-sync disabled; use Admin -> New Booking.' }));
               return;
             }
 

@@ -44,6 +44,31 @@ const LEGACY_STORAGE_KEYS = ['kt_admin_offline_trips_backup_v1', 'kt_admin_drive
 const GOOGLE_REVIEW_URL = 'https://share.google/1IOq41QwMkhDJvrLY';
 const DRIVER_LANGUAGES = ['Tamil', 'English', 'Telugu', 'Kannada', 'Malayalam', 'Hindi'];
 
+// Exclude legacy/auto-logged website WhatsApp click leads from Live Dispatch Unassigned.
+// Never hides trips that already have a driver assigned or are On Trip / Completed.
+function isAutoWebsiteLead(trip) {
+  if (!trip) return false;
+  const status = normalizeManifestStatus(trip.manifestStatus);
+  if (status === 'On Trip' || status === 'Completed') return false;
+  if (String(trip.driverName || '').trim()) return false;
+
+  const name = String(trip.customerName || '').trim().toLowerCase();
+  const notes = String(trip.notes || '').trim().toLowerCase();
+  const cat = String(trip.tripCategory || '').trim().toLowerCase();
+  const phone = String(trip.phone || '').trim();
+
+  return (
+    name === 'website whatsapp lead' ||
+    name === 'direct whatsapp guest' ||
+    name === 'acting driver whatsapp lead' ||
+    name === 'vehicle relocation whatsapp lead' ||
+    notes.startsWith('website whatsapp click:') ||
+    notes === 'booked via website whatsapp engine' ||
+    notes === 'booked via website whatsapp' ||
+    (cat === 'website lead' && !phone)
+  );
+}
+
 function normalizeLanguages(val, fallback = []) {
   if (Array.isArray(val)) {
     const cleaned = val.map(v => String(v || '').trim()).filter(Boolean);
@@ -451,7 +476,7 @@ export default function FastOperationsDesk() {
           notes: row.notes || '',
           createdAt: row.createdAt || new Date().toISOString(),
           updatedAt: row.updatedAt || new Date().toISOString()
-        })).reverse();
+        })).filter(trip => !isAutoWebsiteLead(trip)).reverse();
         setTrips(formatted);
 
         // 2-way Drivers sync (when Apps Script v2 is deployed)
@@ -817,7 +842,6 @@ Vehicle: ${calcVehicle} AC
 
 *Over-limit (Only if > ${calculatedFare.chargeableKm} km):*
 • Extra km: ₹${calculatedFare.extraKmRate} / km
-• Night drive (10 PM–6 AM): ₹350
 
 *To Confirm:*
 • Advance now: ₹${calculatedFare.advanceAmt.toLocaleString('en-IN')}
@@ -1433,6 +1457,7 @@ Warm regards,
     const tomorrowIso = tomorrow.toISOString().split('T')[0];
 
     return trips.filter(trip => {
+      if (isAutoWebsiteLead(trip)) return false;
       if (dateFilter === 'today' && !isTripActiveOnDate(trip, todayIso)) return false;
       if (dateFilter === 'tomorrow' && !isTripActiveOnDate(trip, tomorrowIso)) return false;
 
@@ -4064,8 +4089,8 @@ Warm regards,
                 <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 text-xs flex items-start gap-2">
                   <span className="material-symbols-outlined text-emerald-600 text-base shrink-0 mt-0.5">auto_awesome</span>
                   <div>
-                    <span className="font-bold block">Automatic Website Lead Integration:</span>
-                    Once connected, all quotation requests and bookings submitted on your public website (via BookingEngine or tour calculators) will automatically log into this Google Sheet and appear live in your <strong>"1. UNASSIGNED"</strong> dispatch queue!
+                    <span className="font-bold block">Manual Booking Intake Mode:</span>
+                    Website WhatsApp quotations are <strong>not</strong> auto-added to Live Dispatch. Paste confirmed WhatsApp quotations in <strong>"New Booking Entry"</strong> to log them into this Google Sheet and dispatch queue.
                   </div>
                 </div>
               </div>
