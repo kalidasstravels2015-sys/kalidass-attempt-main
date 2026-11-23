@@ -14,7 +14,9 @@ import {
   ArrowLeft,
   AlertCircle,
   HelpCircle,
-  Plus
+  Plus,
+  FileText,
+  ChevronDown
 } from "lucide-react";
 import { ALL_CHENNAI_LOCALITIES } from "../data/chennaiFleetStandards.js";
 
@@ -29,8 +31,16 @@ const breadcrumbItems = [
 // Single source of truth for FAQs (rendered visibly and marked up in Schema)
 const faqItems = [
   {
-    q: "How does trip settlement and commission work for attached vehicles?",
-    a: "We operate on a transparent per-trip outsourced model (not a fixed monthly salary). Standard agency commission is 10% on outsourced bookings, meaning 90% of the trip fare goes to the vehicle partner. If the customer pays the balance directly to you at trip completion, you simply settle the net commission difference with our dispatch desk."
+    q: "Do you accept vehicle-only attachments with a company-provided driver?",
+    a: "No. We strictly accept attachments on a Vehicle + Driver basis only. We do not accept vehicle-only attachments and do not provide company drivers. The vehicle owner/partner must bear 100% of operating expenses including fuel, maintenance, repairs, insurance, driver salary, and accident or legal liabilities."
+  },
+  {
+    q: "Can I attach a new car I am planning to buy on loan/EMI, or get a dealer quotation?",
+    a: "No. Only vehicles that are already owned and registered with a valid RC book and active number plate can be registered. Kalidass Travels does not provide pre-purchase commitments, dealer quotations, loan assistance, or guaranteed monthly income to cover EMIs, and holds zero liability for any vehicle purchase decision."
+  },
+  {
+    q: "How does billing & settlement work, and are corporate page monthly rates the owner payout?",
+    a: "No — the monthly retainer rates on our Corporate Mobility page are B2B client hiring tariffs (covering GST, 24/7 dispatch, backup SLA, and overhead), not owner attachment payouts. We operate on an outsourced per-trip commission model (10% agency commission; 90% to partner) or duty-based billing — never a fixed monthly salary. For invoice-billed duties, partner payment is settled +15 days after invoice submission and reconciliation."
   },
   {
     q: "How do I register if I have 2 or more cars (Fleet Partner)?",
@@ -378,8 +388,13 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
             </button>
           </div>
 
-          <div class="text-center text-[11px] text-m3-on-surface-variant">
-            100% Free Onboarding. Partner Dispatch Desk: <a href="tel:+919092303060" class="font-bold text-m3-primary hover:underline">+91 90923 03060</a>.
+          <div class="text-center text-[11px] text-m3-on-surface-variant space-y-1">
+            <div>
+              100% Free Onboarding. Partner Dispatch Desk: <a href="tel:+919092303060" class="font-bold text-m3-primary hover:underline">+91 90923 03060</a>.
+            </div>
+            <div>
+              By submitting, you agree to our <a href="/terms/#vehicle-attachment" class="font-semibold text-m3-primary hover:underline">Vehicle Attachment Terms &amp; Conditions</a>.
+            </div>
           </div>
 
         </form>
@@ -454,6 +469,44 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
           </button>
         </div>
       </div>
+
+      {/* Collapsible Vehicle Attachment Terms & Eligibility */}
+      <section class="pt-2">
+        <details class="group bg-m3-surface border border-m3-outline-variant rounded-m3-xl shadow-2xs overflow-hidden">
+          <summary class="flex items-center justify-between gap-3 p-4 sm:p-5 cursor-pointer select-none list-none hover:bg-m3-surface-container-low/60 transition-colors">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <FileText className="w-5 h-5 text-m3-primary shrink-0" />
+              <div class="min-w-0">
+                <div class="text-sm sm:text-base font-bold text-m3-on-surface font-heading">
+                  Read Vehicle Attachment Terms &amp; Eligibility
+                </div>
+                <div class="text-[11px] text-m3-on-surface-variant">
+                  Vehicle + Driver only · Owner-borne expenses · +15 days post-invoice billing · No pre-purchase / EMI guarantees
+                </div>
+              </div>
+            </div>
+            <ChevronDown className="w-4 h-4 text-m3-on-surface-variant shrink-0 transition-transform duration-200 group-open:rotate-180" />
+          </summary>
+
+          <div class="px-4 sm:px-5 pb-5 pt-1 border-t border-m3-outline-variant/50 space-y-3 text-xs sm:text-sm text-m3-on-surface-variant leading-relaxed">
+            <ul class="list-disc list-inside space-y-2 pt-2">
+              <li><strong class="text-m3-on-surface">Vehicle + Driver Only:</strong> We strictly accept attachments on a <strong>Vehicle + Driver</strong> basis only. We do not take vehicle-only attachments or supply company drivers.</li>
+              <li><strong class="text-m3-on-surface">All Expenses &amp; Liabilities Borne by Owner:</strong> The vehicle owner/partner bears 100% of fuel, maintenance, repairs, insurance, permits, driver salary, and accident/legal liabilities.</li>
+              <li><strong class="text-m3-on-surface">Billing &amp; Settlement (+15 Days After Invoice):</strong> Attachments run on per-trip outsourced commission (10% agency fee) or duty-based billing — never a fixed monthly payout. For invoice-billed duties, settlement is processed <strong>+15 days after invoice</strong>.</li>
+              <li><strong class="text-m3-on-surface">Existing Registered Vehicles Only:</strong> You must already own the vehicle with a valid RC book and plate number. We do not give pre-purchase promises, arrange car dealer quotations, or advise on loans/EMIs.</li>
+              <li><strong class="text-m3-on-surface">Corporate Rates ≠ Owner Payouts:</strong> Monthly retainer rates shown on our Corporate Mobility page are B2B client billing tariffs (including GST, dispatch, and replacement SLA), not vehicle-owner payouts.</li>
+            </ul>
+            <div class="p-3 rounded-m3-lg bg-amber-50 border border-amber-200 text-amber-950 text-xs">
+              <strong>Disclaimer:</strong> Kalidass Travels never asks anyone to buy a car for attachment and holds zero financial or legal responsibility for any vehicle purchase, bank loan, or EMI commitment.
+            </div>
+            <div class="pt-1 text-right">
+              <a href="/terms/#vehicle-attachment" class="text-xs font-bold text-m3-primary hover:underline">
+                View full legal terms on Terms &amp; Conditions →
+              </a>
+            </div>
+          </div>
+        </details>
+      </section>
 
       {/* Frequently Asked Questions Section */}
       <section class="space-y-3 pt-2">

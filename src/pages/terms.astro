@@ -7,12 +7,12 @@ const breadcrumbItems = [
   { name: "Terms and Conditions", item: "/terms/" },
 ];
 
-const lastUpdated = "March 14, 2026";
+const lastUpdated = "November 23, 2026";
 ---
 
 <Layout
   title="Terms and Conditions - Kalidass Travels Chennai"
-  description="Read our booking policies, transparent pricing guidelines, acting driver terms, toll policies, and cancellation conditions for Kalidass Travels."
+  description="Read our booking policies, transparent pricing guidelines, acting driver terms, vehicle attachment & fleet partner conditions, toll policies, and cancellation rules for Kalidass Travels."
 >
   <Breadcrumbs items={breadcrumbItems} />
 
@@ -21,13 +21,13 @@ const lastUpdated = "March 14, 2026";
       <!-- Header Banner -->
       <div class="bg-m3-surface rounded-m3-2xl p-6 sm:p-10 border border-m3-outline-variant shadow-m3-1 mb-8">
         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-m3-full bg-m3-secondary/10 text-m3-secondary text-xs font-bold uppercase tracking-wider mb-3">
-          Customer Service Agreement
+          Customer &amp; Partner Service Agreement
         </span>
         <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-m3-on-surface tracking-tight mb-3 font-heading">
           Terms & Conditions
         </h1>
         <p class="text-sm sm:text-base text-m3-on-surface-variant leading-relaxed">
-          Please review the operating terms and booking conditions governing vehicle rentals, temple tour packages, and acting driver hires arranged through Kalidass Travels.
+          Please review the operating terms and conditions governing vehicle rentals, temple tour packages, acting driver hires, and vehicle attachment / fleet partner onboarding arranged through Kalidass Travels.
         </p>
         <p class="text-xs text-m3-on-surface-variant/70 mt-4 font-mono">
           Effective Date: {lastUpdated}
@@ -114,10 +114,32 @@ const lastUpdated = "March 14, 2026";
           </ul>
         </section>
 
-        <!-- 6. Jurisdiction & Contact -->
-        <section class="bg-m3-surface rounded-m3-xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+        <!-- 6. Vehicle Attachment & Fleet Partner Terms -->
+        <section id="vehicle-attachment" class="bg-m3-surface rounded-m3-xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1 scroll-mt-24">
           <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
             <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">6</span>
+            Vehicle Attachment &amp; Fleet Partner Terms
+          </h2>
+          <p class="text-sm text-m3-on-surface-variant leading-relaxed mb-3">
+            The following strict terms apply to all individual car owners, owner-drivers, and fleet operators seeking to attach vehicles with Kalidass Travels:
+          </p>
+          <ul class="list-disc list-inside space-y-2.5 text-sm text-m3-on-surface-variant leading-relaxed">
+            <li><strong>Existing Owned &amp; Registered Vehicles Only:</strong> We only consider vehicles that are already owned, physically available, and registered with a valid Registration Certificate (RC), active number plate, and valid insurance. We do <strong>not</strong> issue pre-purchase commitment letters, arrange or mediate showroom/dealer car quotations, or assist with vehicle purchase loans.</li>
+            <li><strong>Vehicle + Driver Attachment Only:</strong> Kalidass Travels strictly accepts attachments on a <strong>Vehicle + Driver</strong> basis only. We do <strong>not</strong> accept vehicle-only attachments and do <strong>not</strong> supply company drivers for partner-owned vehicles.</li>
+            <li><strong>100% Owner-Borne Expenses &amp; Liabilities:</strong> The vehicle owner/partner is solely responsible for all operating costs and liabilities — including fuel, routine service, maintenance, repairs, tyres, permits, comprehensive insurance, driver salary/welfare, traffic violations, and any accident, vehicle damage, or third-party legal claims.</li>
+            <li><strong>Per-Trip / Duty-Based Billing (+15 Days Settlement):</strong> Attachments operate strictly on an outsourced per-trip commission model (10% agency commission; 90% to partner) or duty-based billing — <strong>not</strong> on a fixed monthly owner payout, salary, or guaranteed minimum income. For corporate or invoice-billed duties, partner settlements are processed <strong>+15 days after invoice submission and reconciliation</strong>.</li>
+            <li><strong>Corporate Website Rates Are B2B Client Tariffs:</strong> Monthly retainer rates displayed on our <a href="/services/corporate/" class="text-m3-primary font-semibold hover:underline">Corporate Mobility</a> page are all-inclusive B2B client hiring rates (covering GST, 24/7 dispatch operations, 60-minute backup replacement SLA, and fleet overhead). They are <strong>not</strong> vehicle-owner attachment payout rates.</li>
+          </ul>
+          <div class="mt-4 p-4 rounded-m3-lg bg-amber-50 border border-amber-200 text-amber-950 text-xs sm:text-sm leading-relaxed">
+            <strong class="block mb-1 text-amber-950">No Investment Advice &amp; Zero Purchase / EMI Liability Disclaimer:</strong>
+            Kalidass Travels never advises, encourages, or guarantees any individual to purchase a new or used vehicle for attachment. Any decision to buy a vehicle, take an auto loan, or commit to monthly EMIs is made solely at the owner's own risk. Kalidass Travels holds zero financial, operational, or legal responsibility for any vehicle purchase, EMI obligation, depreciation, or business loss.
+          </div>
+        </section>
+
+        <!-- 7. Jurisdiction & Contact -->
+        <section class="bg-m3-surface rounded-m3-xl p-6 sm:p-8 border border-m3-outline-variant shadow-m3-1">
+          <h2 class="text-lg sm:text-xl font-bold text-m3-on-surface mb-3 flex items-center gap-2">
+            <span class="w-7 h-7 rounded-m3-full bg-m3-surface-container-high text-m3-primary font-bold text-xs flex items-center justify-center">7</span>
             Governing Law & Legal Jurisdiction
           </h2>
           <p class="text-sm text-m3-on-surface-variant leading-relaxed mb-4">
