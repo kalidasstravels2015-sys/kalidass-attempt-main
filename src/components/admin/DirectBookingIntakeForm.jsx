@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { ClipboardPaste } from 'lucide-react';
 import ContactPickerControl from './ContactPickerControl.jsx';
 import {
   TRIP_CATEGORIES,
@@ -633,20 +634,20 @@ export default function DirectBookingIntakeForm({
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               type="button"
               onClick={handleClipboardPaste}
-              className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 transition"
+              className="flex-1 sm:flex-none min-h-[44px] sm:min-h-0 px-4 sm:px-3 py-2.5 sm:py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white text-xs font-bold shadow-xs flex items-center justify-center gap-1.5 transition"
             >
-              <span className="material-symbols-outlined text-sm">content_paste</span>
+              <ClipboardPaste className="w-4 h-4" />
               <span>Paste from Clipboard</span>
             </button>
             {waPasteText && (
               <button
                 type="button"
                 onClick={resetForm}
-                className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 text-xs font-bold transition"
+                className="min-h-[44px] sm:min-h-0 px-3 sm:px-2.5 py-2.5 sm:py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 text-xs font-bold transition"
               >
                 Clear
               </button>

@@ -3,6 +3,7 @@
 // Equipped with Google Gemini 3.8 Multi-Photo & PDF Document Vision & Live Google Search Grounding
 
 import React, { useState, useRef, useEffect } from 'react';
+import { ClipboardPaste } from 'lucide-react';
 import { cleanWhatsAppText } from '../../utils/cleanWhatsAppText';
 
 // Starter prompt cards inspired by the official AI Fare Assistant
@@ -112,6 +113,18 @@ export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) 
       } catch (_) {
         setIsRecording(false);
       }
+    }
+  };
+
+  const handlePasteFromClipboard = async () => {
+    try {
+      const clipText = await navigator.clipboard.readText();
+      if (clipText && clipText.trim()) {
+        setInput((prev) => (prev ? `${prev}\n${clipText.trim()}` : clipText.trim()));
+        inputRef.current?.focus();
+      }
+    } catch (_) {
+      inputRef.current?.focus();
     }
   };
 
@@ -1086,6 +1099,17 @@ export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) 
                 {attachments.length}
               </span>
             )}
+          </button>
+
+          {/* 1-Tap Paste from Clipboard (WhatsApp Enquiry) */}
+          <button
+            type="button"
+            onClick={handlePasteFromClipboard}
+            className="w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer text-slate-500 hover:text-emerald-700 dark:text-slate-400 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-white/10 shrink-0"
+            title="Paste WhatsApp message from clipboard"
+            aria-label="Paste from clipboard"
+          >
+            <ClipboardPaste className="w-4 h-4" />
           </button>
 
           {/* Voice Microphone Toggle */}

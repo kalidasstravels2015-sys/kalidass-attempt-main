@@ -1,4 +1,28 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import {
+  LayoutGrid,
+  Calculator,
+  Plus,
+  Bot,
+  MoreHorizontal,
+  Users,
+  IndianRupee,
+  Settings,
+  RefreshCw,
+  Lock,
+  Delete,
+  X,
+  Copy,
+  Send,
+  ArrowUpRight,
+  Phone,
+  MessageCircle,
+  Edit3,
+  Trash2,
+  ArrowLeftRight,
+  CheckCircle2,
+  Car
+} from 'lucide-react';
 import MobileDispatchCopilot from './MobileDispatchCopilot.jsx';
 import DirectBookingIntakeForm from './DirectBookingIntakeForm.jsx';
 import ContactPickerControl from './ContactPickerControl.jsx';
@@ -38,6 +62,8 @@ import {
 
 // Configuration keys
 const PIN_KEY = 'kt_admin_pin_verified';
+const PIN_REMEMBER_UNTIL_KEY = 'kt_admin_pin_verified_until';
+const PIN_REMEMBER_DAYS = 30;
 const GOOGLE_SHEET_URL_KEY = 'kt_admin_google_sheet_webhook_v1';
 const LOCAL_BACKUP_KEY = 'kt_admin_offline_trips_backup_v2';
 const DRIVERS_STORAGE_KEY = 'kt_admin_drivers_roster_v2';
@@ -315,15 +341,20 @@ function doPost(e) {
 const DEFAULT_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbzyfKwbaG83dNG3EAWf719-UWbWxWpEoBQoRoRbJsHjD-Bx8uKUfytP5Eb2RXaJfgDz/exec';
 
 export default function FastOperationsDesk() {
-  // Security PIN (Owner PIN: 2015)
+  // Security PIN (Owner PIN: 2015) — supports 30-day "Remember this phone" on Pixel/mobile
   const [isUnlocked, setIsUnlocked] = useState(() => {
-    if (typeof window !== 'undefined' && window.sessionStorage) {
-      return sessionStorage.getItem(PIN_KEY) === 'true';
+    if (typeof window !== 'undefined') {
+      try {
+        const until = Number(window.localStorage?.getItem(PIN_REMEMBER_UNTIL_KEY) || 0);
+        if (until > Date.now()) return true;
+        if (window.sessionStorage?.getItem(PIN_KEY) === 'true') return true;
+      } catch (_) {}
     }
     return false;
   });
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
+  const [rememberDevice, setRememberDevice] = useState(true);
 
   // Active View / Navigation State
   // Valid views: 'dispatch' | 'copilot' | 'quotes' | 'new-booking' | 'drivers' | 'settlements' | 'settings'
@@ -339,13 +370,18 @@ export default function FastOperationsDesk() {
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileMoreOpen, setIsMobileMoreOpen] = useState(false);
+  // Mobile single-stage tab state for Live Dispatch Desk (eliminates vertical scroll traps)
+  const [mobileStage, setMobileStage] = useState('confirmed'); // 'quotation' | 'confirmed' | 'active' | 'completed'
 
   // Sync activeNav with URL Hash
   const navigateTo = (view) => {
     setActiveNav(view);
     setIsMobileMenuOpen(false);
+    setIsMobileMoreOpen(false);
     if (typeof window !== 'undefined') {
       window.location.hash = view;
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
   };
 
@@ -1926,26 +1962,80 @@ Warm regards,
     showToast('CSV Export downloaded!');
   };
 
-  // Owner PIN Authentication
-  const handleUnlockPin = (e) => {
-    e.preventDefault();
-    if (pinInput.trim() === '2015') {
+  // Owner PIN Authentication (supports 4-digit auto-unlock + 30-day device remember)
+  const verifyPinCode = (code) => {
+    if (String(code).trim() === '2015') {
       setIsUnlocked(true);
       setPinError(false);
-      if (typeof window !== 'undefined' && window.sessionStorage) {
-        sessionStorage.setItem(PIN_KEY, 'true');
+      setPinInput('');
+      if (typeof window !== 'undefined') {
+        try {
+          window.sessionStorage?.setItem(PIN_KEY, 'true');
+          if (rememberDevice) {
+            const expiry = Date.now() + PIN_REMEMBER_DAYS * 24 * 60 * 60 * 1000;
+            window.localStorage?.setItem(PIN_REMEMBER_UNTIL_KEY, String(expiry));
+          } else {
+            window.localStorage?.removeItem(PIN_REMEMBER_UNTIL_KEY);
+          }
+        } catch (_) {}
       }
-    } else {
-      setPinError(true);
+      return true;
     }
+    setPinError(true);
+    setTimeout(() => {
+      setPinInput('');
+    }, 450);
+    return false;
+  };
+
+  const handleUnlockPin = (e) => {
+    e.preventDefault();
+    verifyPinCode(pinInput);
+  };
+
+  const handlePinDigit = (digit) => {
+    if (pinInput.length >= 4) return;
+    const next = pinInput + String(digit);
+    setPinError(false);
+    setPinInput(next);
+    if (next.length === 4) {
+      verifyPinCode(next);
+    }
+  };
+
+  const handlePinBackspace = () => {
+    setPinError(false);
+    setPinInput((prev) => prev.slice(0, -1));
   };
 
   const handleLockConsole = () => {
     setIsUnlocked(false);
-    if (typeof window !== 'undefined' && window.sessionStorage) {
-      sessionStorage.removeItem(PIN_KEY);
+    setPinInput('');
+    setIsMobileMoreOpen(false);
+    if (typeof window !== 'undefined') {
+      try {
+        window.sessionStorage?.removeItem(PIN_KEY);
+        window.localStorage?.removeItem(PIN_REMEMBER_UNTIL_KEY);
+      } catch (_) {}
     }
   };
+
+  // Allow desktop keyboard typing on PIN screen without opening mobile virtual keyboard
+  useEffect(() => {
+    if (isUnlocked) return;
+    const onKeyDown = (e) => {
+      if (e.key >= '0' && e.key <= '9') {
+        handlePinDigit(e.key);
+      } else if (e.key === 'Backspace') {
+        handlePinBackspace();
+      } else if (e.key === 'Escape') {
+        setPinInput('');
+        setPinError(false);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isUnlocked, pinInput, rememberDevice]);
 
   // Navigation Items Config
   const NAV_ITEMS = [
@@ -1958,40 +2048,88 @@ Warm regards,
     { id: 'settings', label: 'Cloud Sheet & Settings', icon: 'settings' }
   ];
 
-  // PIN PROTECTION SCREEN
+  // PIN PROTECTION SCREEN (Tactile 1-Handed Number Pad for Pixel / Mobile)
   if (!isUnlocked) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-        <div className="bg-slate-800 border border-slate-700 rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl">
-          <div className="w-16 h-16 bg-blue-600/20 border border-blue-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4 text-blue-400">
-            <span className="material-symbols-outlined text-3xl">local_taxi</span>
+      <div className="min-h-[100dvh] bg-slate-950 flex items-center justify-center p-4 pb-safe">
+        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl">
+          <div className="w-14 h-14 bg-blue-600/20 border border-blue-500/30 rounded-2xl flex items-center justify-center mx-auto mb-3 text-blue-400">
+            <Car className="w-7 h-7" />
           </div>
-          <h2 className="text-xl font-bold text-white mb-1">Kalidass Travels</h2>
-          <p className="text-xs text-slate-400 mb-6">Operations & Dispatch Console</p>
-          <form onSubmit={handleUnlockPin} className="space-y-4">
-            <div>
-              <input
-                id="admin-owner-pin"
-                name="pin"
-                aria-label="Enter Owner PIN"
-                type="password"
-                inputMode="numeric"
-                maxLength={4}
-                value={pinInput}
-                onChange={(e) => setPinInput(e.target.value)}
-                placeholder="Enter Owner PIN (2015)"
-                className="w-full text-center tracking-widest text-2xl font-mono py-3 px-4 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"
-                autoFocus
-              />
-              {pinError && <p className="text-red-400 text-xs mt-2">Incorrect PIN. Try again.</p>}
-            </div>
+          <h2 className="text-xl font-extrabold text-white mb-0.5">KT Ops Console</h2>
+          <p className="text-xs text-slate-400 mb-5">Tap 4-digit Owner PIN to unlock</p>
+
+          {/* 4-Dot Visual PIN Indicator */}
+          <div className="flex items-center justify-center gap-3.5 mb-3">
+            {[0, 1, 2, 3].map((idx) => {
+              const filled = idx < pinInput.length;
+              return (
+                <div
+                  key={idx}
+                  className={`w-4 h-4 rounded-full border-2 transition-all duration-150 ${
+                    pinError
+                      ? 'bg-rose-500 border-rose-400 scale-110'
+                      : filled
+                      ? 'bg-blue-500 border-blue-400 scale-110 shadow-md shadow-blue-500/40'
+                      : 'bg-slate-800 border-slate-600'
+                  }`}
+                />
+              );
+            })}
+          </div>
+          <div className="h-5 mb-3">
+            {pinError && <p className="text-rose-400 text-xs font-semibold">Incorrect PIN. Try again.</p>}
+          </div>
+
+          {/* Tactile 3x4 Number Pad (Auto-unlocks on 4th digit) */}
+          <div className="grid grid-cols-3 gap-2.5 mb-5 select-none">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+              <button
+                key={num}
+                type="button"
+                onClick={() => handlePinDigit(num)}
+                className="h-14 rounded-2xl bg-slate-800/90 hover:bg-slate-700 active:scale-95 active:bg-blue-600 text-white text-2xl font-bold font-mono transition border border-slate-700/70 shadow-sm"
+              >
+                {num}
+              </button>
+            ))}
             <button
-              type="submit"
-              className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl transition duration-150 shadow-lg shadow-blue-600/30"
+              type="button"
+              onClick={() => {
+                setPinInput('');
+                setPinError(false);
+              }}
+              className="h-14 rounded-2xl bg-slate-800/50 hover:bg-slate-800 active:scale-95 text-slate-400 text-xs font-bold uppercase tracking-wider transition border border-slate-800"
             >
-              Unlock Dashboard
+              Clear
             </button>
-          </form>
+            <button
+              type="button"
+              onClick={() => handlePinDigit(0)}
+              className="h-14 rounded-2xl bg-slate-800/90 hover:bg-slate-700 active:scale-95 active:bg-blue-600 text-white text-2xl font-bold font-mono transition border border-slate-700/70 shadow-sm"
+            >
+              0
+            </button>
+            <button
+              type="button"
+              onClick={handlePinBackspace}
+              aria-label="Backspace"
+              className="h-14 rounded-2xl bg-slate-800/50 hover:bg-slate-800 active:scale-95 text-slate-300 flex items-center justify-center transition border border-slate-800"
+            >
+              <Delete className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* 30-Day Remember Phone Toggle */}
+          <label className="flex items-center justify-center gap-2.5 text-xs text-slate-300 cursor-pointer py-2 px-3 rounded-xl bg-slate-800/60 border border-slate-800">
+            <input
+              type="checkbox"
+              checked={rememberDevice}
+              onChange={(e) => setRememberDevice(e.target.checked)}
+              className="w-4 h-4 rounded accent-blue-500"
+            />
+            <span>Keep unlocked on this phone ({PIN_REMEMBER_DAYS} days)</span>
+          </label>
         </div>
       </div>
     );
@@ -2118,17 +2256,14 @@ Warm regards,
       {/* RIGHT CONTENT WORKSPACE */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* TOP HEADER BAR */}
-        <header className="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shadow-xs">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100"
-            >
-              <span className="material-symbols-outlined text-xl">menu</span>
-            </button>
+        <header className="h-14 sm:h-16 bg-white border-b border-slate-200 px-3.5 sm:px-6 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="lg:hidden w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center font-extrabold text-white text-xs shadow-sm shrink-0">
+              KT
+            </div>
 
-            <div>
-              <h2 className="text-base font-bold text-slate-900 leading-tight">
+            <div className="min-w-0">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 leading-tight truncate">
                 {NAV_ITEMS.find(n => n.id === activeNav)?.label || 'Operations Desk'}
               </h2>
               <p className="text-xs text-slate-500 hidden sm:block">
@@ -2138,46 +2273,44 @@ Warm regards,
           </div>
 
           {/* Quick Header Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {googleSheetUrl && (
               <button
                 onClick={() => fetchTripsFromGoogleSheet()}
-                className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition"
+                className="min-h-[40px] min-w-[40px] sm:min-h-0 sm:min-w-0 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl sm:rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition"
                 title="Fetch latest trips from Google Sheet"
               >
-                <span className={`material-symbols-outlined text-sm ${syncStatus === 'syncing' ? 'animate-spin' : ''}`}>
-                  refresh
-                </span>
+                <RefreshCw className={`w-4 h-4 ${syncStatus === 'syncing' ? 'animate-spin text-blue-600' : ''}`} />
                 <span className="hidden md:inline">Sync Live</span>
               </button>
             )}
 
             <button
               onClick={() => navigateTo('new-booking')}
-              className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold shadow-md shadow-blue-600/30 flex items-center gap-1.5 transition"
+              className="hidden lg:flex px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold shadow-md shadow-blue-600/30 items-center gap-1.5 transition"
             >
-              <span className="material-symbols-outlined text-sm">add</span>
+              <Plus className="w-4 h-4" />
               <span>New Booking</span>
             </button>
 
             <button
               onClick={handleLockConsole}
-              className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition"
+              className="min-h-[40px] min-w-[40px] sm:min-h-0 sm:min-w-0 p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl sm:rounded-lg flex items-center justify-center transition"
               title="Lock Console"
             >
-              <span className="material-symbols-outlined text-lg">lock</span>
+              <Lock className="w-4 h-4" />
             </button>
           </div>
         </header>
 
         {/* MAIN BODY AREA (ONE FOCUSED VIEW AT A TIME) */}
-        <main className="p-4 sm:p-6 max-w-7xl w-full mx-auto flex-1 space-y-6">
+        <main className={`p-3 sm:p-6 max-w-7xl w-full mx-auto flex-1 space-y-5 lg:pb-6 ${activeNav === 'quotes' ? 'pb-40' : 'pb-24'}`}>
 
           {/* ========================================================= */}
           {/* VIEW 0: 24/7 MOBILE AI CO-PILOT                           */}
           {/* ========================================================= */}
           {activeNav === 'copilot' && (
-            <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl max-w-4xl mx-auto h-[85vh] animate-fadeIn">
+            <div className="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl max-w-4xl mx-auto h-[calc(100dvh-10.5rem)] lg:h-[85vh] animate-fadeIn">
               <MobileDispatchCopilot onPushToDispatch={handlePushFromCopilot} />
             </div>
           )}
@@ -2186,20 +2319,32 @@ Warm regards,
           {/* VIEW 1: LIVE DISPATCH DESK (4-STAGE PIPELINE)             */}
           {/* ========================================================= */}
           {activeNav === 'dispatch' && (
-            <div className="space-y-5 animate-fadeIn">
-              {/* Metric Counters Banner (4 Stages) */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                <div className="bg-white p-3.5 rounded-2xl border border-amber-200 shadow-xs">
+            <div className="space-y-4 sm:space-y-5 animate-fadeIn">
+              {/* Metric Counters Banner (4 Stages — Tappable on Mobile to jump straight to stage) */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+                <button
+                  type="button"
+                  onClick={() => setMobileStage('quotation')}
+                  className={`text-left bg-white p-3 sm:p-3.5 rounded-2xl border shadow-xs transition ${
+                    mobileStage === 'quotation' ? 'border-amber-500 ring-2 ring-amber-200 md:ring-0 md:border-amber-200' : 'border-amber-200'
+                  }`}
+                >
                   <div className="text-[11px] font-bold text-amber-700 uppercase flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-amber-500"></span>
                     1. Quotations
                   </div>
                   <div className="flex items-baseline justify-between mt-0.5">
                     <div className="text-2xl font-extrabold text-amber-600 font-mono">{quotationTrips.length}</div>
-                    <span className="text-[10px] font-semibold text-slate-500">Speak &amp; Collect Adv</span>
+                    <span className="text-[10px] font-semibold text-slate-500">Speak &amp; Adv</span>
                   </div>
-                </div>
-                <div className="bg-white p-3.5 rounded-2xl border border-indigo-200 shadow-xs">
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMobileStage('confirmed')}
+                  className={`text-left bg-white p-3 sm:p-3.5 rounded-2xl border shadow-xs transition ${
+                    mobileStage === 'confirmed' ? 'border-indigo-500 ring-2 ring-indigo-200 md:ring-0 md:border-indigo-200' : 'border-indigo-200'
+                  }`}
+                >
                   <div className="text-[11px] font-bold text-indigo-700 uppercase flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
                     2. Confirmed
@@ -2207,49 +2352,61 @@ Warm regards,
                   <div className="flex items-baseline justify-between mt-0.5">
                     <div className="text-2xl font-extrabold text-indigo-600 font-mono">{confirmedTrips.length}</div>
                     <span className={`text-[10px] font-bold ${needsDriverCount > 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
-                      {needsDriverCount > 0 ? `${needsDriverCount} Needs Driver` : 'All Drivers Ready'}
+                      {needsDriverCount > 0 ? `${needsDriverCount} Need Cab` : 'All Ready'}
                     </span>
                   </div>
-                </div>
-                <div className="bg-white p-3.5 rounded-2xl border border-emerald-200 shadow-xs">
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMobileStage('active')}
+                  className={`text-left bg-white p-3 sm:p-3.5 rounded-2xl border shadow-xs transition ${
+                    mobileStage === 'active' ? 'border-emerald-500 ring-2 ring-emerald-200 md:ring-0 md:border-emerald-200' : 'border-emerald-200'
+                  }`}
+                >
                   <div className="text-[11px] font-bold text-emerald-700 uppercase flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    3. On Trip (Live)
+                    3. On Trip
                   </div>
                   <div className="flex items-baseline justify-between mt-0.5">
                     <div className="text-2xl font-extrabold text-emerald-600 font-mono">{activeTrips.length}</div>
-                    <span className="text-[10px] font-semibold text-slate-500">Auto at Pickup IST</span>
+                    <span className="text-[10px] font-semibold text-slate-500">Live Now</span>
                   </div>
-                </div>
-                <div className="bg-white p-3.5 rounded-2xl border border-blue-200 shadow-xs">
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMobileStage('completed')}
+                  className={`text-left bg-white p-3 sm:p-3.5 rounded-2xl border shadow-xs transition ${
+                    mobileStage === 'completed' ? 'border-blue-500 ring-2 ring-blue-200 md:ring-0 md:border-blue-200' : 'border-blue-200'
+                  }`}
+                >
                   <div className="text-[11px] font-bold text-blue-700 uppercase flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-                    4. Payment &amp; Review
+                    4. Pay &amp; Review
                   </div>
                   <div className="flex items-baseline justify-between mt-0.5">
                     <div className="text-2xl font-extrabold text-blue-600 font-mono">{settledTrips.length}</div>
                     <span className="text-[10px] font-semibold text-slate-500">
-                      {settledTrips.length - closedCompletedCount} Pending Action
+                      {settledTrips.length - closedCompletedCount} Pending
                     </span>
                   </div>
-                </div>
+                </button>
               </div>
 
               {/* Search & Date Filter Bar */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-slate-200 shadow-xs">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3 bg-white p-3 rounded-2xl border border-slate-200 shadow-xs">
                 <div className="flex-1 relative">
                   <span className="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-lg">search</span>
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by passenger name, phone, booking ID, driver, or vehicle plate..."
-                    className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:border-blue-500"
+                    placeholder="Search name, phone, ID, driver, plate..."
+                    className="w-full pl-9 pr-4 py-2.5 sm:py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm sm:text-xs font-medium text-slate-800 focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Filter:</span>
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1 hidden sm:inline">Filter:</span>
                   {[
                     { id: 'all', label: 'All Dates' },
                     { id: 'today', label: 'Today' },
@@ -2258,7 +2415,7 @@ Warm regards,
                     <button
                       key={d.id}
                       onClick={() => setDateFilter(d.id)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition ${
+                      className={`flex-1 sm:flex-none min-h-[40px] sm:min-h-0 px-3 py-2 sm:py-1.5 rounded-xl sm:rounded-lg text-xs font-semibold border transition ${
                         dateFilter === d.id
                           ? 'bg-slate-900 border-slate-900 text-white'
                           : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
@@ -2270,10 +2427,41 @@ Warm regards,
                 </div>
               </div>
 
-              {/* 4-Column Operations Pipeline */}
+              {/* MOBILE STICKY STAGE TABS (< md) — Eliminates 4-column vertical scroll traps */}
+              <div className="md:hidden sticky top-14 z-20 -mx-3 px-3 py-2 bg-slate-100/95 backdrop-blur-md border-b border-slate-200/80">
+                <div className="grid grid-cols-4 gap-1.5 bg-white p-1 rounded-2xl border border-slate-200 shadow-xs">
+                  {[
+                    { id: 'quotation', label: 'Quotes', count: quotationTrips.length, activeCls: 'bg-amber-500 text-slate-950 shadow-sm' },
+                    { id: 'confirmed', label: 'Confirm', count: confirmedTrips.length, activeCls: 'bg-indigo-600 text-white shadow-sm' },
+                    { id: 'active', label: 'Live', count: activeTrips.length, activeCls: 'bg-emerald-600 text-white shadow-sm' },
+                    { id: 'completed', label: 'Pay', count: visibleCompletedTrips.length, activeCls: 'bg-blue-600 text-white shadow-sm' },
+                  ].map((tab) => {
+                    const active = mobileStage === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setMobileStage(tab.id)}
+                        className={`min-h-[40px] px-1.5 py-1.5 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1 transition ${
+                          active ? tab.activeCls : 'text-slate-600 hover:bg-slate-50'
+                        }`}
+                      >
+                        <span>{tab.label}</span>
+                        <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-extrabold leading-none ${
+                          active ? 'bg-black/15 text-current' : 'bg-slate-100 text-slate-700'
+                        }`}>
+                          {tab.count}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 4-Column Operations Pipeline (Single-stage on Mobile, 2/4-Column Grid on Tablet/Desktop) */}
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
                 {/* STAGE 1: QUOTATION / ENQUIRY */}
-                <div className="bg-slate-50/80 border border-amber-200/80 rounded-2xl p-3.5 flex flex-col min-h-[520px]">
+                <div className={`${mobileStage === 'quotation' ? 'flex' : 'hidden md:flex'} bg-slate-50/80 border border-amber-200/80 rounded-2xl p-3.5 flex-col md:min-h-[520px]`}>
                   <div className="flex items-center justify-between pb-3 border-b border-amber-200/70 mb-3 gap-2">
                     <div className="flex items-center gap-1.5 min-w-0">
                       <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
@@ -2295,7 +2483,7 @@ Warm regards,
                     </button>
                   </div>
 
-                  <div className="space-y-3 flex-1 overflow-y-auto max-h-[720px] pr-1">
+                  <div className="space-y-3 flex-1 md:overflow-y-auto md:max-h-[720px] md:pr-1">
                     {quotationTrips.length === 0 ? (
                       <div className="h-44 border border-dashed border-amber-200 rounded-xl flex flex-col items-center justify-center text-slate-400 text-xs gap-1.5 text-center px-3">
                         <span className="material-symbols-outlined text-2xl text-amber-300">request_quote</span>
@@ -2358,20 +2546,20 @@ Warm regards,
                               )}
                             </div>
 
-                            <div className="flex items-center gap-1.5 pt-0.5">
+                            <div className="flex items-center gap-2 sm:gap-1.5 pt-1 sm:pt-0.5">
                               <button
                                 type="button"
                                 onClick={() => handleOpenConfirmModal(trip)}
-                                className="flex-1 py-2 px-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[11px] rounded-lg transition flex items-center justify-center gap-1 shadow-xs"
+                                className="flex-1 min-h-[44px] sm:min-h-0 py-2.5 sm:py-2 px-3 sm:px-2 bg-amber-500 hover:bg-amber-400 active:scale-[0.98] text-slate-950 font-bold text-xs sm:text-[11px] rounded-xl sm:rounded-lg transition flex items-center justify-center gap-1.5 shadow-xs"
                               >
-                                <span className="material-symbols-outlined text-xs">verified</span>
+                                <CheckCircle2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                                 <span>Collect Adv &amp; Confirm</span>
                               </button>
                               {trip.phone && (
                                 <button
                                   type="button"
                                   onClick={() => handleSendFollowUpWA(trip)}
-                                  className="p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg text-[11px] font-bold"
+                                  className="min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 p-2 sm:p-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-xl sm:rounded-lg text-xs sm:text-[11px] font-bold flex items-center justify-center"
                                   title="Send WhatsApp Follow-up"
                                 >
                                   WA
@@ -2380,18 +2568,18 @@ Warm regards,
                               <button
                                 type="button"
                                 onClick={() => handleOpenEditTrip(trip)}
-                                className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
+                                className="min-h-[44px] min-w-[40px] sm:min-h-0 sm:min-w-0 p-2 sm:p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl sm:rounded-lg flex items-center justify-center"
                                 title="Edit quotation"
                               >
-                                <span className="material-symbols-outlined text-xs">edit</span>
+                                <Edit3 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                               </button>
                               <button
                                 type="button"
                                 onClick={() => handleDeleteTrip(trip.id)}
-                                className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg"
+                                className="min-h-[44px] min-w-[40px] sm:min-h-0 sm:min-w-0 p-2 sm:p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl sm:rounded-lg flex items-center justify-center"
                                 title="Delete quotation"
                               >
-                                <span className="material-symbols-outlined text-xs">delete</span>
+                                <Trash2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                               </button>
                             </div>
                           </div>
@@ -2402,7 +2590,7 @@ Warm regards,
                 </div>
 
                 {/* STAGE 2: CONFIRMED (ADVANCE PAID) */}
-                <div className="bg-slate-50/80 border border-indigo-200/80 rounded-2xl p-3.5 flex flex-col min-h-[520px]">
+                <div className={`${mobileStage === 'confirmed' ? 'flex' : 'hidden md:flex'} bg-slate-50/80 border border-indigo-200/80 rounded-2xl p-3.5 flex-col md:min-h-[520px]`}>
                   <div className="flex items-center justify-between pb-3 border-b border-indigo-200/70 mb-3 gap-2">
                     <div className="flex items-center gap-1.5 min-w-0">
                       <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 shrink-0"></span>
@@ -2414,7 +2602,7 @@ Warm regards,
                     <span className="text-[10px] font-semibold text-indigo-700 shrink-0">Advance Paid</span>
                   </div>
 
-                  <div className="space-y-3 flex-1 overflow-y-auto max-h-[720px] pr-1">
+                  <div className="space-y-3 flex-1 md:overflow-y-auto md:max-h-[720px] md:pr-1">
                     {confirmedTrips.length === 0 ? (
                       <div className="h-44 border border-dashed border-indigo-200 rounded-xl flex flex-col items-center justify-center text-slate-400 text-xs gap-1.5 text-center px-3">
                         <span className="material-symbols-outlined text-2xl text-indigo-300">event_available</span>
@@ -2534,90 +2722,90 @@ Warm regards,
                             </div>
 
                             {hasDriver ? (
-                              <div className="space-y-1.5 pt-0.5">
-                                <div className="grid grid-cols-2 gap-1.5">
+                              <div className="space-y-2 sm:space-y-1.5 pt-1 sm:pt-0.5">
+                                <div className="grid grid-cols-2 gap-2 sm:gap-1.5">
                                   <button
                                     type="button"
                                     onClick={() => handleSendDriverDutySlip(trip)}
-                                    className="py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 transition"
+                                    className="min-h-[42px] sm:min-h-0 py-2 sm:py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 active:scale-[0.98] text-emerald-800 border border-emerald-300 rounded-xl sm:rounded-lg text-xs sm:text-[10px] font-bold flex items-center justify-center gap-1.5 transition"
                                   >
-                                    <span className="material-symbols-outlined text-xs">send</span>
+                                    <Send className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
                                     <span>Duty Slip</span>
                                   </button>
                                   <button
                                     type="button"
                                     onClick={() => handleSendCustomerConfirmation(trip)}
-                                    className="py-1.5 px-2 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-300 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 transition"
+                                    className="min-h-[42px] sm:min-h-0 py-2 sm:py-1.5 px-2 bg-blue-50 hover:bg-blue-100 active:scale-[0.98] text-blue-800 border border-blue-300 rounded-xl sm:rounded-lg text-xs sm:text-[10px] font-bold flex items-center justify-center gap-1.5 transition"
                                   >
-                                    <span className="material-symbols-outlined text-xs">chat</span>
+                                    <MessageCircle className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
                                     <span>Guest Info</span>
                                   </button>
                                 </div>
-                                <div className="flex items-center gap-1.5">
+                                <div className="flex items-center gap-2 sm:gap-1.5">
                                   <button
                                     type="button"
                                     onClick={() => handleStartTripNow(trip)}
-                                    className="flex-1 py-1.5 px-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] rounded-lg transition flex items-center justify-center gap-1 shadow-xs"
+                                    className="flex-1 min-h-[44px] sm:min-h-0 py-2.5 sm:py-1.5 px-2 bg-indigo-600 hover:bg-indigo-500 active:scale-[0.98] text-white font-bold text-xs sm:text-[11px] rounded-xl sm:rounded-lg transition flex items-center justify-center gap-1 shadow-xs"
                                     title="Manually move to On Trip right now"
                                   >
-                                    <span className="material-symbols-outlined text-xs">play_arrow</span>
+                                    <ArrowUpRight className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                                     <span>Start Trip</span>
                                   </button>
                                   <button
                                     type="button"
                                     onClick={() => handleOpenAssignModal(trip)}
-                                    className="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+                                    className="min-h-[44px] min-w-[40px] sm:min-h-0 sm:min-w-0 p-2 sm:p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl sm:rounded-lg flex items-center justify-center transition"
                                     title="Change driver"
                                   >
-                                    <span className="material-symbols-outlined text-xs">swap_horiz</span>
+                                    <ArrowLeftRight className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                                   </button>
                                   <button
                                     type="button"
                                     onClick={() => handleOpenEditTrip(trip)}
-                                    className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                                    className="min-h-[44px] min-w-[40px] sm:min-h-0 sm:min-w-0 p-2 sm:p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl sm:rounded-lg flex items-center justify-center transition"
                                     title="Edit booking"
                                   >
-                                    <span className="material-symbols-outlined text-xs">edit</span>
+                                    <Edit3 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                                   </button>
                                   <button
                                     type="button"
                                     onClick={() => handleDeleteTrip(trip.id)}
-                                    className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
+                                    className="min-h-[44px] min-w-[40px] sm:min-h-0 sm:min-w-0 p-2 sm:p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl sm:rounded-lg flex items-center justify-center transition"
                                     title="Delete booking"
                                   >
-                                    <span className="material-symbols-outlined text-xs">delete</span>
+                                    <Trash2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                                   </button>
                                 </div>
                               </div>
                             ) : (
-                              <div className="flex items-center gap-1.5 pt-0.5">
+                              <div className="flex items-center gap-2 sm:gap-1.5 pt-1 sm:pt-0.5">
                                 <button
                                   type="button"
                                   onClick={() => handleOpenAssignModal(trip)}
-                                  className={`flex-1 py-2 font-bold text-[11px] rounded-lg transition flex items-center justify-center gap-1 shadow-xs ${
+                                  className={`flex-1 min-h-[44px] sm:min-h-0 py-2.5 sm:py-2 font-bold text-xs sm:text-[11px] rounded-xl sm:rounded-lg active:scale-[0.98] transition flex items-center justify-center gap-1.5 shadow-xs ${
                                     overdueNoDriver
                                       ? 'bg-rose-600 hover:bg-rose-500 text-white'
                                       : 'bg-indigo-600 hover:bg-indigo-500 text-white'
                                   }`}
                                 >
-                                  <span className="material-symbols-outlined text-xs">badge</span>
+                                  <Users className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                                   <span>Assign Driver &amp; Cab</span>
                                 </button>
                                 <button
                                   type="button"
                                   onClick={() => handleOpenEditTrip(trip)}
-                                  className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                                  className="min-h-[44px] min-w-[40px] sm:min-h-0 sm:min-w-0 p-2 sm:p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl sm:rounded-lg flex items-center justify-center transition"
                                   title="Edit booking"
                                 >
-                                  <span className="material-symbols-outlined text-xs">edit</span>
+                                  <Edit3 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                                 </button>
                                 <button
                                   type="button"
                                   onClick={() => handleDeleteTrip(trip.id)}
-                                  className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
+                                  className="min-h-[44px] min-w-[40px] sm:min-h-0 sm:min-w-0 p-2 sm:p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl sm:rounded-lg flex items-center justify-center transition"
                                   title="Delete booking"
                                 >
-                                  <span className="material-symbols-outlined text-xs">delete</span>
+                                  <Trash2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                                 </button>
                               </div>
                             )}
@@ -2629,7 +2817,7 @@ Warm regards,
                 </div>
 
                 {/* STAGE 3: ON TRIP (LIVE — AUTO AT PICKUP TIME) */}
-                <div className="bg-slate-50/80 border border-emerald-200/80 rounded-2xl p-3.5 flex flex-col min-h-[520px]">
+                <div className={`${mobileStage === 'active' ? 'flex' : 'hidden md:flex'} bg-slate-50/80 border border-emerald-200/80 rounded-2xl p-3.5 flex-col md:min-h-[520px]`}>
                   <div className="flex items-center justify-between pb-3 border-b border-emerald-200/70 mb-3 gap-2">
                     <div className="flex items-center gap-1.5 min-w-0">
                       <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
@@ -2641,7 +2829,7 @@ Warm regards,
                     <span className="text-[10px] font-semibold text-emerald-700 shrink-0">On Road</span>
                   </div>
 
-                  <div className="space-y-3 flex-1 overflow-y-auto max-h-[720px] pr-1">
+                  <div className="space-y-3 flex-1 md:overflow-y-auto md:max-h-[720px] md:pr-1">
                     {activeTrips.length === 0 ? (
                       <div className="h-44 border border-dashed border-emerald-200 rounded-xl flex flex-col items-center justify-center text-slate-400 text-xs gap-1.5 text-center px-3">
                         <span className="material-symbols-outlined text-2xl text-emerald-300">no_crash</span>
@@ -2709,49 +2897,49 @@ Warm regards,
                               </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-1.5">
+                            <div className="grid grid-cols-2 gap-2 sm:gap-1.5">
                               <button
                                 type="button"
                                 onClick={() => handleSendDriverDutySlip(trip)}
-                                className="py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 transition"
+                                className="min-h-[42px] sm:min-h-0 py-2 sm:py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 active:scale-[0.98] text-emerald-800 border border-emerald-300 rounded-xl sm:rounded-lg text-xs sm:text-[10px] font-bold flex items-center justify-center gap-1.5 transition"
                               >
-                                <span className="material-symbols-outlined text-xs">send</span>
+                                <Send className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
                                 <span>Duty Slip</span>
                               </button>
                               <button
                                 type="button"
                                 onClick={() => handleSendCustomerConfirmation(trip)}
-                                className="py-1.5 px-2 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-300 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 transition"
+                                className="min-h-[42px] sm:min-h-0 py-2 sm:py-1.5 px-2 bg-blue-50 hover:bg-blue-100 active:scale-[0.98] text-blue-800 border border-blue-300 rounded-xl sm:rounded-lg text-xs sm:text-[10px] font-bold flex items-center justify-center gap-1.5 transition"
                               >
-                                <span className="material-symbols-outlined text-xs">chat</span>
+                                <MessageCircle className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
                                 <span>Guest Info</span>
                               </button>
                             </div>
 
-                            <div className="flex items-center gap-1.5 pt-0.5">
+                            <div className="flex items-center gap-2 sm:gap-1.5 pt-1 sm:pt-0.5">
                               <button
                                 type="button"
                                 onClick={() => handleOpenCompleteModal(trip)}
-                                className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] rounded-lg transition flex items-center justify-center gap-1 shadow-xs"
+                                className="flex-1 min-h-[44px] sm:min-h-0 py-2.5 sm:py-2 bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white font-bold text-xs sm:text-[11px] rounded-xl sm:rounded-lg transition flex items-center justify-center gap-1.5 shadow-xs"
                               >
-                                <span className="material-symbols-outlined text-xs">payments</span>
+                                <IndianRupee className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                                 <span>End Trip &amp; Collect Payment</span>
                               </button>
                               <button
                                 type="button"
                                 onClick={() => handleOpenEditTrip(trip)}
-                                className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                                className="min-h-[44px] min-w-[40px] sm:min-h-0 sm:min-w-0 p-2 sm:p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl sm:rounded-lg flex items-center justify-center transition"
                                 title="Edit booking"
                               >
-                                <span className="material-symbols-outlined text-xs">edit</span>
+                                <Edit3 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                               </button>
                               <button
                                 type="button"
                                 onClick={() => handleDeleteTrip(trip.id)}
-                                className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
+                                className="min-h-[44px] min-w-[40px] sm:min-h-0 sm:min-w-0 p-2 sm:p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl sm:rounded-lg flex items-center justify-center transition"
                                 title="Delete booking"
                               >
-                                <span className="material-symbols-outlined text-xs">delete</span>
+                                <Trash2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                               </button>
                             </div>
                           </div>
@@ -2762,7 +2950,7 @@ Warm regards,
                 </div>
 
                 {/* STAGE 4: PAYMENT & REVIEW */}
-                <div className="bg-slate-50/80 border border-blue-200/80 rounded-2xl p-3.5 flex flex-col min-h-[520px]">
+                <div className={`${mobileStage === 'completed' ? 'flex' : 'hidden md:flex'} bg-slate-50/80 border border-blue-200/80 rounded-2xl p-3.5 flex-col md:min-h-[520px]`}>
                   <div className="flex items-center justify-between pb-3 border-b border-blue-200/70 mb-3 gap-2">
                     <div className="flex items-center gap-1.5 min-w-0">
                       <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0"></span>
@@ -2787,7 +2975,7 @@ Warm regards,
                     )}
                   </div>
 
-                  <div className="space-y-3 flex-1 overflow-y-auto max-h-[720px] pr-1">
+                  <div className="space-y-3 flex-1 md:overflow-y-auto md:max-h-[720px] md:pr-1">
                     {visibleCompletedTrips.length === 0 ? (
                       <div className="h-44 border border-dashed border-blue-200 rounded-xl flex flex-col items-center justify-center text-slate-400 text-xs gap-1.5 text-center px-3">
                         <span className="material-symbols-outlined text-2xl text-blue-300">verified</span>
@@ -2855,29 +3043,27 @@ Warm regards,
                               </div>
                             </div>
 
-                            <div className="flex items-center gap-1.5 pt-0.5">
+                            <div className="flex items-center gap-2 sm:gap-1.5 pt-1 sm:pt-0.5">
                               <button
                                 type="button"
                                 onClick={() => handleSendGoogleReviewRequest(trip)}
-                                className={`flex-1 py-2 font-bold text-[11px] rounded-lg transition flex items-center justify-center gap-1 shadow-xs ${
+                                className={`flex-1 min-h-[44px] sm:min-h-0 py-2.5 sm:py-2 font-bold text-xs sm:text-[11px] rounded-xl sm:rounded-lg active:scale-[0.98] transition flex items-center justify-center gap-1.5 shadow-xs ${
                                   trip.reviewSent
                                     ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300'
                                     : 'bg-blue-600 hover:bg-blue-500 text-white'
                                 }`}
                               >
-                                <span className={`material-symbols-outlined text-xs ${trip.reviewSent ? 'text-emerald-600' : 'text-yellow-300'}`}>
-                                  {trip.reviewSent ? 'task_alt' : 'star'}
-                                </span>
+                                <CheckCircle2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                                 <span>{trip.reviewSent ? 'Review Sent ✓ (Resend)' : 'Send Review Link'}</span>
                               </button>
 
                               <button
                                 type="button"
                                 onClick={() => handleDeleteTrip(trip.id)}
-                                className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition"
+                                className="min-h-[44px] min-w-[40px] sm:min-h-0 sm:min-w-0 p-2 sm:p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl sm:rounded-lg flex items-center justify-center transition"
                                 title="Delete / Archive"
                               >
-                                <span className="material-symbols-outlined text-xs">delete</span>
+                                <Trash2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                               </button>
                             </div>
                           </div>
@@ -3893,14 +4079,26 @@ Warm regards,
                 </div>
               )}
 
-              {/* Quick Paste WhatsApp Registration Modal */}
+              {/* Quick Paste WhatsApp Registration Modal (Bottom Sheet on Mobile) */}
               {waPasteModalOpen && (
-                <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-                  <div className="bg-white rounded-2xl border border-slate-200 p-6 max-w-md w-full shadow-2xl space-y-4">
+                <div
+                  className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4"
+                  onClick={() => setWaPasteModalOpen(false)}
+                >
+                  <div
+                    className="bg-white rounded-t-3xl sm:rounded-2xl border border-slate-200 p-5 sm:p-6 pb-safe max-w-md w-full shadow-2xl space-y-4 max-h-[90dvh] overflow-y-auto animate-fadeIn"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="w-10 h-1 bg-slate-300 rounded-full mx-auto sm:hidden" />
                     <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                       <h4 className="font-bold text-sm text-slate-900">Import Partner from WhatsApp Message</h4>
-                      <button onClick={() => setWaPasteModalOpen(false)} className="text-slate-400 hover:text-slate-600">
-                        <span className="material-symbols-outlined text-lg">close</span>
+                      <button
+                        type="button"
+                        onClick={() => setWaPasteModalOpen(false)}
+                        className="w-9 h-9 rounded-full bg-slate-100 sm:bg-transparent text-slate-500 hover:text-slate-700 flex items-center justify-center"
+                        aria-label="Close modal"
+                      >
+                        <X className="w-4 h-4" />
                       </button>
                     </div>
                     <p className="text-xs text-slate-500">
@@ -3961,9 +4159,103 @@ Warm regards,
                   <p className="text-xs">Trips marked completed in the Live Dispatch Desk will appear here.</p>
                 </div>
               ) : (
-                <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs">
+                <>
+                  {/* MOBILE SETTLEMENT CARDS (< md) — Zero Horizontal Scrolling */}
+                  <div className="md:hidden space-y-3">
+                    {settledTrips.map(trip => {
+                      const totalPaid = (Number(trip.agreedRate) || 0) + (Number(trip.extraCharges) || 0);
+                      const math = computeSettlementMath(trip, trip.commissionPct ?? 10);
+                      return (
+                        <div
+                          key={trip.id}
+                          className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs space-y-3"
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className="font-mono font-bold text-[11px] text-slate-500">#{trip.id}</span>
+                                <h4 className="font-bold text-sm text-slate-900 truncate">{trip.customerName}</h4>
+                              </div>
+                              {trip.phone && (
+                                <a
+                                  href={`tel:${trip.phone}`}
+                                  className="inline-flex items-center gap-1 text-xs font-mono text-blue-600 mt-0.5 py-0.5"
+                                >
+                                  <Phone className="w-3.5 h-3.5" />
+                                  <span>{formatPhoneForDisplay(trip.phone)}</span>
+                                </a>
+                              )}
+                            </div>
+                            <div className="text-right shrink-0">
+                              <div className="font-mono font-extrabold text-base text-emerald-600">
+                                ₹{totalPaid.toLocaleString('en-IN')}
+                              </div>
+                              <div className="text-[10px] text-slate-500 font-medium">
+                                By {trip.paymentCollector || 'Driver'}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-slate-50 border border-slate-100 rounded-xl p-2.5 text-xs text-slate-700 space-y-1">
+                            <div className="font-semibold text-slate-900">
+                              {trip.vehicle} • {trip.driverName || 'Verified'} ({trip.vehicleNumber || 'Cab'})
+                            </div>
+                            <div className="text-slate-600 line-clamp-2">{trip.route}</div>
+                            {Number(trip.extraCharges) > 0 && (
+                              <div className="text-[11px] text-amber-700 font-semibold">
+                                +₹{Number(trip.extraCharges).toLocaleString('en-IN')} extras
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleToggleCommissionSettled(trip)}
+                              className={`min-h-[44px] px-3 py-2 rounded-xl text-xs font-bold border active:scale-[0.98] transition ${
+                                trip.commissionSettled
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                                  : 'bg-amber-50 text-amber-900 border-amber-300'
+                              }`}
+                            >
+                              {trip.commissionSettled
+                                ? 'Comm. Settled ✓'
+                                : `${math.settlementDirection === 'DRIVER_PAYS_OFFICE' ? 'Drv→Off' : 'Off→Drv'} ₹${math.settlementAmount.toLocaleString('en-IN')}`}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleSendGoogleReviewRequest(trip)}
+                              className={`min-h-[44px] px-3 py-2 rounded-xl text-xs font-bold border active:scale-[0.98] transition flex items-center justify-center gap-1.5 ${
+                                trip.reviewSent
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                                  : 'bg-blue-600 text-white border-blue-600'
+                              }`}
+                            >
+                              <CheckCircle2 className="w-4 h-4" />
+                              <span>{trip.reviewSent ? 'Review Sent ✓' : 'Send Review'}</span>
+                            </button>
+                          </div>
+
+                          <div className="flex justify-end pt-1 border-t border-slate-100">
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteTrip(trip.id)}
+                              className="min-h-[36px] px-2.5 text-xs font-semibold text-slate-400 hover:text-red-600 flex items-center gap-1 rounded-lg"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                              <span>Delete Record</span>
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* DESKTOP SETTLEMENT TABLE (md+) */}
+                  <div className="hidden md:block bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs">
                       <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider text-[11px]">
                         <tr>
                           <th className="py-3 px-4">Trip ID</th>
@@ -4049,6 +4341,7 @@ Warm regards,
                     </table>
                   </div>
                 </div>
+                </>
               )}
             </div>
           )}
@@ -4193,8 +4486,15 @@ Warm regards,
         });
 
         return (
-          <div className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-            <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 max-w-2xl w-full shadow-2xl space-y-4 animate-fadeIn my-auto max-h-[92vh] overflow-y-auto">
+          <div
+            className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto"
+            onClick={() => setAssigningTrip(null)}
+          >
+            <div
+              className="bg-white border border-slate-200 rounded-t-3xl sm:rounded-2xl p-4 sm:p-6 pb-safe max-w-2xl w-full shadow-2xl space-y-4 animate-fadeIn sm:my-auto max-h-[92dvh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="w-10 h-1 bg-slate-300 rounded-full mx-auto sm:hidden" />
               {/* Modal Header */}
               <div className="flex items-start justify-between pb-3 border-b border-slate-100">
                 <div>
@@ -4209,10 +4509,12 @@ Warm regards,
                   </p>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setAssigningTrip(null)}
-                  className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"
+                  className="w-9 h-9 rounded-full bg-slate-100 sm:bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0"
+                  aria-label="Close modal"
                 >
-                  <span className="material-symbols-outlined text-lg">close</span>
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
@@ -4538,10 +4840,17 @@ Warm regards,
         );
       })()}
 
-      {/* EDIT DRIVER MODAL */}
+      {/* EDIT DRIVER MODAL (Bottom Sheet on Mobile) */}
       {editingDriver && (
-        <div className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 max-w-lg w-full shadow-2xl space-y-4 animate-fadeIn my-auto">
+        <div
+          className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto"
+          onClick={() => setEditingDriver(null)}
+        >
+          <div
+            className="bg-white border border-slate-200 rounded-t-3xl sm:rounded-2xl p-5 sm:p-6 pb-safe max-w-lg w-full shadow-2xl space-y-4 animate-fadeIn sm:my-auto max-h-[92dvh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-10 h-1 bg-slate-300 rounded-full mx-auto sm:hidden" />
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
                 <h3 className="font-bold text-base text-slate-900">Edit Driver / Vehicle</h3>
@@ -4550,9 +4859,10 @@ Warm regards,
               <button
                 type="button"
                 onClick={() => setEditingDriver(null)}
-                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"
+                className="w-9 h-9 rounded-full bg-slate-100 sm:bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0"
+                aria-label="Close modal"
               >
-                <span className="material-symbols-outlined text-lg">close</span>
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -4714,10 +5024,17 @@ Warm regards,
         </div>
       )}
 
-      {/* EDIT BOOKING MODAL */}
+      {/* EDIT BOOKING MODAL (Bottom Sheet on Mobile) */}
       {editingTrip && (
-        <div className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 max-w-lg w-full shadow-2xl space-y-4 animate-fadeIn my-auto">
+        <div
+          className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto"
+          onClick={() => setEditingTrip(null)}
+        >
+          <div
+            className="bg-white border border-slate-200 rounded-t-3xl sm:rounded-2xl p-5 sm:p-6 pb-safe max-w-lg w-full shadow-2xl space-y-4 animate-fadeIn sm:my-auto max-h-[92dvh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-10 h-1 bg-slate-300 rounded-full mx-auto sm:hidden" />
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
                 <h3 className="font-bold text-base text-slate-900">Edit Booking #{editingTrip.id}</h3>
@@ -4726,9 +5043,10 @@ Warm regards,
               <button
                 type="button"
                 onClick={() => setEditingTrip(null)}
-                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"
+                className="w-9 h-9 rounded-full bg-slate-100 sm:bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0"
+                aria-label="Close modal"
               >
-                <span className="material-symbols-outlined text-lg">close</span>
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -4917,10 +5235,17 @@ Warm regards,
         </div>
       )}
 
-      {/* STAGE 1 -> STAGE 2: COLLECT ADVANCE & CONFIRM QUOTATION MODAL */}
+      {/* STAGE 1 -> STAGE 2: COLLECT ADVANCE & CONFIRM QUOTATION MODAL (Bottom Sheet on Mobile) */}
       {confirmingTrip && (
-        <div className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 max-w-lg w-full shadow-2xl space-y-4 animate-fadeIn my-auto">
+        <div
+          className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto"
+          onClick={() => setConfirmingTrip(null)}
+        >
+          <div
+            className="bg-white border border-slate-200 rounded-t-3xl sm:rounded-2xl p-5 sm:p-6 pb-safe max-w-lg w-full shadow-2xl space-y-4 animate-fadeIn sm:my-auto max-h-[92dvh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-10 h-1 bg-slate-300 rounded-full mx-auto sm:hidden" />
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
                 <h3 className="font-bold text-base text-slate-900">Collect Advance &amp; Confirm #{confirmingTrip.id}</h3>
@@ -4929,9 +5254,10 @@ Warm regards,
               <button
                 type="button"
                 onClick={() => setConfirmingTrip(null)}
-                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"
+                className="w-9 h-9 rounded-full bg-slate-100 sm:bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0"
+                aria-label="Close modal"
               >
-                <span className="material-symbols-outlined text-lg">close</span>
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -5086,8 +5412,15 @@ Warm regards,
         });
         const totalEndCollection = math.customerBalanceToDriver;
         return (
-          <div className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 max-w-md w-full shadow-2xl space-y-4 animate-fadeIn my-auto">
+          <div
+            className="fixed inset-0 z-50 bg-slate-900/65 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto"
+            onClick={() => setCompletingTrip(null)}
+          >
+            <div
+              className="bg-white border border-slate-200 rounded-t-3xl sm:rounded-2xl p-5 sm:p-6 pb-safe max-w-md w-full shadow-2xl space-y-4 animate-fadeIn sm:my-auto max-h-[92dvh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="w-10 h-1 bg-slate-300 rounded-full mx-auto sm:hidden" />
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div>
                   <h3 className="font-bold text-base text-slate-900">End Trip &amp; Record Payment</h3>
@@ -5098,9 +5431,10 @@ Warm regards,
                 <button
                   type="button"
                   onClick={() => setCompletingTrip(null)}
-                  className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100"
+                  className="w-9 h-9 rounded-full bg-slate-100 sm:bg-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center shrink-0"
+                  aria-label="Close modal"
                 >
-                  <span className="material-symbols-outlined text-lg">close</span>
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
@@ -5213,6 +5547,252 @@ Warm regards,
           </div>
         );
       })()}
+
+      {/* ========================================================= */}
+      {/* MOBILE STICKY LIVE FARE & QUICK-SEND BAR (QUOTES VIEW)    */}
+      {/* ========================================================= */}
+      {activeNav === 'quotes' && (
+        <div className="lg:hidden fixed left-0 right-0 bottom-nav-offset z-30 bg-slate-900/95 backdrop-blur-md text-white border-t border-slate-700/80 px-3 py-2.5 shadow-2xl">
+          <div className="flex items-center justify-between gap-2 max-w-lg mx-auto">
+            <div className="min-w-0">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 leading-none">
+                {calculatedFare.statePermitAmt > 0 ? `Total + ${calculatedFare.stateCode} Permit` : 'Total Fare'}
+              </div>
+              <div className="text-xl font-extrabold text-emerald-400 font-mono leading-tight">
+                ₹{calculatedFare.total.toLocaleString('en-IN')}
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => handleCopyQuote(calcOption1Text, 'Option 1 Micro-Receipt', true)}
+                className="min-h-[42px] px-3 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-white text-xs font-bold border border-slate-700 flex items-center gap-1"
+              >
+                <Copy className="w-3.5 h-3.5" />
+                <span>Copy</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSendWhatsAppQuote(calcOption1Text, true)}
+                className="min-h-[42px] px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-xs font-bold flex items-center gap-1 shadow-sm"
+              >
+                <Send className="w-3.5 h-3.5" />
+                <span>WA</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleTransferToBooking(calculatedFare.total)}
+                className="min-h-[42px] px-3 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white text-xs font-bold flex items-center gap-1 shadow-sm"
+              >
+                <ArrowUpRight className="w-3.5 h-3.5" />
+                <span>Push</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* MOBILE "MORE" BOTTOM SHEET (DRIVERS / SETTLEMENTS / SYNC) */}
+      {/* ========================================================= */}
+      {isMobileMoreOpen && (
+        <div
+          className="lg:hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-end"
+          onClick={() => setIsMobileMoreOpen(false)}
+        >
+          <div
+            className="w-full bg-white rounded-t-3xl p-4 pb-safe shadow-2xl border-t border-slate-200 animate-fadeIn space-y-3"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-1" />
+            <div className="flex items-center justify-between px-1">
+              <h3 className="text-sm font-extrabold text-slate-900">More Operations</h3>
+              <button
+                type="button"
+                onClick={() => setIsMobileMoreOpen(false)}
+                className="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center"
+                aria-label="Close menu"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2">
+              <button
+                type="button"
+                onClick={() => navigateTo('drivers')}
+                className={`min-h-[52px] px-4 py-3 rounded-2xl border flex items-center justify-between text-left transition ${
+                  activeNav === 'drivers'
+                    ? 'bg-blue-50 border-blue-300 text-blue-900 font-bold'
+                    : 'bg-slate-50 border-slate-200 text-slate-800 font-semibold'
+                }`}
+              >
+                <span className="flex items-center gap-3 text-sm">
+                  <Users className="w-5 h-5 text-blue-600" />
+                  Drivers &amp; Fleet Roster
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full bg-white border border-slate-200 text-xs font-bold text-slate-700">
+                  {drivers.length}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigateTo('settlements')}
+                className={`min-h-[52px] px-4 py-3 rounded-2xl border flex items-center justify-between text-left transition ${
+                  activeNav === 'settlements'
+                    ? 'bg-blue-50 border-blue-300 text-blue-900 font-bold'
+                    : 'bg-slate-50 border-slate-200 text-slate-800 font-semibold'
+                }`}
+              >
+                <span className="flex items-center gap-3 text-sm">
+                  <IndianRupee className="w-5 h-5 text-emerald-600" />
+                  Settlements &amp; Reviews
+                </span>
+                {settledTrips.length - closedCompletedCount > 0 && (
+                  <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold">
+                    {settledTrips.length - closedCompletedCount} pending
+                  </span>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigateTo('settings')}
+                className={`min-h-[52px] px-4 py-3 rounded-2xl border flex items-center justify-between text-left transition ${
+                  activeNav === 'settings'
+                    ? 'bg-blue-50 border-blue-300 text-blue-900 font-bold'
+                    : 'bg-slate-50 border-slate-200 text-slate-800 font-semibold'
+                }`}
+              >
+                <span className="flex items-center gap-3 text-sm">
+                  <Settings className="w-5 h-5 text-slate-600" />
+                  Cloud Sheet &amp; Settings
+                </span>
+                <span className={`w-2.5 h-2.5 rounded-full ${googleSheetUrl && syncStatus !== 'error' ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 pt-1 pb-2">
+              {googleSheetUrl && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    fetchTripsFromGoogleSheet();
+                    setIsMobileMoreOpen(false);
+                  }}
+                  className="min-h-[46px] px-3 py-2.5 rounded-2xl bg-slate-900 text-white text-xs font-bold flex items-center justify-center gap-2"
+                >
+                  <RefreshCw className={`w-4 h-4 ${syncStatus === 'syncing' ? 'animate-spin' : ''}`} />
+                  <span>Sync Sheet</span>
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={handleLockConsole}
+                className="min-h-[46px] px-3 py-2.5 rounded-2xl bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold flex items-center justify-center gap-2"
+              >
+                <Lock className="w-4 h-4" />
+                <span>Lock Console</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* MOBILE MATERIAL-3 THUMB-ZONE BOTTOM NAVIGATION BAR        */}
+      {/* ========================================================= */}
+      <nav
+        aria-label="Mobile navigation"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 pb-safe shadow-[0_-4px_20px_rgba(15,23,42,0.08)]"
+      >
+        <div className="grid grid-cols-5 items-center h-[4.25rem] px-1 max-w-lg mx-auto">
+          <button
+            type="button"
+            onClick={() => navigateTo('dispatch')}
+            className={`relative flex flex-col items-center justify-center gap-0.5 h-full rounded-xl transition ${
+              activeNav === 'dispatch' ? 'text-blue-600 font-bold' : 'text-slate-500 font-medium'
+            }`}
+          >
+            <span className={`px-3 py-1 rounded-full transition ${activeNav === 'dispatch' ? 'bg-blue-100/90' : ''}`}>
+              <LayoutGrid className="w-5 h-5" />
+            </span>
+            <span className="text-[10px] leading-none">Dispatch</span>
+            {quotationTrips.length + needsDriverCount > 0 && (
+              <span className="absolute top-1.5 right-3 min-w-[16px] h-4 px-1 rounded-full bg-rose-600 text-white text-[9px] font-extrabold flex items-center justify-center">
+                {quotationTrips.length + needsDriverCount}
+              </span>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigateTo('quotes')}
+            className={`flex flex-col items-center justify-center gap-0.5 h-full rounded-xl transition ${
+              activeNav === 'quotes' ? 'text-blue-600 font-bold' : 'text-slate-500 font-medium'
+            }`}
+          >
+            <span className={`px-3 py-1 rounded-full transition ${activeNav === 'quotes' ? 'bg-blue-100/90' : ''}`}>
+              <Calculator className="w-5 h-5" />
+            </span>
+            <span className="text-[10px] leading-none">Quote</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigateTo('new-booking')}
+            className="flex flex-col items-center justify-center -mt-4"
+            aria-label="New Booking"
+          >
+            <span
+              className={`rounded-2xl flex items-center justify-center shadow-lg transition active:scale-95 ${
+                activeNav === 'new-booking'
+                  ? 'bg-slate-900 text-white ring-4 ring-blue-100'
+                  : 'bg-blue-600 text-white shadow-blue-600/40'
+              }`}
+              style={{ width: '52px', height: '52px' }}
+            >
+              <Plus className="w-6 h-6 stroke-[2.5]" />
+            </span>
+            <span className={`text-[10px] mt-1 leading-none font-bold ${activeNav === 'new-booking' ? 'text-blue-700' : 'text-slate-700'}`}>
+              New
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigateTo('copilot')}
+            className={`flex flex-col items-center justify-center gap-0.5 h-full rounded-xl transition ${
+              activeNav === 'copilot' ? 'text-blue-600 font-bold' : 'text-slate-500 font-medium'
+            }`}
+          >
+            <span className={`px-3 py-1 rounded-full transition ${activeNav === 'copilot' ? 'bg-blue-100/90' : ''}`}>
+              <Bot className="w-5 h-5" />
+            </span>
+            <span className="text-[10px] leading-none">Co-Pilot</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsMobileMoreOpen(true)}
+            className={`relative flex flex-col items-center justify-center gap-0.5 h-full rounded-xl transition ${
+              ['drivers', 'settlements', 'settings'].includes(activeNav) || isMobileMoreOpen
+                ? 'text-blue-600 font-bold'
+                : 'text-slate-500 font-medium'
+            }`}
+          >
+            <span
+              className={`px-3 py-1 rounded-full transition ${
+                ['drivers', 'settlements', 'settings'].includes(activeNav) || isMobileMoreOpen ? 'bg-blue-100/90' : ''
+              }`}
+            >
+              <MoreHorizontal className="w-5 h-5" />
+            </span>
+            <span className="text-[10px] leading-none">More</span>
+          </button>
+        </div>
+      </nav>
     </div>
   );
 }
