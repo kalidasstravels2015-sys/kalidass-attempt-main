@@ -1009,8 +1009,10 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
     });
 
     // Form Submission
+    let isFormSubmitting = false;
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (isFormSubmitting) return;
       errorAlert.classList.add('hidden');
 
       const rawArea = (localitySearchInput.value || cityInput.value || '').trim();
@@ -1072,6 +1074,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
         return;
       }
 
+      isFormSubmitting = true;
       submitBtn.disabled = true;
       submitBtn.innerHTML = `
         <span class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
@@ -1115,6 +1118,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
       };
 
       let leadId = getNextDriverLeadId();
+      let savedToBackend = false;
 
       try {
         const res = await fetch('/api/record-driver-lead', {
@@ -1123,6 +1127,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
           body: JSON.stringify(leadPayload)
         });
         if (res.ok) {
+          savedToBackend = true;
           const resData = await res.json();
           if (resData && resData.leadId) {
             leadId = resData.leadId;
@@ -1136,32 +1141,42 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
         }
       } catch (_) {}
 
-      try {
-        const sheetUrl = DRIVER_LEADS_WEBHOOK_URL;
-        if (sheetUrl && sheetUrl.startsWith('https://script.google.com/macros/s/')) {
-          await fetch(sheetUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({
-              type: 'driver_lead',
-              leadId,
-              date: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-              name: leadPayload.name,
-              phone: leadPayload.phone,
-              category: leadPayload.partnerType,
-              zone: leadPayload.zone,
-              area: leadPayload.area,
-              city: leadPayload.city,
-              notes: leadPayload.notes,
-              dlFile: dlFileData,
-              rcFile: vehiclesState[0]?.rcFile || null,
-              carFile: vehiclesState[0]?.carFile || null,
-              referenceId: leadId
-            })
-          }).catch(() => {});
-        }
-      } catch (_) {}
+      // Fallback only if server endpoint was not reachable (prevents duplicate submissions)
+      if (!savedToBackend) {
+        try {
+          const sheetUrl = DRIVER_LEADS_WEBHOOK_URL;
+          if (sheetUrl && sheetUrl.startsWith('https://script.google.com/macros/s/')) {
+            await fetch(sheetUrl, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'text/plain' },
+              body: JSON.stringify({
+                type: 'driver_lead',
+                leadId,
+                date: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+                name: leadPayload.name,
+                phone: leadPayload.phone,
+                category: leadPayload.category,
+                partnerType: leadPayload.partnerType,
+                carCount: leadPayload.carCount,
+                cars: leadPayload.cars,
+                plateType: leadPayload.plateType,
+                licenseType: leadPayload.licenseType,
+                experience: leadPayload.experience,
+                preferredDuty: leadPayload.preferredDuty,
+                zone: leadPayload.zone,
+                area: leadPayload.area,
+                city: leadPayload.city,
+                notes: leadPayload.notes,
+                dlFile: dlFileData,
+                rcFile: vehiclesState[0]?.rcFile || null,
+                carFile: vehiclesState[0]?.carFile || null,
+                referenceId: leadId
+              })
+            }).catch(() => {});
+          }
+        } catch (_) {}
+      }
 
       (document.getElementById('confLeadId') as HTMLElement).textContent = `Ref ID: ${leadId}`;
       (document.getElementById('confName') as HTMLElement).textContent = name;
@@ -1223,6 +1238,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
       renderVehicleCards();
       setCanonicalLocality('Medavakkam', 'South & OMR');
       submitBtn.disabled = false;
+      isFormSubmitting = false;
       submitBtn.innerHTML = `<span>Submit Partner Registration</span>`;
       successCard.classList.add('hidden');
       formWrapper.classList.remove('hidden');

@@ -62,7 +62,42 @@ export const GET: APIRoute = async () => {
       }
     } catch (_) {}
   }
-  return new Response(JSON.stringify({ success: true, leads }), {
+
+  // Deduplicate and prioritize complete vehicle submissions
+  const phoneMap = new Map<string, any[]>();
+  const testLeads: any[] = [];
+  leads.forEach((l) => {
+    const cleanPhone = String(l.phone || '').replace(/\D/g, '').slice(-10);
+    const isTest =
+      !cleanPhone ||
+      cleanPhone.length !== 10 ||
+      cleanPhone === '9999999999' ||
+      cleanPhone.startsWith('00000') ||
+      (/test|verify|applicant|visitor/i.test(l.name) && cleanPhone.length !== 10) ||
+      String(l.leadId || '').includes('TEST');
+    if (isTest) {
+      testLeads.push(l);
+    } else {
+      if (!phoneMap.has(cleanPhone)) phoneMap.set(cleanPhone, []);
+      phoneMap.get(cleanPhone)!.push(l);
+    }
+  });
+
+  const deduplicated: any[] = [];
+  phoneMap.forEach((group) => {
+    group.sort((a, b) => {
+      const aHasCar = a.details && a.details.includes('Car (') && !a.details.includes('Car ()');
+      const bHasCar = b.details && b.details.includes('Car (') && !b.details.includes('Car ()');
+      if (aHasCar && !bHasCar) return -1;
+      if (!aHasCar && bHasCar) return 1;
+      return 0;
+    });
+    deduplicated.push(group[0]);
+  });
+
+  const resultLeads = [...deduplicated, ...testLeads];
+
+  return new Response(JSON.stringify({ success: true, count: resultLeads.length, leads: resultLeads }), {
     status: 200,
     headers: { 'Content-Type': 'application/json; charset=utf-8' }
   });

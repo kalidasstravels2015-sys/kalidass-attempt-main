@@ -384,7 +384,7 @@ export function getNextDriverRosterId(existingDrivers = [], offset = 0, prefix =
   if (Array.isArray(existingDrivers)) {
     for (const item of existingDrivers) {
       const rawId = item?.id || (typeof item === 'string' ? item : '');
-      const m = rawId ? String(rawId).match(/^DRV-0*(\d+)$/i) : null;
+      const m = rawId ? String(rawId).match(/^(?:KT-)?DRV-0*(\d+)$/i) : null;
       if (m) {
         const val = parseInt(m[1], 10);
         if (!isNaN(val) && val >= 1 && val <= 999 && val > maxFromList) {

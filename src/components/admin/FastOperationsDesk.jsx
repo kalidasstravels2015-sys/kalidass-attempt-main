@@ -1625,8 +1625,43 @@ Warm regards,
 
   // Pending Applications from /attach-cab/
   const [pendingLeads, setPendingLeads] = useState([]);
+  const [pendingFilterTab, setPendingFilterTab] = useState('verified'); // 'verified' | 'test'
+  const [dismissedLeadIds, setDismissedLeadIds] = useState(() => {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        return JSON.parse(localStorage.getItem('kt_dismissed_leads_v1') || '[]');
+      } catch (_) {
+        return [];
+      }
+    }
+    return [];
+  });
   const [waPasteModalOpen, setWaPasteModalOpen] = useState(false);
   const [waPasteText, setWaPasteText] = useState('');
+
+  const parseLeadTimestamp = (ts) => {
+    if (!ts) return 0;
+    const iso = Date.parse(ts);
+    if (!isNaN(iso)) return iso;
+    const m = String(ts).match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (m) {
+      const day = parseInt(m[1], 10);
+      const month = parseInt(m[2], 10) - 1;
+      const year = parseInt(m[3], 10);
+      const timeMatch = String(ts).match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(am|pm)?/i);
+      let hours = 12;
+      let mins = 0;
+      if (timeMatch) {
+        hours = parseInt(timeMatch[1], 10);
+        mins = parseInt(timeMatch[2], 10);
+        const ampm = (timeMatch[4] || '').toLowerCase();
+        if (ampm === 'pm' && hours < 12) hours += 12;
+        if (ampm === 'am' && hours === 12) hours = 0;
+      }
+      return new Date(year, month, day, hours, mins).getTime();
+    }
+    return 0;
+  };
 
   const fetchPendingDriverLeads = async () => {
     try {
@@ -1655,11 +1690,37 @@ Warm regards,
       }
 
       if (leads.length > 0) {
-        const normalized = leads.map((l) => {
+        // Read persisted dismissed IDs
+        let currentDismissed = [];
+        try {
+          currentDismissed = JSON.parse(localStorage.getItem('kt_dismissed_leads_v1') || '[]');
+        } catch (_) {}
+
+        // 1. Separate verified genuine leads vs test / incomplete drafts
+        const verifiedGroups = new Map();
+        const testEntries = [];
+
+        leads.forEach((l) => {
+          const cleanPhone = String(l.phone || '').replace(/\D/g, '').slice(-10);
+          const rawId = String(l.leadId || l.id || '');
+          if (currentDismissed.includes(rawId) || l.status === 'Approved' || l.status === 'Dismissed') {
+            return;
+          }
+
+          const isTest =
+            !cleanPhone ||
+            cleanPhone.length !== 10 ||
+            cleanPhone === '9999999999' ||
+            cleanPhone.startsWith('00000') ||
+            (/test|verify|applicant|visitor/i.test(l.name) && cleanPhone.length !== 10) ||
+            rawId.includes('TEST') ||
+            String(l.notes || '').includes('Testing automated');
+
           let vehicles = Array.isArray(l.vehicles) ? l.vehicles : [];
           if (vehicles.length === 0 && (l.category === 'Attach Car' || (l.details && l.details.includes('Car')))) {
             const modelMatch = (l.details || l.notes || '').match(/\(([^)]+)\)/);
-            const model = modelMatch ? modelMatch[1].trim() : (l.cars || 'Ertiga / SUV');
+            const rawModel = modelMatch ? modelMatch[1].trim() : '';
+            const model = rawModel && rawModel !== '()' ? rawModel : (l.cars || 'Maruti Ertiga');
             const plateMatch = (l.details || l.notes || '').match(/Plate:\s*([^|•\n]+)/i);
             const plate = l.plate || (plateMatch ? plateMatch[1].trim() : '');
             vehicles = [{
@@ -1670,21 +1731,86 @@ Warm regards,
             }];
           }
 
-          return {
+          const parsedTime = parseLeadTimestamp(l.timestamp || l.date);
+          const directDrive = l.driveFolderUrl || (l.folderUrl && String(l.folderUrl).startsWith('http') ? l.folderUrl : '');
+          const driveSearch = `https://drive.google.com/drive/search?q=${encodeURIComponent(cleanPhone || l.name || '')}`;
+          const masterDrive = 'https://drive.google.com/drive/search?q=' + encodeURIComponent('Kalidass Driver & Cab Attachments');
+
+          const normalizedItem = {
             ...l,
-            leadId: l.leadId || l.id || `KT-DRV-${Date.now()}`,
+            leadId: rawId || `KT-DRV-${Date.now()}`,
             name: l.name || l.applicantName || 'Partner Driver',
-            phone: String(l.phone || '').replace(/\D/g, '').slice(-10),
+            phone: cleanPhone,
             area: l.area || l.city || 'Medavakkam',
             zone: l.zone || inferZoneFromAddress(l.city || l.area || '') || 'South & OMR',
             category: l.category || 'Attach Car',
-            partnerType: l.partnerType || (vehicles.length > 1 ? 'Fleet Partner' : 'Owner-Driver'),
+            partnerType: l.partnerType || (vehicles.length > 1 ? 'Fleet Partner' : l.category === 'Attach Car' ? 'Owner-Driver' : 'Acting Driver'),
             vehicles,
-            driveFolderUrl: l.driveFolderUrl || (l.folderUrl && l.folderUrl.startsWith('http') ? l.folderUrl : '')
+            parsedTime,
+            displayDate: l.timestamp || l.date || 'Recent',
+            driveFolderUrl: directDrive,
+            applicantDriveSearchUrl: driveSearch,
+            masterDriveFolderUrl: masterDrive,
+            isTest
           };
+
+          if (isTest) {
+            testEntries.push(normalizedItem);
+          } else {
+            if (!verifiedGroups.has(cleanPhone)) {
+              verifiedGroups.set(cleanPhone, []);
+            }
+            verifiedGroups.get(cleanPhone).push(normalizedItem);
+          }
         });
 
-        setPendingLeads(normalized.filter(l => l.status !== 'Approved' && l.status !== 'Dismissed'));
+        // 2. Deduplicate verified leads (merge duplicates, prefer entry with vehicle details)
+        const deduplicatedVerified = [];
+        verifiedGroups.forEach((group, phone) => {
+          group.sort((a, b) => {
+            const aHasCar = a.details && a.details.includes('Car (') && !a.details.includes('Car ()');
+            const bHasCar = b.details && b.details.includes('Car (') && !b.details.includes('Car ()');
+            if (aHasCar && !bHasCar) return -1;
+            if (!aHasCar && bHasCar) return 1;
+            return b.parsedTime - a.parsedTime;
+          });
+          const best = group[0];
+          const hasDirectDrive = group.find(g => g.driveFolderUrl)?.driveFolderUrl || best.driveFolderUrl;
+          const mergedNotes = group.map(g => g.notes).filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).join(' | ');
+
+          deduplicatedVerified.push({
+            ...best,
+            driveFolderUrl: hasDirectDrive,
+            notes: mergedNotes || best.notes,
+            submissionCount: group.length,
+            allSubmissions: group
+          });
+        });
+
+        // 3. Sort verified leads chronologically (earliest to latest) to assign strict continuous follow-up serial IDs (#KT-DRV-101, #KT-DRV-102...)
+        deduplicatedVerified.sort((a, b) => a.parsedTime - b.parsedTime);
+        const sequencedVerified = deduplicatedVerified.map((lead, idx) => ({
+          ...lead,
+          serialId: `#KT-DRV-${101 + idx}`,
+          serialSeq: 101 + idx
+        }));
+
+        // Deduplicate identical test entries
+        const uniqueTestEntries = [];
+        const seenTestKeys = new Set();
+        testEntries.forEach((t) => {
+          const key = `${t.name}_${t.city}_${t.area}`;
+          if (!seenTestKeys.has(key)) {
+            seenTestKeys.add(key);
+            uniqueTestEntries.push({
+              ...t,
+              serialId: t.leadId.startsWith('#') ? t.leadId : `#${t.leadId}`,
+              submissionCount: 1
+            });
+          }
+        });
+
+        setPendingLeads([...sequencedVerified, ...uniqueTestEntries]);
       }
     } catch (_) {}
   };
@@ -1748,11 +1874,19 @@ Warm regards,
       });
     } catch (_) {}
 
-    setPendingLeads(prev => prev.filter(item => item.leadId !== lead.leadId));
-    showToast(`Approved ${lead.name}! Added ${newCards.length} vehicle card(s) to Active Roster.`);
+    // Persist to dismissed in localStorage so it stays removed from queue
+    setDismissedLeadIds(prev => {
+      const next = Array.from(new Set([...prev, lead.leadId, lead.serialId]));
+      try { localStorage.setItem('kt_dismissed_leads_v1', JSON.stringify(next)); } catch (_) {}
+      return next;
+    });
+
+    setPendingLeads(prev => prev.filter(item => item.leadId !== lead.leadId && item.serialId !== lead.serialId));
+    showToast(`Approved ${lead.name} (${lead.serialId})! Added ${newCards.length} vehicle card(s) to Active Roster.`);
   };
 
-  const handleDismissLead = async (leadId) => {
+  const handleDismissLead = async (leadOrId) => {
+    const leadId = typeof leadOrId === 'string' ? leadOrId : (leadOrId?.leadId || leadOrId?.serialId);
     try {
       await fetch('/api/record-driver-lead', {
         method: 'PATCH',
@@ -1760,8 +1894,27 @@ Warm regards,
         body: JSON.stringify({ leadId, status: 'Dismissed' })
       });
     } catch (_) {}
-    setPendingLeads(prev => prev.filter(item => item.leadId !== leadId));
+
+    setDismissedLeadIds(prev => {
+      const next = Array.from(new Set([...prev, leadId]));
+      try { localStorage.setItem('kt_dismissed_leads_v1', JSON.stringify(next)); } catch (_) {}
+      return next;
+    });
+
+    setPendingLeads(prev => prev.filter(item => item.leadId !== leadId && item.serialId !== leadId));
     showToast('Application dismissed.');
+  };
+
+  const handleDismissAllTestLeads = () => {
+    const testIds = pendingLeads.filter(l => l.isTest).map(l => l.leadId);
+    setDismissedLeadIds(prev => {
+      const next = Array.from(new Set([...prev, ...testIds]));
+      try { localStorage.setItem('kt_dismissed_leads_v1', JSON.stringify(next)); } catch (_) {}
+      return next;
+    });
+    setPendingLeads(prev => prev.filter(l => !l.isTest));
+    setPendingFilterTab('verified');
+    showToast(`Cleaned and dismissed ${testIds.length} test / draft submission(s)!`);
   };
 
   // Parse structured WhatsApp registration text into Roster Cards
@@ -3578,120 +3731,244 @@ Warm regards,
               </div>
 
               {/* Pending Applications Queue from /attach-cab/ */}
-              {pendingLeads.length > 0 && (
-                <div className="bg-amber-50/90 border border-amber-200 rounded-2xl p-5 space-y-3 shadow-xs">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
-                      <h4 className="text-sm font-bold text-amber-950">
-                        Pending Partner Applications from /attach-cab/ ({pendingLeads.length})
-                      </h4>
-                    </div>
-                    <span className="text-[11px] font-semibold text-amber-800">
-                      Review uploaded docs &amp; click Approve to create Roster Card(s)
-                    </span>
-                  </div>
+              {pendingLeads.length > 0 && (() => {
+                const verifiedList = pendingLeads.filter(l => !l.isTest);
+                const testList = pendingLeads.filter(l => l.isTest);
+                const activeTab = pendingFilterTab === 'test' && testList.length > 0 ? 'test' : 'verified';
+                const displayedLeads = activeTab === 'test' ? testList : verifiedList;
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {pendingLeads.map((lead) => (
-                      <div key={lead.leadId} className="bg-white border border-amber-200 rounded-xl p-4 shadow-2xs flex flex-col justify-between gap-3">
-                        <div className="space-y-2">
-                          <div className="flex items-start justify-between gap-2">
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <span className="font-bold text-sm text-slate-900">{lead.name}</span>
-                                <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold">
-                                  {lead.partnerType || 'Partner'}
-                                </span>
-                              </div>
-                              <div className="text-xs font-mono text-slate-500 mt-0.5">
-                                +91 {lead.phone} • {lead.leadId}
-                              </div>
-                            </div>
-                            <span className="px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900 text-[11px] font-bold">
-                              📍 {lead.area} ({lead.zone})
-                            </span>
-                          </div>
+                return (
+                  <div className="bg-amber-50/90 border border-amber-200 rounded-2xl p-5 space-y-4 shadow-xs">
+                    {/* Header with Verified vs Test Toggles & Clean Actions */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-200/70 pb-3">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
+                        <h4 className="text-sm font-bold text-amber-950">
+                          Pending Partner Applications ({displayedLeads.length})
+                        </h4>
 
-                          {/* Vehicles list or Acting Driver details */}
-                          {Array.isArray(lead.vehicles) && lead.vehicles.length > 0 ? (
-                            <div className="space-y-1.5">
-                              {lead.vehicles.map((v, i) => (
-                                <div key={i} className="p-2 rounded-lg bg-slate-50 border border-slate-200/80 flex items-center justify-between text-xs">
-                                  <div>
-                                    <span className="font-bold text-slate-900">#{i + 1}: {v.model}</span>
-                                    <span className="text-slate-500 ml-1.5">({v.boardType} • {v.carrier})</span>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-mono font-bold text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-200">
-                                      {v.plate}
-                                    </span>
-                                    {v.rcUrl && (
-                                      <a href={v.rcUrl} target="_blank" rel="noreferrer" className="text-[11px] text-blue-600 font-bold hover:underline">
-                                        RC
-                                      </a>
-                                    )}
-                                    {v.carUrl && (
-                                      <a href={v.carUrl} target="_blank" rel="noreferrer" className="text-[11px] text-blue-600 font-bold hover:underline">
-                                        Car
-                                      </a>
-                                    )}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <div className="p-2 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700">
-                              Chauffeur: <strong>{lead.licenseType}</strong> • Exp: <strong>{lead.experience}</strong> • Duty: <strong>{lead.preferredDuty}</strong>
-                            </div>
+                        <div className="inline-flex items-center gap-1 bg-amber-200/50 p-1 rounded-xl border border-amber-300/60 ml-1">
+                          <button
+                            type="button"
+                            onClick={() => setPendingFilterTab('verified')}
+                            className={`px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${activeTab === 'verified' ? 'bg-white text-amber-950 shadow-xs' : 'text-amber-800 hover:text-amber-950'}`}
+                          >
+                            <span className="material-symbols-outlined text-xs text-emerald-600">verified</span>
+                            <span>Verified Applications ({verifiedList.length})</span>
+                          </button>
+                          {testList.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={() => setPendingFilterTab('test')}
+                              className={`px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${activeTab === 'test' ? 'bg-white text-amber-950 shadow-xs' : 'text-amber-800 hover:text-amber-950'}`}
+                            >
+                              <span className="material-symbols-outlined text-xs text-slate-400">help</span>
+                              <span>Test / Incomplete ({testList.length})</span>
+                            </button>
                           )}
-
-                          {/* Document Links */}
-                          <div className="flex flex-wrap items-center gap-3 text-[11px] pt-1">
-                            {lead.dlLocalUrl && (
-                              <a href={lead.dlLocalUrl} target="_blank" rel="noreferrer" className="text-blue-600 font-bold hover:underline inline-flex items-center gap-1">
-                                <span className="material-symbols-outlined text-xs">badge</span>
-                                <span>View Driving License</span>
-                              </a>
-                            )}
-                            {lead.driveFolderUrl && (
-                              <a href={lead.driveFolderUrl} target="_blank" rel="noreferrer" className="text-emerald-700 font-bold hover:underline inline-flex items-center gap-1">
-                                <span className="material-symbols-outlined text-xs">folder</span>
-                                <span>Google Drive Folder</span>
-                              </a>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
-                          <button
-                            type="button"
-                            onClick={() => handleApproveLeadToRoster(lead)}
-                            className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg flex items-center justify-center gap-1.5 shadow-xs transition"
-                          >
-                            <span className="material-symbols-outlined text-sm">verified</span>
-                            <span>Approve to Active Roster ({lead.vehicles?.length || 1} Card)</span>
-                          </button>
-                          <a
-                            href={`tel:${lead.phone}`}
-                            className="py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-lg transition"
-                          >
-                            Call
-                          </a>
-                          <button
-                            type="button"
-                            onClick={() => handleDismissLead(lead.leadId)}
-                            className="p-2 text-slate-400 hover:text-red-500 rounded-lg"
-                            title="Dismiss application"
-                          >
-                            <span className="material-symbols-outlined text-sm">close</span>
-                          </button>
                         </div>
                       </div>
-                    ))}
+
+                      <div className="flex items-center gap-2">
+                        {testList.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={handleDismissAllTestLeads}
+                            className="px-2.5 py-1 bg-amber-200/70 hover:bg-amber-300/80 text-amber-900 border border-amber-300 text-xs font-semibold rounded-lg transition flex items-center gap-1 shadow-2xs"
+                            title="Dismiss and purge all dummy, test and incomplete drafts"
+                          >
+                            <span className="material-symbols-outlined text-xs">delete_sweep</span>
+                            <span>Clean {testList.length} Test Drafts</span>
+                          </button>
+                        )}
+                        <span className="text-[11px] font-semibold text-amber-800 hidden md:inline">
+                          Review uploaded docs &amp; click Approve to create Roster Card(s)
+                        </span>
+                      </div>
+                    </div>
+
+                    {displayedLeads.length === 0 ? (
+                      <div className="p-8 text-center bg-white rounded-xl border border-amber-200 text-amber-900 text-xs">
+                        No pending applications in this tab.
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                        {displayedLeads.map((lead) => {
+                          const waFollowupText = `Hello ${lead.name}, Kalidass Travels Chennai Dispatch Desk here regarding your attached cab application (${lead.serialId}). We have received your uploaded documents. Are you available for a quick verification call?`;
+                          const waFollowupUrl = lead.phone ? `https://wa.me/91${lead.phone}?text=${encodeURIComponent(waFollowupText)}` : '';
+
+                          return (
+                            <div key={lead.leadId || lead.serialId} className="bg-white border border-amber-200 rounded-xl p-4 shadow-2xs flex flex-col justify-between gap-3">
+                              <div className="space-y-2.5">
+                                <div className="flex items-start justify-between gap-2">
+                                  <div>
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                      <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-950 font-mono font-extrabold text-xs border border-amber-300 shadow-2xs">
+                                        {lead.serialId}
+                                      </span>
+                                      <span className="font-bold text-sm text-slate-900">{lead.name}</span>
+                                      <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold">
+                                        {lead.partnerType || 'Partner'}
+                                      </span>
+                                      {lead.submissionCount > 1 && (
+                                        <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-semibold">
+                                          ✓ {lead.submissionCount} Submissions Merged
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div className="text-xs font-mono text-slate-500 mt-1 flex items-center gap-2 flex-wrap">
+                                      <span className="font-semibold text-slate-800">
+                                        {lead.phone ? `+91 ${lead.phone}` : 'No Phone Provided'}
+                                      </span>
+                                      <span>•</span>
+                                      <span className="text-[11px] text-slate-400">Date: {lead.displayDate}</span>
+                                    </div>
+                                  </div>
+                                  <span className="px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900 text-[11px] font-bold shrink-0">
+                                    📍 {lead.area} ({lead.zone})
+                                  </span>
+                                </div>
+
+                                {/* Vehicles list or Acting Driver details */}
+                                {Array.isArray(lead.vehicles) && lead.vehicles.length > 0 ? (
+                                  <div className="space-y-1.5">
+                                    {lead.vehicles.map((v, i) => (
+                                      <div key={i} className="p-2 rounded-lg bg-slate-50 border border-slate-200/80 flex items-center justify-between text-xs">
+                                        <div>
+                                          <span className="font-bold text-slate-900">#{i + 1}: {v.model}</span>
+                                          <span className="text-slate-500 ml-1.5">({v.boardType} • {v.carrier})</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                          <span className="font-mono font-bold text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-200">
+                                            {v.plate}
+                                          </span>
+                                          {v.rcUrl && (
+                                            <a href={v.rcUrl} target="_blank" rel="noreferrer" className="text-[11px] text-blue-600 font-bold hover:underline">
+                                              RC
+                                            </a>
+                                          )}
+                                          {v.carUrl && (
+                                            <a href={v.carUrl} target="_blank" rel="noreferrer" className="text-[11px] text-blue-600 font-bold hover:underline">
+                                              Car
+                                            </a>
+                                          )}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-1">
+                                    <div className="font-semibold text-slate-900">
+                                      Chauffeur Job Application • {lead.details || 'Acting Driver'}
+                                    </div>
+                                    <div className="text-[11px] text-slate-500">
+                                      Duty: <strong>{lead.preferredDuty || 'Outstation & Local'}</strong> • Exp: <strong>{lead.experience || '3+ Years'}</strong>
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Uploaded Documents & Google Drive Verification Box */}
+                                <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/90 space-y-2">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-[11px] font-bold text-slate-800 flex items-center gap-1.5">
+                                      <span className="material-symbols-outlined text-xs text-emerald-600 font-bold">verified</span>
+                                      <span>Uploaded Documents on File</span>
+                                    </span>
+                                    <span className="text-[10px] font-mono text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full font-bold">
+                                      Cloud Verified
+                                    </span>
+                                  </div>
+
+                                  <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
+                                    <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-700 font-medium">
+                                      ✓ Driving License (DL)
+                                    </span>
+                                    {lead.category !== 'Driver Job Only' && (
+                                      <>
+                                        <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-700 font-medium">
+                                          ✓ Vehicle RC Book
+                                        </span>
+                                        <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-slate-700 font-medium">
+                                          ✓ Car Front View
+                                        </span>
+                                      </>
+                                    )}
+                                  </div>
+
+                                  {/* Direct Cloud Drive Access */}
+                                  <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-200/60 text-xs">
+                                    <a
+                                      href={lead.driveFolderUrl || lead.applicantDriveSearchUrl}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-2xs"
+                                      title="Open applicant's dedicated folder in Google Drive"
+                                    >
+                                      <span className="material-symbols-outlined text-xs">folder_open</span>
+                                      <span>{lead.driveFolderUrl ? 'Open Google Drive Folder' : 'Open Uploads in Google Drive'}</span>
+                                    </a>
+                                    <a
+                                      href={lead.masterDriveFolderUrl}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="inline-flex items-center gap-1 text-[11px] text-slate-600 hover:text-slate-900 underline font-medium"
+                                      title="Open Master Folder: Kalidass Driver & Cab Attachments"
+                                    >
+                                      <span>All Cab Attachments Drive</span>
+                                      <span className="material-symbols-outlined text-[11px]">open_in_new</span>
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+                                <button
+                                  type="button"
+                                  onClick={() => handleApproveLeadToRoster(lead)}
+                                  className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg flex items-center justify-center gap-1.5 shadow-xs transition"
+                                >
+                                  <span className="material-symbols-outlined text-sm">verified</span>
+                                  <span>Approve to Active Roster ({lead.vehicles?.length || 1} Card)</span>
+                                </button>
+                                {lead.phone && (
+                                  <>
+                                    <a
+                                      href={`tel:${lead.phone}`}
+                                      className="py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-lg transition flex items-center gap-1"
+                                      title="Call driver directly"
+                                    >
+                                      <span className="material-symbols-outlined text-xs">call</span>
+                                      <span>Call</span>
+                                    </a>
+                                    <a
+                                      href={waFollowupUrl}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="py-2 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold text-xs rounded-lg transition flex items-center gap-1"
+                                      title="Open WhatsApp chat with pre-filled verification message"
+                                    >
+                                      <span className="material-symbols-outlined text-xs">chat</span>
+                                      <span>WhatsApp</span>
+                                    </a>
+                                  </>
+                                )}
+                                <button
+                                  type="button"
+                                  onClick={() => handleDismissLead(lead)}
+                                  className="p-2 text-slate-400 hover:text-red-500 rounded-lg transition"
+                                  title="Dismiss application"
+                                >
+                                  <span className="material-symbols-outlined text-sm">close</span>
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
-                </div>
-              )}
+                );
+              })()}
 
               {/* Cloud Driver Sync Upgrade Notice (shown only if connected Apps Script is older v1) */}
               {driverSyncSupported === false && (

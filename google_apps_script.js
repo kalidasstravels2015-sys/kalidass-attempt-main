@@ -781,14 +781,15 @@ function getNextSequenceId(sheet, prefix) {
   // Threshold strictly ignores legacy random 4-digit numbers (e.g. 5046, 9123, 866992)
   var threshold = (startSeq - 1) + Math.max(values.length + 30, 100);
 
-  var cleanPrefix = prefix.replace(/[^A-Za-z]/g, '').toUpperCase();
+  var cleanPrefix = prefix.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
 
   for (var i = 0; i < values.length; i++) {
     var val = String(values[i][0] || '').trim();
     if (!val) continue;
 
+    var valClean = val.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
     // Filter for matching prefix
-    if (!cleanPrefix || val.toUpperCase().indexOf(cleanPrefix) !== -1 || (cleanPrefix === 'QT' && val.indexOf('CALC') !== -1)) {
+    if (!cleanPrefix || valClean.indexOf(cleanPrefix) !== -1 || (cleanPrefix === 'QT' && val.indexOf('CALC') !== -1) || (cleanPrefix.indexOf('DRV') !== -1 && valClean.indexOf('DRV') !== -1)) {
       var match = val.match(/(\d+)/);
       if (match) {
         var num = parseInt(match[1], 10);

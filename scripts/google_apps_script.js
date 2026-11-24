@@ -40,8 +40,15 @@ function doGet(e) {
     var lastRow = sheet.getLastRow();
     var leads = [];
     if (lastRow > 1) {
-      var data = sheet.getRange(2, 1, lastRow - 1, 10).getValues();
+      var range = sheet.getRange(2, 1, lastRow - 1, 10);
+      var data = range.getValues();
+      var formulas = range.getFormulas();
       for (var i = data.length - 1; i >= 0; i--) {
+        var rawFolder = data[i][7];
+        var formula = (formulas[i] && formulas[i][7]) ? formulas[i][7] : '';
+        var match = formula.match(/HYPERLINK\("([^"]+)"/i);
+        var realFolderUrl = match ? match[1] : (String(rawFolder).startsWith('http') ? rawFolder : '');
+
         leads.push({
           leadId: data[i][0],
           timestamp: data[i][1],
@@ -50,7 +57,7 @@ function doGet(e) {
           category: data[i][4],
           details: data[i][5],
           city: data[i][6],
-          folderUrl: data[i][7],
+          folderUrl: realFolderUrl || rawFolder,
           status: data[i][8],
           notes: data[i][9]
         });
@@ -77,9 +84,32 @@ function doPost(e) {
     }
 
     var sheet = setupSheets();
-    var leadId = String(data.leadId || data.referenceId || '').trim();
-    if (!leadId) {
-      leadId = '#KT-DRV-' + (100 + sheet.getLastRow());
+    var lastRow = sheet.getLastRow();
+
+    // Compute strictly continuous sequential lead ID (#KT-DRV-101, #KT-DRV-102...)
+    var maxId = 100;
+    if (lastRow > 1) {
+      var idValues = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+      for (var r = 0; r < idValues.length; r++) {
+        var existingVal = String(idValues[r][0] || '');
+        var numMatch = existingVal.match(/KT-DRV-(\d+)/i);
+        if (numMatch) {
+          var n = parseInt(numMatch[1], 10);
+          if (!isNaN(n) && n >= 101 && n < 9999 && n > maxId) {
+            maxId = n;
+          }
+        }
+      }
+    }
+
+    var incomingLeadId = String(data.leadId || data.referenceId || '').trim();
+    var incomingNumMatch = incomingLeadId.match(/KT-DRV-(\d+)/i);
+    var leadId = '';
+    // Only accept incoming ID if it's already higher than maxId and not generic 101 / 1
+    if (incomingNumMatch && parseInt(incomingNumMatch[1], 10) > maxId) {
+      leadId = '#KT-DRV-' + parseInt(incomingNumMatch[1], 10);
+    } else {
+      leadId = '#KT-DRV-' + (maxId + 1);
     }
 
     var timestamp = data.timestamp || data.date || Utilities.formatDate(new Date(), 'Asia/Kolkata', 'dd MMM yyyy, hh:mm a');
