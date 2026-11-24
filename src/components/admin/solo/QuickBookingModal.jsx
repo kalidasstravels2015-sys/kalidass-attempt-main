@@ -269,7 +269,7 @@ export default function QuickBookingModal({
     setErrorMsg('');
     const cleanPhone = getCleanPhone();
     if (cleanPhone.length !== 10 || !/^[6-9]\d{9}$/.test(cleanPhone)) {
-      const msg = 'Please enter a valid 10-digit Mobile Number (e.g. 9944649858) to confirm booking.';
+      const msg = 'Please enter a valid 10-digit Mobile Number to confirm booking.';
       setErrorMsg(msg);
       showToast?.(msg, 'error');
       phoneRef.current?.focus();
@@ -359,7 +359,7 @@ export default function QuickBookingModal({
                 <input
                   ref={phoneRef}
                   type="tel"
-                  placeholder="99446 49858"
+                  placeholder="10-digit mobile number"
                   value={phone}
                   onChange={(e) => {
                     const raw = e.target.value;
@@ -379,7 +379,7 @@ export default function QuickBookingModal({
               </label>
               <input
                 type="text"
-                placeholder="e.g. Ramesh / Sir"
+                placeholder="Customer Name"
                 value={guestName}
                 onChange={(e) => setGuestName(e.target.value)}
                 className="w-full p-2 rounded-lg border border-slate-300 bg-white font-semibold text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -396,7 +396,7 @@ export default function QuickBookingModal({
               <input
                 ref={pickupRef}
                 type="text"
-                placeholder="e.g. Purvankara Pallikaranai, Chennai"
+                placeholder="Enter pickup address or landmark"
                 value={pickup}
                 onChange={(e) => setPickup(e.target.value)}
                 className="w-full p-2.5 rounded-lg border border-slate-300 bg-white font-semibold text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600"

@@ -594,7 +594,7 @@ export default function SingleScreenDispatchDesk({
                 <div className="grid grid-cols-2 gap-2">
                   <input
                     type="text"
-                    placeholder="Driver Name (e.g. Moorthy)"
+                    placeholder="Driver Name"
                     value={newDriverForm.name}
                     onChange={(e) => setNewDriverForm({ ...newDriverForm, name: e.target.value })}
                     className="p-2 rounded-lg border border-m3-outline-variant bg-m3-surface font-semibold text-xs"

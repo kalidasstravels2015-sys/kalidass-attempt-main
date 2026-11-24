@@ -239,7 +239,7 @@ export default function DeskInquiries({
             <button type="button" onClick={() => setShowQuickPhoneForm(false)} className="text-slate-500 font-bold">✕</button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <input type="text" placeholder="Customer Name (e.g. Ramesh)" value={quickPhoneLead.guestName} onChange={(e) => setQuickPhoneLead({ ...quickPhoneLead, guestName: e.target.value })} className="p-2 rounded-xl border border-slate-300 bg-white font-semibold" />
+            <input type="text" placeholder="Customer Name" value={quickPhoneLead.guestName} onChange={(e) => setQuickPhoneLead({ ...quickPhoneLead, guestName: e.target.value })} className="p-2 rounded-xl border border-slate-300 bg-white font-semibold" />
             <input type="tel" placeholder="Mobile (10 digits)" value={quickPhoneLead.phone} onChange={(e) => setQuickPhoneLead({ ...quickPhoneLead, phone: e.target.value })} className="p-2 rounded-xl border border-slate-300 bg-white font-mono font-bold" />
             <select value={quickPhoneLead.sourceChannel} onChange={(e) => setQuickPhoneLead({ ...quickPhoneLead, sourceChannel: e.target.value })} className="p-2 rounded-xl border border-slate-300 bg-white font-bold">
               <option value="Phone Call">📞 Phone Call</option>

@@ -82,7 +82,7 @@ export default function DispatchActionModal({
     pickupAddress: booking.pickupAddress || 'Chennai',
     guestName,
     guestPhone,
-    driverName: driverName || 'Moorthy',
+    driverName: driverName || '',
     vehicleName: vehicleName || 'Cab',
     vehiclePlate: vehiclePlate || '',
     collectionAmount
@@ -90,7 +90,7 @@ export default function DispatchActionModal({
 
   const guestCabText = buildCustomerCabDetailsMessage({
     bookingId: booking.bookingId,
-    driverName: driverName || 'Moorthy',
+    driverName: driverName || '',
     driverPhone: driverPhone || '8939539211',
     vehicleName: vehicleName || 'Cab',
     vehiclePlate: vehiclePlate || '',
@@ -235,7 +235,7 @@ export default function DispatchActionModal({
                 <input
                   id="modalDriverNameInput"
                   type="text"
-                  placeholder="e.g. Moorthy"
+                  placeholder="Driver Name"
                   value={driverName}
                   onChange={(e) => setDriverName(e.target.value)}
                   className="w-full p-2 rounded-lg border border-m3-outline-variant bg-m3-surface text-xs font-semibold outline-none"
@@ -246,7 +246,7 @@ export default function DispatchActionModal({
                 <input
                   id="modalDriverPhoneInput"
                   type="tel"
-                  placeholder="e.g. 7305282977"
+                  placeholder="10-digit mobile number"
                   value={driverPhone}
                   onChange={(e) => setDriverPhone(e.target.value)}
                   className="w-full p-2 rounded-lg border border-m3-outline-variant bg-m3-surface text-xs font-mono-code font-bold outline-none"
@@ -257,7 +257,7 @@ export default function DispatchActionModal({
                 <input
                   id="modalVehicleNameInput"
                   type="text"
-                  placeholder="e.g. Maruti XL6"
+                  placeholder="e.g. Swift Dzire, Innova..."
                   value={vehicleName}
                   onChange={(e) => setVehicleName(e.target.value)}
                   className="w-full p-2 rounded-lg border border-m3-outline-variant bg-m3-surface text-xs font-semibold outline-none"
@@ -268,7 +268,7 @@ export default function DispatchActionModal({
                 <input
                   id="modalVehiclePlateInput"
                   type="text"
-                  placeholder="e.g. TN85W4093"
+                  placeholder="e.g. TN 01 AB 1234"
                   value={vehiclePlate}
                   onChange={(e) => setVehiclePlate(e.target.value)}
                   className="w-full p-2 rounded-lg border border-m3-outline-variant bg-m3-surface text-xs font-mono-code font-bold uppercase outline-none"

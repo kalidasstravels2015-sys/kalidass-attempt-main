@@ -19,7 +19,11 @@ export async function onRequestPost({ request, env }) {
     const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
 
     // Asynchronously forward to Google Apps Script Webhook backup if configured
-    const webhookUrl = data.webhookUrl || (env && (env.GOOGLE_SHEET_WEBHOOK_URL || env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL)) || DEFAULT_WEBHOOK_URL;
+    let webhookUrl = data.webhookUrl || (env && (env.DRIVER_LEADS_WEBHOOK_URL || env.GOOGLE_SHEET_WEBHOOK_URL)) || DEFAULT_WEBHOOK_URL;
+    // Guard: Never post driver leads to Trips sheet
+    if (typeof webhookUrl === 'string' && webhookUrl.includes('AKfycbzyf')) {
+      webhookUrl = DEFAULT_WEBHOOK_URL;
+    }
     let driveFolderUrl = '';
     if (webhookUrl && webhookUrl.startsWith('http')) {
       try {
@@ -75,12 +79,72 @@ export async function onRequestPost({ request, env }) {
   }
 }
 
+export async function onRequestGet({ request, env }) {
+  try {
+    const webhookUrl = (env && (env.DRIVER_LEADS_WEBHOOK_URL || env.GOOGLE_SHEET_WEBHOOK_URL)) || DEFAULT_WEBHOOK_URL;
+    const res = await fetch(webhookUrl, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      redirect: 'follow'
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return new Response(JSON.stringify({
+        success: true,
+        leads: data.leads || data.driverLeads || []
+      }), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Access-Control-Allow-Origin': '*'
+        }
+      });
+    }
+  } catch (err) {
+    return new Response(JSON.stringify({ success: false, error: err.message, leads: [] }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
+  }
+  return new Response(JSON.stringify({ success: true, leads: [] }), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Access-Control-Allow-Origin': '*'
+    }
+  });
+}
+
+export async function onRequestPatch({ request }) {
+  try {
+    const body = await request.json().catch(() => ({}));
+    return new Response(JSON.stringify({ success: true, updated: body }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ success: false, error: err.message }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
+  }
+}
+
 export async function onRequestOptions() {
   return new Response(null, {
     status: 204,
     headers: {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Methods': 'GET, POST, PATCH, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type'
     }
   });

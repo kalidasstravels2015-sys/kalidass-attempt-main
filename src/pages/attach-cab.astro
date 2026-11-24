@@ -124,6 +124,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
   keywords="attach taxi chennai, attach car travels chennai, cab attachment kalidass travels, fleet attachment chennai, vehicle attachment medavakkam"
   schema={pageSchemas}
   whatsappMsg="Hi Kalidass Travels, I want to attach my vehicle / join as a driver partner with your fleet. Please share the partner onboarding process and trip duty details."
+  robots="noindex, nofollow"
 >
   <Breadcrumbs items={breadcrumbItems} />
 
@@ -286,7 +287,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
                     id="driverName"
                     name="name"
                     required
-                    placeholder="e.g. Ramesh Kumar"
+                    placeholder="Owner / Driver Full Name"
                     class="w-full bg-transparent py-2.5 px-3.5 text-xs sm:text-sm font-medium text-m3-on-surface outline-none"
                   />
                 </div>
@@ -309,7 +310,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
                     inputmode="numeric"
                     pattern="[0-9]{10}"
                     maxlength="10"
-                    placeholder="98401 23456"
+                    placeholder="10-digit mobile number"
                     class="w-full bg-transparent py-2.5 pr-3.5 text-xs sm:text-sm font-semibold tracking-wide text-m3-on-surface outline-none"
                   />
                 </div>
@@ -527,7 +528,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
 </Layout>
 
 <script>
-  import { getActiveGoogleSheetUrl } from '../config/googleSheets';
+  import { getActiveGoogleSheetUrl, DRIVER_LEADS_WEBHOOK_URL } from '../config/googleSheets';
   import {
     VEHICLE_CATEGORIES,
     formatIndianPlateNumber,
@@ -721,7 +722,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
                     data-plate-idx="${idx}"
                     value="${v.plate}"
                     maxlength="13"
-                    placeholder="TN 14 AK 2026"
+                    placeholder="e.g. TN 01 AB 1234"
                     class="veh-plate-input w-full bg-white border border-m3-outline-variant focus:border-m3-primary rounded-m3-lg py-2.5 px-3 text-xs sm:text-sm font-mono font-bold uppercase text-m3-on-surface outline-none shadow-2xs"
                   />
                 </div>
@@ -1109,7 +1110,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
         rcFile: vehiclesState[0]?.rcFile || null,
         carFile: vehiclesState[0]?.carFile || null,
         vehicles: category === 'Attach Car' ? vehiclesState : [],
-        webhookUrl: getActiveGoogleSheetUrl(),
+        webhookUrl: DRIVER_LEADS_WEBHOOK_URL,
         notes: vehiclesSummaryText
       };
 
@@ -1136,7 +1137,7 @@ const pageSchemas = [webPageSchema, serviceSchema, faqSchema];
       } catch (_) {}
 
       try {
-        const sheetUrl = getActiveGoogleSheetUrl();
+        const sheetUrl = DRIVER_LEADS_WEBHOOK_URL;
         if (sheetUrl && sheetUrl.startsWith('https://script.google.com/macros/s/')) {
           await fetch(sheetUrl, {
             method: 'POST',

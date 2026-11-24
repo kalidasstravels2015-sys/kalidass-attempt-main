@@ -337,7 +337,7 @@ export default function OperatorRateCalcWorkspace({
               <User className="w-4 h-4 text-m3-on-surface-variant mr-2 shrink-0" />
               <input
                 type="text"
-                placeholder="e.g. Ramesh / Priya"
+                placeholder="Caller / Guest Name"
                 value={callerName}
                 onChange={(e) => setCallerName(e.target.value)}
                 className="w-full bg-transparent text-sm font-semibold text-m3-on-surface outline-none placeholder:text-m3-on-surface-variant/60 placeholder:font-normal"

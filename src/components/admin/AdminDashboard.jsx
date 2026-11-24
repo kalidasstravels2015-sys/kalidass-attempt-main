@@ -292,7 +292,7 @@ export default function AdminDashboard() {
     // Dynamically extract phone number from lead
     const combined = `${lead.pickup} ${lead.metadata || ''} ${lead.sourcePage || ''}`;
     const phoneMatch = combined.match(/(?:\+?91[\s-]?)?([6-9]\d{4}[\s-]?\d{5}|[6-9]\d{9})/);
-    const guestPhone = phoneMatch ? phoneMatch[1].replace(/[\s-]/g, '') : '9840100000';
+    const guestPhone = phoneMatch ? phoneMatch[1].replace(/[\s-]/g, '') : '';
 
     let guestName = 'WhatsApp Guest';
     if (lead.metadata && lead.metadata.toLowerCase().includes('business')) {
@@ -1922,7 +1922,7 @@ export default function AdminDashboard() {
                     required
                     value={newBooking.guestName}
                     onChange={(e) => setNewBooking(prev => ({ ...prev, guestName: e.target.value }))}
-                    placeholder="Ramesh Kumar"
+                    placeholder="Customer Name"
                     className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   />
                 </div>
@@ -1933,7 +1933,7 @@ export default function AdminDashboard() {
                     required
                     value={newBooking.guestPhone}
                     onChange={(e) => setNewBooking(prev => ({ ...prev, guestPhone: e.target.value }))}
-                    placeholder="98401 23456"
+                    placeholder="10-digit mobile number"
                     className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   />
                 </div>
@@ -1976,7 +1976,7 @@ export default function AdminDashboard() {
                   required
                   value={newBooking.pickupAddress}
                   onChange={(e) => setNewBooking(prev => ({ ...prev, pickupAddress: e.target.value }))}
-                  placeholder="#12, 4th Main Road, Anna Nagar East"
+                  placeholder="Enter pickup address or landmark"
                   className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2.5 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                 />
               </div>
@@ -2308,7 +2308,7 @@ export default function AdminDashboard() {
                       required
                       value={callForm.callerPhone}
                       onChange={(e) => setCallForm(prev => ({ ...prev, callerPhone: e.target.value.replace(/[^0-9]/g, '') }))}
-                      placeholder="98803 09619"
+                      placeholder="10-digit mobile number"
                       className="w-full pl-12 pr-3 py-2 bg-white border border-m3-outline-variant rounded-xl text-m3-on-surface font-bold text-sm focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                       autoFocus
                     />
@@ -2320,7 +2320,7 @@ export default function AdminDashboard() {
                     type="text"
                     value={callForm.guestName}
                     onChange={(e) => setCallForm(prev => ({ ...prev, guestName: e.target.value }))}
-                    placeholder="e.g. Mr. Senthil"
+                    placeholder="Customer Name"
                     className="w-full mt-1 bg-white border border-m3-outline-variant rounded-xl p-2 text-m3-on-surface focus:border-m3-primary focus:ring-1 focus:ring-m3-primary focus:outline-none"
                   />
                 </div>

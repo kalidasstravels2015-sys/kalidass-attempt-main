@@ -861,7 +861,7 @@ export default function DirectBookingIntakeForm({
                 required
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
-                placeholder="e.g. Riddhi Gandhi / Vivek USA"
+                placeholder="Customer Name"
                 className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
               />
             </div>
@@ -876,7 +876,7 @@ export default function DirectBookingIntakeForm({
                 required
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="e.g. 9840100000 or +1 / +44..."
+                placeholder="10-digit mobile number or +91..."
                 className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-mono font-medium focus:outline-none focus:border-blue-500"
               />
             </div>
@@ -907,9 +907,14 @@ export default function DirectBookingIntakeForm({
                   type="text"
                   value={pickupLocation}
                   onChange={(e) => setPickupLocation(e.target.value)}
-                  placeholder="e.g. New Avadi Rd, Kilpauk / Airport T2"
+                  placeholder="Enter pickup address or landmark"
                   className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
                 />
+                {(!pickupLocation.trim() || /^chennai$/i.test(pickupLocation.trim())) && (
+                  <span className="text-[10px] text-amber-600 font-semibold mt-1 block">
+                    ⚠️ Enter exact pickup street / landmark so chauffeur knows where to report
+                  </span>
+                )}
               </div>
 
               <div>
@@ -921,6 +926,11 @@ export default function DirectBookingIntakeForm({
                   placeholder="e.g. Tirupati / HVXP+RRW / Madurai"
                   className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
                 />
+                {/\b[23456789CFGHJMPQRVWX]{4,8}\+[23456789CFGHJMPQRVWX]{2,4}\b/i.test(dropLocation) && (
+                  <span className="text-[10px] text-blue-600 font-semibold mt-1 block">
+                    📍 Plus Code detected: clickable Google Maps link will be attached for chauffeur
+                  </span>
+                )}
               </div>
             </div>
           )}
@@ -1069,7 +1079,7 @@ export default function DirectBookingIntakeForm({
                     type="text"
                     value={guestName}
                     onChange={(e) => setGuestName(e.target.value)}
-                    placeholder="e.g. Mr. Ved Parkash"
+                    placeholder="Guest Name (Optional)"
                     className="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -1079,7 +1089,7 @@ export default function DirectBookingIntakeForm({
                     type="tel"
                     value={guestPhone}
                     onChange={(e) => setGuestPhone(e.target.value)}
-                    placeholder="e.g. 9382155220"
+                    placeholder="10-digit mobile number"
                     className="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-mono font-medium focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -1099,7 +1109,7 @@ export default function DirectBookingIntakeForm({
                     type="text"
                     value={hotelName}
                     onChange={(e) => setHotelName(e.target.value)}
-                    placeholder="e.g. GT Grande, T. Nagar"
+                    placeholder="Hotel Name / Stay Landmark"
                     className="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
                   />
                 </div>

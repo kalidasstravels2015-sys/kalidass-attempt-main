@@ -771,7 +771,7 @@ export default function WebsiteRadarView({
                   type="text"
                   required
                   autoFocus
-                  placeholder="e.g. Ramesh Kumar"
+                  placeholder="Customer Name"
                   value={convertForm.guestName}
                   onChange={(e) => {
                     setConvertForm({ ...convertForm, guestName: e.target.value });
@@ -793,7 +793,7 @@ export default function WebsiteRadarView({
                     type="tel"
                     required
                     maxLength={10}
-                    placeholder="98401 23456"
+                    placeholder="10-digit mobile number"
                     value={convertForm.phone}
                     onChange={(e) => {
                       const val = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);

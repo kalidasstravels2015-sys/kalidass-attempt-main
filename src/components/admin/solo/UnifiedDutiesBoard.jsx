@@ -3,6 +3,7 @@ import { buildMapsBlock } from '../../../utils/whatsapp';
 import { getNextEnquiryId, getOrderedEnquiryId, getNextBookingId, isSequentialId } from '../../../utils/sequenceGenerator';
 import { validateCustomerContact, extractValidMobile, isPlaceholderCustomerName, isActionableLead, deduplicateCalculatorQuotes } from '../../../utils/bookingContactValidator';
 import { formatCleanDateTime, cleanLocationName } from '../../../utils/dateFormatter';
+import { formatLocationWithMapsLink, formatPickupAddress, formatDropAddress } from '../../../utils/adminBookingHelper.js';
 
 /**
  * Simple 3-Step Taxi Operations Register
@@ -282,13 +283,19 @@ export default function UnifiedDutiesBoard({
     const fare = Number(b.terminalFare) || 0;
     const adv = Number(b.advancePaid) || 0;
     const bal = Math.max(0, fare - adv);
+    const rawRoute = String(b.pickupAddress || '').trim();
+    const routeParts = rawRoute.split(/➔|->|→/);
+    const pickupFormatted = routeParts.length > 1 ? formatPickupAddress(routeParts[0].trim()) : formatPickupAddress(rawRoute);
+    const dropFormatted = routeParts.length > 1 ? formatDropAddress(routeParts[1].trim()) : formatDropAddress(rawRoute);
+
     const msg =
       `*KALIDASS TRAVELS — CAB & DRIVER DETAILS*\n` +
       `Booking ID: *${b.bookingId}*\n\n` +
       `*Driver & Cab:* ${b.assignedChauffeur}\n` +
       `*Vehicle:* ${b.vehicleCategory}\n` +
       `*Pickup Time:* ${b.travelDateTime}\n` +
-      `*Route:* ${b.pickupAddress}\n\n` +
+      `*Pickup Location:* ${pickupFormatted}\n` +
+      `*Drop / Destination:* ${dropFormatted}\n\n` +
       `*Total Fare:* ₹${fare.toLocaleString('en-IN')}\n` +
       `*Advance Paid:* ₹${adv.toLocaleString('en-IN')}\n` +
       `*Balance to Pay Driver:* ₹${bal.toLocaleString('en-IN')}\n\n` +
@@ -307,14 +314,18 @@ export default function UnifiedDutiesBoard({
     const fare = Number(b.terminalFare) || 0;
     const adv = Number(b.advancePaid) || 0;
     const bal = Math.max(0, fare - adv);
-    const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.pickupAddress || 'Chennai')}`;
+    const rawRoute = String(b.pickupAddress || '').trim();
+    const routeParts = rawRoute.split(/➔|->|→/);
+    const pickupFormatted = routeParts.length > 1 ? formatPickupAddress(routeParts[0].trim()) : formatPickupAddress(rawRoute);
+    const dropFormatted = routeParts.length > 1 ? formatDropAddress(routeParts[1].trim()) : formatDropAddress(rawRoute);
+
     const msg =
       `*KALIDASS TRAVELS — DRIVER DUTY SLIP*\n` +
       `Trip ID: *${b.bookingId}*\n\n` +
       `*Passenger:* ${b.guestNamePhone}\n` +
       `*Pickup Time:* ${b.travelDateTime}\n` +
-      `*Route:* ${b.pickupAddress}\n` +
-      `*Google Maps Pin:* ${mapsLink}\n\n` +
+      `*Pickup Location:* ${pickupFormatted}\n` +
+      `*Drop / Destination:* ${dropFormatted}\n\n` +
       `*Amount to Collect:* *₹${bal.toLocaleString('en-IN')} + Toll & Parking (Actuals)*\n\n` +
       `*Enter Start/End KM & Close Bill Here:*\n${tripUrl}`;
     window.open(cleanPhone ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
@@ -628,7 +639,7 @@ export default function UnifiedDutiesBoard({
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Ramesh Kumar"
+                    placeholder="Customer Name"
                     value={quickEntry.guestName}
                     onChange={(e) => setQuickEntry({ ...quickEntry, guestName: e.target.value })}
                     className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-semibold text-xs"
@@ -640,7 +651,7 @@ export default function UnifiedDutiesBoard({
                   <input
                     type="tel"
                     required
-                    placeholder="e.g. 9840123456"
+                    placeholder="10-digit mobile number"
                     value={quickEntry.phone}
                     onChange={(e) => setQuickEntry({ ...quickEntry, phone: e.target.value })}
                     className="w-full p-2.5 rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-low font-mono-code font-bold text-xs"
@@ -1204,7 +1215,7 @@ export default function UnifiedDutiesBoard({
                         <span className="font-bold text-amber-950 text-xs w-full">Enter Outside Market Driver:</span>
                         <input
                           type="text"
-                          placeholder="Driver Name (e.g. Mani)"
+                          placeholder="Driver Name"
                           value={outsideDriverMap[b.bookingId]?.name || ''}
                           onChange={(e) => setOutsideDriverMap({ ...outsideDriverMap, [b.bookingId]: { ...(outsideDriverMap[b.bookingId] || {}), name: e.target.value } })}
                           className="flex-1 min-w-[120px] p-2 rounded-m3-sm border border-m3-outline-variant bg-white"
@@ -1218,7 +1229,7 @@ export default function UnifiedDutiesBoard({
                         />
                         <input
                           type="text"
-                          placeholder="Car Plate (TN 09 BX 1234)"
+                          placeholder="Car Plate (e.g. TN 01 AB 1234)"
                           value={outsideDriverMap[b.bookingId]?.plate || ''}
                           onChange={(e) => setOutsideDriverMap({ ...outsideDriverMap, [b.bookingId]: { ...(outsideDriverMap[b.bookingId] || {}), plate: e.target.value.toUpperCase() } })}
                           className="flex-1 min-w-[120px] p-2 rounded-m3-sm border border-m3-outline-variant bg-white"

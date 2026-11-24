@@ -683,7 +683,7 @@ export default function EnquiriesView({
                   required
                   autoFocus
                   maxLength={10}
-                  placeholder="99446 49858"
+                  placeholder="10-digit mobile number"
                   value={convertForm.phone}
                   onChange={(e) => {
                     const val = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);

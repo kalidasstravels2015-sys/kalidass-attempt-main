@@ -569,7 +569,7 @@ Call: +91 89395 39211`;
                   type="text"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  placeholder="Hari"
+                  placeholder="Customer Name"
                   className="w-full text-xs py-1.5 px-2.5 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:border-blue-500"
                 />
               </div>
@@ -581,7 +581,7 @@ Call: +91 89395 39211`;
                   type="text"
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
-                  placeholder="8428012695"
+                  placeholder="10-digit mobile number"
                   className="w-full text-xs py-1.5 px-2.5 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:border-blue-500 font-mono"
                 />
               </div>

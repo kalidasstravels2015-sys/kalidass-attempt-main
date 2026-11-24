@@ -328,7 +328,7 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Ramesh"
+                  placeholder="Driver Full Name"
                   value={newDriver.name}
                   onChange={(e) => setNewDriver({ ...newDriver, name: e.target.value })}
                   className="w-full rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest p-2 text-xs text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:outline-none"
@@ -340,7 +340,7 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
                 <input
                   type="text"
                   required
-                  placeholder="e.g. 98401 23456"
+                  placeholder="10-digit mobile number"
                   value={newDriver.phone}
                   onChange={(e) => setNewDriver({ ...newDriver, phone: e.target.value })}
                   className="w-full rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest p-2 text-xs text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:outline-none font-mono"
@@ -424,7 +424,7 @@ export default function DeskChauffeurs({ chauffeurs = [], bookings = [], onAddCh
                 <input
                   type="text"
                   required
-                  placeholder="e.g. TN 14 AK 2026"
+                  placeholder="e.g. TN 01 AB 1234"
                   value={newDriver.plate}
                   onChange={(e) => setNewDriver({ ...newDriver, plate: formatIndianPlateNumber(e.target.value) })}
                   className="w-full rounded-m3-md border border-m3-outline-variant bg-m3-surface-container-lowest p-2 text-xs text-m3-on-surface focus:ring-2 focus:ring-m3-primary focus:outline-none font-mono uppercase"

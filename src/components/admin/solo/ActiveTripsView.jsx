@@ -771,7 +771,7 @@ export default function ActiveTripsView({
                       </label>
                       <input
                         type="text"
-                        placeholder="e.g. Collect ₹3,500 cash, keep ₹3,200 and GPay ₹300 to office (8939539211)"
+                        placeholder="Enter driver collection or settlement instructions..."
                         value={financeForm.settlementNote}
                         onChange={(e) => setFinanceForm({ ...financeForm, settlementNote: e.target.value })}
                         className="w-full p-2 border border-m3-outline-variant rounded-m3-sm text-xs bg-white text-m3-on-surface focus:border-m3-primary"
@@ -804,7 +804,7 @@ export default function ActiveTripsView({
                     <span className="font-bold text-m3-on-surface text-xs w-full">Enter Outside Market Driver & Negotiated Rate:</span>
                     <input
                       type="text"
-                      placeholder="Driver Name (e.g. Mani)"
+                      placeholder="Driver Name"
                       value={outsideDriverMap[b.bookingId]?.name || ''}
                       onChange={(e) => setOutsideDriverMap({ ...outsideDriverMap, [b.bookingId]: { ...(outsideDriverMap[b.bookingId] || {}), name: e.target.value } })}
                       className="flex-1 min-w-[120px] p-2 rounded-m3-sm border border-m3-outline-variant bg-m3-surface-container-lowest"
@@ -818,7 +818,7 @@ export default function ActiveTripsView({
                     />
                     <input
                       type="text"
-                      placeholder="Car Plate (TN 09 BX 1234)"
+                      placeholder="Car Plate (e.g. TN 01 AB 1234)"
                       value={outsideDriverMap[b.bookingId]?.plate || ''}
                       onChange={(e) => setOutsideDriverMap({ ...outsideDriverMap, [b.bookingId]: { ...(outsideDriverMap[b.bookingId] || {}), plate: e.target.value.toUpperCase() } })}
                       className="flex-1 min-w-[120px] p-2 rounded-m3-sm border border-m3-outline-variant bg-m3-surface-container-lowest font-mono-code uppercase"
@@ -994,7 +994,7 @@ export default function ActiveTripsView({
                   type="text"
                   required
                   autoFocus
-                  placeholder="e.g. Ramesh Kumar"
+                  placeholder="Customer Name"
                   value={editContactForm.name}
                   onChange={(e) => {
                     setEditContactForm({ ...editContactForm, name: e.target.value });
@@ -1014,7 +1014,7 @@ export default function ActiveTripsView({
                     type="tel"
                     required
                     maxLength={10}
-                    placeholder="98401 23456"
+                    placeholder="10-digit mobile number"
                     value={editContactForm.phone}
                     onChange={(e) => {
                       const val = e.target.value.replace(/[^0-9]/g, '').slice(0, 10);

@@ -50,7 +50,18 @@ function writeLeadsJson(leads: any[]) {
 }
 
 export const GET: APIRoute = async () => {
-  const leads = readLeadsJson();
+  let leads = readLeadsJson();
+  if (leads.length === 0) {
+    try {
+      const gRes = await fetch(DEFAULT_WEBHOOK_URL, { redirect: 'follow' });
+      if (gRes.ok) {
+        const gData: any = await gRes.json();
+        if (gData && Array.isArray(gData.leads)) {
+          leads = gData.leads;
+        }
+      }
+    } catch (_) {}
+  }
   return new Response(JSON.stringify({ success: true, leads }), {
     status: 200,
     headers: { 'Content-Type': 'application/json; charset=utf-8' }

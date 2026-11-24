@@ -417,7 +417,7 @@ export default function AiBookingParser({ onBookingCreated, onLeadCreated, showT
                 type="tel"
                 value={customerPhone}
                 onChange={(e) => setCustomerPhone(e.target.value)}
-                placeholder="e.g. 9677980938 or +91 96779 80938"
+                placeholder="10-digit mobile number or +91..."
                 className="w-full pl-9 pr-3 py-2 text-xs font-semibold rounded-xl border border-m3-outline-variant bg-m3-surface-container-low focus:outline-none focus:ring-2 focus:ring-m3-primary font-mono-code"
               />
             </div>
@@ -433,7 +433,7 @@ export default function AiBookingParser({ onBookingCreated, onLeadCreated, showT
                 type="text"
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
-                placeholder="e.g. Rajesh Kumar"
+                placeholder="Customer Name"
                 className="w-full pl-9 pr-3 py-2 text-xs font-semibold rounded-xl border border-m3-outline-variant bg-m3-surface-container-low focus:outline-none focus:ring-2 focus:ring-m3-primary"
               />
             </div>

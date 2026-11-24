@@ -297,7 +297,46 @@ Split your monthly advertising budget into **3 tightly-themed Search Campaigns**
 
 Add this list at the **Account Level** under **Tools & Settings > Shared Library > Negative keyword lists**:
 
-### A. Employment & Hiring (Eliminates Job Seekers)
+### A. Vehicle Attachment & Speculative Car Buyers (CRITICAL — Stops 100% of Budget Drain)
+```text
+attachment
+attachments
+attaching
+attach
+attach cab
+attach car
+cab attachment
+car attachment
+vehicle attachment
+attach ertiga
+ertiga attachment
+innova attachment
+monthly attachment
+company attachment
+driver attachment
+fleet attachment
+own car attachment
+attach my car
+attach taxi
+car lease
+lease my car
+commercial attachment
+vehicle contract
+ola attachment
+uber attachment
+redbus attachment
+purchase car for attachment
+buy car for attachment
+new car attachment
+owner payout
+monthly payout
+passive income
+emi
+car loan
+partner onboarding
+```
+
+### B. Employment & Hiring (Eliminates Job Seekers)
 ```text
 job
 jobs

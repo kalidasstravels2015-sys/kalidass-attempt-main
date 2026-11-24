@@ -237,10 +237,10 @@ export default function DeskPhoneQuoteEngine({
   };
 
   const handleConfirmAdvancePaid = () => {
-    const clean = callerPhone.replace(/[^0-9]/g, '').slice(-10) || '9840100000';
+    const clean = callerPhone.replace(/[^0-9]/g, '').slice(-10);
     const newBooking = {
       bookingId: quoteId.replace('#QT-', '#KT-'),
-      guestNamePhone: `${callerName.trim() || 'Customer'} (+91 ${clean})`,
+      guestNamePhone: `${callerName.trim() || 'Customer'}${clean ? ` (+91 ${clean})` : ''}`,
       travelDateTime,
       pickupAddress: `${activePickup} ➔ ${activeDrop}`,
       vehicleCategory: selectedVehicle,
@@ -325,7 +325,7 @@ export default function DeskPhoneQuoteEngine({
                   <input
                     type="tel"
                     inputMode="numeric"
-                    placeholder="98401 23456"
+                    placeholder="10-digit mobile number"
                     value={callerPhone}
                     onChange={(e) => setCallerPhone(e.target.value)}
                     className="w-full pl-9 pr-3 py-2 text-sm font-bold rounded-m3-sm border border-m3-outline-variant bg-m3-surface-container-lowest focus:ring-2 focus:ring-m3-primary font-mono-code"
@@ -341,7 +341,7 @@ export default function DeskPhoneQuoteEngine({
                   <span className="material-symbols-outlined text-[18px] text-m3-outline absolute left-3 pointer-events-none">person</span>
                   <input
                     type="text"
-                    placeholder="e.g. Senthil Kumar"
+                    placeholder="Customer Name"
                     value={callerName}
                     onChange={(e) => setCallerName(e.target.value)}
                     className="w-full pl-9 pr-3 py-2 text-sm rounded-m3-sm border border-m3-outline-variant bg-m3-surface-container-lowest focus:ring-2 focus:ring-m3-primary"

@@ -118,7 +118,7 @@ export function buildWhatsAppUrl(phone, text = '') {
 
 export function formatPhoneForDisplay(rawPhone) {
   const s = String(rawPhone || '').trim();
-  if (!s) return '';
+  if (!s || s.includes('#ERROR') || s.includes('ERROR')) return '';
   if (s.startsWith('+')) return s;
   const digits = s.replace(/\D/g, '');
   if (digits.length === 10 && /^[6-9]/.test(digits)) {
@@ -134,6 +134,20 @@ export function formatPhoneForDisplay(rawPhone) {
 export function toIsoDate(raw) {
   if (!raw) return '';
   const s = String(raw).trim();
+  if (s.includes('T')) {
+    try {
+      const dt = new Date(s);
+      if (!isNaN(dt.getTime())) {
+        return new Intl.DateTimeFormat('en-CA', {
+          timeZone: 'Asia/Kolkata',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        }).format(dt);
+      }
+    } catch (_) {}
+  }
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
   if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
   const dmy = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{2,4})/);
   if (dmy) {
@@ -529,7 +543,7 @@ export function parseWhatsAppBookingText(rawText, tariffConfig = {}) {
   }
 
   // 2. Phone numbers & WhatsApp copy-paste chat headers (preserve international & alternate contacts)
-  // e.g. "[12:26 pm, 22/11/2026] +91 91711 63663:" or "[22/11/26, 12:26:00 PM] Riddhi Gandhi:"
+  // e.g. "[12:26 pm, 22/11/2026] +91 98765 43210:" or "[22/11/26, 12:26:00 PM] Customer Name:"
   const waHeaderMatches = [...text.matchAll(/^\[[^\]]+\]\s*([^:\n\r]{2,50}):/gm)];
   for (const hm of waHeaderMatches) {
     const sender = hm[1].trim();
@@ -554,7 +568,7 @@ export function parseWhatsAppBookingText(rawText, tariffConfig = {}) {
     });
   if (phoneMatches.length > 0) {
     const uniquePhones = [...new Set(phoneMatches.map(normalizePhoneNumber))];
-    // Check if text explicitly marks an alternate contact ("My dad will contact you. 9382155220")
+    // Check if text explicitly marks an alternate contact ("My dad will contact you. 9876543210")
     const altMatch = text.match(/(?:dad|father|brother|guest|passenger|alternate|contact\s+you)[^\n\r\d]{0,30}(\+?\d[\d\s-]{8,14})/i);
     if (altMatch && uniquePhones.length >= 2) {
       parsed.guestPhone = normalizePhoneNumber(altMatch[1]);
@@ -598,7 +612,7 @@ export function parseWhatsAppBookingText(rawText, tariffConfig = {}) {
     highlights.push(veh);
   }
 
-  // 5. Multi-Day Custom Day-by-Day Itinerary detection (Vivek USA style)
+  // 5. Multi-Day Custom Day-by-Day Itinerary detection
   // Matches: "23 Nov (Day 1): 8 Hrs / 80 Kms\nAirport T1 Pickup (11:20 AM) + Chennai Local\nRate: ₹3,000"
   const dayBlockRegex = /(?:(\d{1,2}\s+[A-Za-z]{3,9}(?:\s+\d{4})?)\s*\(\s*Day\s*(\d+)\s*\)|Day\s*(\d+)\s*(?:\(([^)]+)\))?)\s*[:\-–]\s*([^\n\r]+)(?:\r?\n([^\n\r]+))?(?:\r?\n([^\n\r]+))?/gi;
   const dayRows = [];
@@ -849,11 +863,121 @@ export function parseWhatsAppBookingText(rawText, tariffConfig = {}) {
 // WHATSAPP MESSAGE BUILDERS (ICON-FREE)
 // ==========================================
 
-export function buildCustomerBookingSummaryWA(trip) {
-  const dateLine = trip.returnDate && trip.returnDate !== trip.pickupDate
-    ? `${formatShortDate(trip.pickupDate, true)} to ${formatShortDate(trip.returnDate, true)} (${trip.days || computeTripDays(trip.pickupDate, trip.returnDate)} Days)`
-    : `${formatShortDate(trip.pickupDate, true) || trip.pickupDate}${trip.pickupTime ? ` @ ${trip.pickupTime}` : ''}`;
+export function formatLocationWithMapsLink(rawLoc, defaultCity = 'Chennai') {
+  const loc = String(rawLoc || '').trim();
+  if (!loc) return defaultCity;
+  const plusMatch = loc.match(/\b([23456789CFGHJMPQRVWX]{4,8}\+[23456789CFGHJMPQRVWX]{2,4})\b/i);
+  if (plusMatch) {
+    const code = plusMatch[1].toUpperCase();
+    const mapUrl = `https://maps.google.com/?q=${encodeURIComponent(code + ' Tamil Nadu')}`;
+    if (loc === plusMatch[1]) {
+      return `${code} (📍 Google Maps: ${mapUrl})`;
+    }
+    return `${loc} (📍 Maps: ${mapUrl})`;
+  }
+  return loc;
+}
 
+export function formatPickupAddress(rawPickup) {
+  const loc = String(rawPickup || '').trim();
+  if (!loc || /^chennai$/i.test(loc)) {
+    return 'Chennai (⚠️ Exact pickup address / landmark to be shared by guest)';
+  }
+  return formatLocationWithMapsLink(loc, 'Chennai');
+}
+
+export function formatDropAddress(rawDrop, route = '') {
+  const drop = String(rawDrop || route || '').trim();
+  if (!drop) return 'As directed by guest';
+  return formatLocationWithMapsLink(drop, 'Destination');
+}
+
+export function buildTripScheduleLine(trip) {
+  const pickup = toIsoDate(trip?.pickupDate) || trip?.pickupDate || '';
+  const ret = toIsoDate(trip?.returnDate) || trip?.returnDate || '';
+  const hasReturn = ret && ret !== pickup;
+  const days = trip?.days || (hasReturn ? computeTripDays(pickup, ret) : 1);
+  const time = trip?.pickupTime ? ` @ ${trip.pickupTime}` : '';
+
+  if (hasReturn) {
+    return `${formatShortDate(pickup, true)} to ${formatShortDate(ret, true)} (${days} Days)${time}`;
+  }
+  return `${formatShortDate(pickup, true)}${time}`;
+}
+
+export function buildCustomerConfirmationWA(trip) {
+  const unifiedId = normalizeUnifiedTripId(trip.id || trip.quoteRef) || trip.id;
+  const schedLine = buildTripScheduleLine(trip);
+  const pickupAddr = formatPickupAddress(trip.pickupLocation);
+  const dropAddr = formatDropAddress(trip.dropLocation, trip.route);
+  const greetingTarget = trip.guestName || trip.customerName || 'Guest';
+
+  const lines = [
+    `*KALIDASS TRAVELS — TRIP CONFIRMATION*`,
+    `Ref: *${unifiedId}*`,
+    ``,
+    `Dear ${greetingTarget}, your booking is confirmed.`,
+    ``,
+    `*Trip Schedule:* ${schedLine}`,
+    `*Pickup Location:* ${pickupAddr}`,
+    `*Drop / Destination:* ${dropAddr}`,
+    ``,
+    `*Vehicle:* ${trip.vehicle}${trip.vehicleNumber ? ` (${trip.vehicleNumber})` : ' (Confirmed)'}`,
+  ];
+
+  if (trip.driverName) {
+    lines.push(`*Chauffeur:* ${trip.driverName}`);
+    if (trip.driverPhone) {
+      lines.push(`*Chauffeur Contact:* ${formatPhoneForDisplay(trip.driverPhone)}`);
+    }
+  } else {
+    lines.push(`*Chauffeur:* Designated professional chauffeur (details shared before pickup)`);
+  }
+
+  if (trip.flightNumber || trip.terminal) {
+    lines.push(`*Flight / Terminal:* ${[trip.terminal, trip.flightNumber].filter(Boolean).join(' - ')}`);
+  }
+  if (trip.hotelName) {
+    lines.push(`*Hotel:* ${trip.hotelName}`);
+  }
+
+  if (Array.isArray(trip.dayPlan) && trip.dayPlan.length > 0) {
+    lines.push(``);
+    lines.push(`*DAY-BY-DAY ITINERARY:*`);
+    trip.dayPlan.forEach((d, idx) => {
+      const dLabel = d.date ? `${formatShortDate(d.date)} (Day ${d.day || idx + 1})` : `Day ${d.day || idx + 1}`;
+      const pkgStr = d.pkg ? ` [${d.pkg}]` : '';
+      const rateStr = Number(d.rate) > 0 ? ` — ₹${Number(d.rate).toLocaleString('en-IN')}` : '';
+      lines.push(`- *${dLabel}:*${pkgStr} ${d.duty}${rateStr}`);
+    });
+  }
+
+  const terms = buildCompactTermsSummary(trip);
+  lines.push(``);
+  if (Number(trip.agreedRate) > 0) {
+    lines.push(`*Agreed Total Fare:* ₹${Number(trip.agreedRate).toLocaleString('en-IN')}`);
+    if (Number(trip.advance) > 0) {
+      lines.push(`*Advance Received:* ₹${Number(trip.advance).toLocaleString('en-IN')}`);
+    }
+    const bal = Math.max(0, (Number(trip.agreedRate) || 0) - (Number(trip.advance) || 0));
+    lines.push(`*Balance to Chauffeur:* *₹${bal.toLocaleString('en-IN')}${trip.tollPolicy === 'All-Inclusive' ? ' (All-Inclusive)' : ' + Toll & Parking (Actuals)'}*`);
+  }
+  if (terms) lines.push(`_(${terms})_`);
+
+  const cleanNote = getCleanNotes(trip.notes);
+  if (cleanNote) lines.push(`*Note:* ${cleanNote}`);
+
+  lines.push(``);
+  lines.push(`Our chauffeur will report on time and assist with your luggage. Have a comfortable and pleasant journey.`);
+  lines.push(`*24/7 Dispatch Desk:* +91 89395 39211`);
+
+  return lines.join('\n');
+}
+
+export function buildCustomerBookingSummaryWA(trip) {
+  const schedLine = buildTripScheduleLine(trip);
+  const pickupAddr = formatPickupAddress(trip.pickupLocation);
+  const dropAddr = formatDropAddress(trip.dropLocation, trip.route);
   const unifiedId = normalizeUnifiedTripId(trip.id || trip.quoteRef) || trip.id;
   const lines = [
     `*KALIDASS TRAVELS — BOOKING SUMMARY*`,
@@ -869,14 +993,14 @@ export function buildCustomerBookingSummaryWA(trip) {
   }
   if (trip.paxCount) lines.push(`*Passengers:* ${trip.paxCount}`);
   lines.push(`*Vehicle:* ${trip.vehicle} (${trip.tripCategory})`);
-  lines.push(`*Schedule:* ${dateLine}${trip.returnDate && trip.pickupTime ? ` | Pickup: ${trip.pickupTime}` : ''}`);
+  lines.push(`*Schedule:* ${schedLine}`);
   if (trip.flightNumber || trip.terminal) {
     lines.push(`*Flight / Terminal:* ${[trip.terminal, trip.flightNumber].filter(Boolean).join(' - ')}`);
   }
   if (trip.hotelName) lines.push(`*Hotel:* ${trip.hotelName}`);
-  lines.push(`*Pickup:* ${trip.pickupLocation || 'Chennai'}`);
+  lines.push(`*Pickup Location:* ${pickupAddr}`);
   if (trip.dropLocation && trip.tripCategory !== 'Multi-Day Custom Itinerary') {
-    lines.push(`*Route / Drop:* ${trip.dropLocation}`);
+    lines.push(`*Drop / Destination:* ${dropAddr}`);
   }
 
   if (Array.isArray(trip.dayPlan) && trip.dayPlan.length > 0) {
@@ -907,26 +1031,31 @@ export function buildCustomerBookingSummaryWA(trip) {
   return lines.join('\n');
 }
 
-export function buildEnhancedDriverDutySlipWA(trip) {
-  const dateLine = trip.returnDate && trip.returnDate !== trip.pickupDate
-    ? `${formatShortDate(trip.pickupDate, true)} to ${formatShortDate(trip.returnDate, true)} (${trip.days || computeTripDays(trip.pickupDate, trip.returnDate)} Days) @ ${trip.pickupTime || 'ASAP'}`
-    : `${formatShortDate(trip.pickupDate, true) || trip.pickupDate} @ ${trip.pickupTime || 'ASAP'}`;
-
+export function buildEnhancedDriverDutySlipWA(trip, math = null) {
   const unifiedId = normalizeUnifiedTripId(trip.id || trip.quoteRef) || trip.id;
+  const schedLine = buildTripScheduleLine(trip);
+  const pickupAddr = formatPickupAddress(trip.pickupLocation);
+  const dropAddr = formatDropAddress(trip.dropLocation, trip.route);
+
   const lines = [
     `*DUTY SLIP — KALIDASS TRAVELS*`,
     `Ref: *${unifiedId}*`,
     ``,
-    `*Pickup:* ${dateLine}`,
+    `*Trip Schedule:* ${schedLine}`,
+    `*Vehicle Assigned:* ${trip.vehicle}${trip.vehicleNumber ? ` (${trip.vehicleNumber})` : ''}`,
   ];
 
-  if (trip.dropLocation && trip.tripCategory !== 'Multi-Day Custom Itinerary') {
-    lines.push(`*Route:* ${trip.dropLocation || trip.route}`);
+  if (trip.driverName) {
+    lines.push(`*Chauffeur:* ${trip.driverName}${trip.driverPhone ? ` (${formatPhoneForDisplay(trip.driverPhone)})` : ''}`);
   }
-  lines.push(`*Vehicle:* ${trip.vehicle}${trip.vehicleNumber ? ` - ${trip.vehicleNumber}` : ''}`);
+
   lines.push(``);
+  lines.push(`*Pickup Location:* ${pickupAddr}`);
+  lines.push(`*Drop / Destination:* ${dropAddr}`);
+  lines.push(``);
+
   lines.push(`*Customer:* ${trip.customerName}`);
-  if (trip.phone) lines.push(`*Mobile:* ${formatPhoneForDisplay(trip.phone)}`);
+  if (trip.phone) lines.push(`*Customer Mobile:* ${formatPhoneForDisplay(trip.phone)}`);
 
   if (trip.guestName && trip.guestName !== trip.customerName) {
     lines.push(`*Passenger:* ${trip.guestName}${trip.guestPhone ? ` (${formatPhoneForDisplay(trip.guestPhone)})` : ''}`);
@@ -938,7 +1067,6 @@ export function buildEnhancedDriverDutySlipWA(trip) {
     lines.push(`*Flight / Terminal:* ${[trip.terminal, trip.flightNumber].filter(Boolean).join(' - ')}`);
   }
   if (trip.hotelName) lines.push(`*Hotel:* ${trip.hotelName}`);
-  lines.push(`*Pickup Address:* ${trip.pickupLocation || 'Chennai'}`);
 
   if (Array.isArray(trip.dayPlan) && trip.dayPlan.length > 0) {
     lines.push(``);
@@ -950,18 +1078,23 @@ export function buildEnhancedDriverDutySlipWA(trip) {
   }
 
   const terms = buildCompactTermsSummary(trip);
+  const bal = Math.max(0, (Number(trip.agreedRate) || 0) - (Number(trip.advance) || 0));
   lines.push(``);
-  lines.push(`*Amount to Collect:* *₹${Number(trip.balance || 0).toLocaleString('en-IN')}${trip.tollPolicy === 'All-Inclusive' ? ' (All-Inclusive - NO toll/permit collection)' : ' + Toll & Parking (Actuals)'}*`);
+  lines.push(`*Amount to Collect from Guest:* *₹${bal.toLocaleString('en-IN')}${trip.tollPolicy === 'All-Inclusive' ? ' (All-Inclusive - NO toll/permit collection)' : ' + Toll & Parking (Actuals)'}*`);
   if (terms) lines.push(`_(${terms})_`);
+
+  if (math && math.commissionAmt !== undefined) {
+    lines.push(`*Commission (${math.pct}%):* ₹${math.commissionAmt.toLocaleString('en-IN')}`);
+  }
 
   const cleanNote = getCleanNotes(trip.notes);
   if (cleanNote) lines.push(`*Note:* ${cleanNote}`);
 
   lines.push(``);
-  lines.push(`*Instructions:*`);
-  lines.push(`- Report 15 mins early in clean AC cab`);
-  lines.push(`- Take Starting & Closing KM photo`);
-  lines.push(`- Keep Toll, Parking & Permit slips`);
+  lines.push(`*Chauffeur Instructions:*`);
+  lines.push(`- Report 15 mins early in clean, sanitized AC cab`);
+  lines.push(`- Take Starting KM & Ending KM odometer photos`);
+  lines.push(`- Keep Toll, Parking & Permit receipts`);
   lines.push(`*Dispatch Desk:* +91 89395 39211`);
 
   return lines.join('\n');

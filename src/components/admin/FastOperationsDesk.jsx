@@ -27,6 +27,7 @@ import MobileDispatchCopilot from './MobileDispatchCopilot.jsx';
 import DirectBookingIntakeForm from './DirectBookingIntakeForm.jsx';
 import ContactPickerControl from './ContactPickerControl.jsx';
 import tariffConfig from '../../data/tariff_config.json' with { type: 'json' };
+import { DRIVER_LEADS_WEBHOOK_URL } from '../../config/googleSheets.js';
 import { getFormattedDateCode, getNextDriverRosterId, formatWhatsAppRefId, peekNextQuotationId } from '../../utils/sequenceGenerator.js';
 import { loadImportedContacts, buildUnifiedContactsList } from '../../utils/contactBookHelper.js';
 import {
@@ -35,12 +36,18 @@ import {
   getCleanNotes,
   buildCompactTermsSummary,
   formatShortDate,
+  toIsoDate,
   computeTripDays,
   isTripActiveOnDate,
   buildWhatsAppUrl,
   formatPhoneForDisplay,
   buildCustomerBookingSummaryWA,
+  buildCustomerConfirmationWA,
   buildEnhancedDriverDutySlipWA,
+  buildTripScheduleLine,
+  formatPickupAddress,
+  formatDropAddress,
+  formatLocationWithMapsLink,
   buildFollowUpReminderWA,
   normalizeManifestStatus,
   parseTripPickupTimestampIST,
@@ -144,12 +151,21 @@ function readSheetObjects(sheet) {
   if (rows.length <= 1) return [];
   var headers = rows[0];
   var items = [];
+  var tz = Session.getScriptTimeZone() || "Asia/Kolkata";
   for (var i = 1; i < rows.length; i++) {
     var row = rows[i];
     if (!row[0] && !row[1]) continue;
     var obj = {};
     for (var j = 0; j < headers.length; j++) {
-      obj[headers[j]] = row[j];
+      var val = row[j];
+      if (val instanceof Date) {
+        if (headers[j] === "pickupDate" || headers[j] === "returnDate") {
+          val = Utilities.formatDate(val, tz, "yyyy-MM-dd");
+        } else if (headers[j] === "pickupTime") {
+          val = Utilities.formatDate(val, tz, "hh:mm a");
+        }
+      }
+      obj[headers[j]] = val;
     }
     items.push(obj);
   }
@@ -486,9 +502,7 @@ export default function FastOperationsDesk() {
       if (data && Array.isArray(data.trips)) {
         const cleanDate = (d) => {
           if (!d) return '';
-          const s = String(d).trim();
-          if (s.includes('T')) return s.split('T')[0];
-          return s;
+          return toIsoDate(d);
         };
         const cleanTime = (t) => {
           if (!t) return '';
@@ -496,7 +510,14 @@ export default function FastOperationsDesk() {
           if (s.includes('T')) {
             try {
               const dt = new Date(s);
-              return dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+              if (!isNaN(dt.getTime())) {
+                return dt.toLocaleTimeString('en-US', {
+                  timeZone: 'Asia/Kolkata',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: true
+                });
+              }
             } catch (_) {}
           }
           return s;
@@ -1354,29 +1375,25 @@ Are you available for this upcoming trip?
   };
 
   const handleSendDriverDutySlip = (trip) => {
+    if (!trip) return;
+    if (!trip.driverPhone || String(trip.driverPhone).includes('ERROR')) {
+      showToast('⚠️ Chauffeur phone is missing or invalid. Please edit trip to assign a chauffeur phone.', 'error');
+      setEditingTrip(trip);
+      return;
+    }
     const math = computeSettlementMath(trip, trip.commissionPct ?? 10);
     const text = buildEnhancedDriverDutySlipWA(trip, math);
     window.open(buildWhatsAppUrl(trip.driverPhone, text), '_blank');
   };
 
   const handleSendCustomerConfirmation = (trip) => {
-    const dateLine = trip.returnDate && trip.returnDate !== trip.pickupDate
-      ? `${formatShortDate(trip.pickupDate, true)} to ${formatShortDate(trip.returnDate, true)} (${trip.days || computeTripDays(trip.pickupDate, trip.returnDate)} Days) @ ${trip.pickupTime || 'ASAP'}`
-      : `${trip.pickupDate} @ ${trip.pickupTime}`;
-
-    const text = `*KALIDASS TRAVELS — TRIP CONFIRMATION*
-Dear ${trip.customerName}, your booking is confirmed. (Ref: *${trip.id}*)
-
-*Vehicle:* ${trip.vehicle} (${trip.vehicleNumber || 'Confirmed'})
-*Driver Name:* ${trip.driverName || 'Designated Chauffeur'}
-*Driver Contact:* ${trip.driverPhone ? formatPhoneForDisplay(trip.driverPhone) : 'Will call you before arrival'}
-*Schedule:* ${dateLine}
-*Pickup Address:* ${trip.pickupLocation || 'Chennai'}
-*Route:* ${trip.dropLocation || trip.route}
-
-Our chauffeur will report on time and assist with your luggage. Have a comfortable and pleasant journey.
-*For any queries/changes:* +91 89395 39211`;
-
+    if (!trip) return;
+    if (!trip.phone || String(trip.phone).includes('ERROR')) {
+      showToast('⚠️ Customer phone number has an error (#ERROR!). Please edit the trip to enter a valid phone number.', 'error');
+      setEditingTrip(trip);
+      return;
+    }
+    const text = buildCustomerConfirmationWA(trip);
     window.open(buildWhatsAppUrl(trip.phone, text), '_blank');
   };
 
@@ -1613,12 +1630,61 @@ Warm regards,
 
   const fetchPendingDriverLeads = async () => {
     try {
-      const res = await fetch('/api/record-driver-lead');
-      if (res.ok) {
-        const data = await res.json();
-        if (data && Array.isArray(data.leads)) {
-          setPendingLeads(data.leads.filter(l => l.status !== 'Approved' && l.status !== 'Dismissed'));
+      let leads = [];
+      try {
+        const res = await fetch('/api/record-driver-lead');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && Array.isArray(data.leads) && data.leads.length > 0) {
+            leads = data.leads;
+          }
         }
+      } catch (_) {}
+
+      // Robust fallback: If /api/record-driver-lead returned empty or failed, fetch directly from DRIVER_LEADS_WEBHOOK_URL
+      if (leads.length === 0 && DRIVER_LEADS_WEBHOOK_URL) {
+        try {
+          const gRes = await fetch(DRIVER_LEADS_WEBHOOK_URL, { redirect: 'follow' });
+          if (gRes.ok) {
+            const gData = await gRes.json();
+            if (gData && Array.isArray(gData.leads)) {
+              leads = gData.leads;
+            }
+          }
+        } catch (_) {}
+      }
+
+      if (leads.length > 0) {
+        const normalized = leads.map((l) => {
+          let vehicles = Array.isArray(l.vehicles) ? l.vehicles : [];
+          if (vehicles.length === 0 && (l.category === 'Attach Car' || (l.details && l.details.includes('Car')))) {
+            const modelMatch = (l.details || l.notes || '').match(/\(([^)]+)\)/);
+            const model = modelMatch ? modelMatch[1].trim() : (l.cars || 'Ertiga / SUV');
+            const plateMatch = (l.details || l.notes || '').match(/Plate:\s*([^|•\n]+)/i);
+            const plate = l.plate || (plateMatch ? plateMatch[1].trim() : '');
+            vehicles = [{
+              model: model || 'Maruti Ertiga',
+              plate: plate || 'Plate TBD',
+              boardType: (l.plateType || l.details || '').includes('White') ? 'White Board' : 'Yellow Board',
+              carrier: (l.notes || '').includes('No Carrier') ? 'No Carrier' : 'With Carrier'
+            }];
+          }
+
+          return {
+            ...l,
+            leadId: l.leadId || l.id || `KT-DRV-${Date.now()}`,
+            name: l.name || l.applicantName || 'Partner Driver',
+            phone: String(l.phone || '').replace(/\D/g, '').slice(-10),
+            area: l.area || l.city || 'Medavakkam',
+            zone: l.zone || inferZoneFromAddress(l.city || l.area || '') || 'South & OMR',
+            category: l.category || 'Attach Car',
+            partnerType: l.partnerType || (vehicles.length > 1 ? 'Fleet Partner' : 'Owner-Driver'),
+            vehicles,
+            driveFolderUrl: l.driveFolderUrl || (l.folderUrl && l.folderUrl.startsWith('http') ? l.folderUrl : '')
+          };
+        });
+
+        setPendingLeads(normalized.filter(l => l.status !== 'Approved' && l.status !== 'Dismissed'));
       }
     } catch (_) {}
   };
@@ -2650,13 +2716,25 @@ Warm regards,
                             <div className="flex items-start justify-between gap-2">
                               <div className="min-w-0">
                                 <h4 className="font-bold text-xs text-slate-900 truncate">{trip.customerName}</h4>
-                                <a
-                                  href={`tel:${trip.phone}`}
-                                  className="text-[11px] text-blue-600 hover:underline font-mono inline-flex items-center gap-0.5"
-                                >
-                                  <span className="material-symbols-outlined text-xs">call</span>
-                                  <span>{formatPhoneForDisplay(trip.phone)}</span>
-                                </a>
+                                {formatPhoneForDisplay(trip.phone) ? (
+                                  <a
+                                    href={`tel:${trip.phone}`}
+                                    className="text-[11px] text-blue-600 hover:underline font-mono inline-flex items-center gap-0.5"
+                                  >
+                                    <span className="material-symbols-outlined text-xs">call</span>
+                                    <span>{formatPhoneForDisplay(trip.phone)}</span>
+                                  </a>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => setEditingTrip(trip)}
+                                    className="text-[10px] text-amber-700 bg-amber-50 border border-amber-300 rounded px-1.5 py-0.5 font-bold inline-flex items-center gap-1"
+                                    title="Click to fix phone number"
+                                  >
+                                    <span className="material-symbols-outlined text-xs text-amber-600">error</span>
+                                    <span>Fix Phone</span>
+                                  </button>
+                                )}
                                 {(trip.guestName || trip.guestPhone) && (
                                   <div className="text-[10px] text-indigo-700 font-medium mt-0.5 truncate">
                                     Guest: {trip.guestName || 'Alt'}{trip.guestPhone ? ` (${formatPhoneForDisplay(trip.guestPhone)})` : ''}
@@ -2693,7 +2771,25 @@ Warm regards,
                               </div>
                               <div className="flex items-start gap-1">
                                 <span className="material-symbols-outlined text-xs text-slate-400 mt-0.5">location_on</span>
-                                <span className="line-clamp-2">{trip.pickupLocation || 'Chennai'} → {trip.dropLocation || trip.route}</span>
+                                <div className="min-w-0 flex-1">
+                                  <div className="line-clamp-2">
+                                    <span className={!trip.pickupLocation || /^chennai$/i.test(trip.pickupLocation.trim()) ? 'text-amber-800 font-semibold' : ''}>
+                                      {trip.pickupLocation || 'Chennai'}
+                                    </span>
+                                    {' → '}
+                                    <span className="font-medium">{trip.dropLocation || trip.route}</span>
+                                  </div>
+                                  {(!trip.pickupLocation || /^chennai$/i.test(trip.pickupLocation.trim())) && (
+                                    <div className="text-[10px] text-amber-700 font-bold flex items-center gap-0.5 mt-0.5">
+                                      <span>⚠️ Exact pickup address pending</span>
+                                    </div>
+                                  )}
+                                  {/\b[23456789CFGHJMPQRVWX]{4,8}\+[23456789CFGHJMPQRVWX]{2,4}\b/i.test(trip.dropLocation || '') && (
+                                    <div className="text-[10px] text-blue-700 font-bold flex items-center gap-0.5 mt-0.5">
+                                      <span>📍 Plus Code Pin (Maps Linked)</span>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                               {hasDriver && (
                                 <div className="pt-1 mt-1 border-t border-slate-200/70 space-y-0.5">
@@ -2879,7 +2975,25 @@ Warm regards,
                               </div>
                               <div className="text-slate-600 flex items-start gap-1">
                                 <span className="material-symbols-outlined text-xs text-slate-400 mt-0.5">location_on</span>
-                                <span className="line-clamp-2">{trip.route}</span>
+                                <div className="min-w-0 flex-1">
+                                  <div className="line-clamp-2">
+                                    <span className={!trip.pickupLocation || /^chennai$/i.test(trip.pickupLocation.trim()) ? 'text-amber-800 font-semibold' : ''}>
+                                      {trip.pickupLocation || 'Chennai'}
+                                    </span>
+                                    {' → '}
+                                    <span className="font-medium">{trip.dropLocation || trip.route}</span>
+                                  </div>
+                                  {(!trip.pickupLocation || /^chennai$/i.test(trip.pickupLocation.trim())) && (
+                                    <div className="text-[10px] text-amber-700 font-bold flex items-center gap-0.5 mt-0.5">
+                                      <span>⚠️ Exact pickup address pending</span>
+                                    </div>
+                                  )}
+                                  {/\b[23456789CFGHJMPQRVWX]{4,8}\+[23456789CFGHJMPQRVWX]{2,4}\b/i.test(trip.dropLocation || '') && (
+                                    <div className="text-[10px] text-blue-700 font-bold flex items-center gap-0.5 mt-0.5">
+                                      <span>📍 Plus Code Pin (Maps Linked)</span>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                               <div className="pt-1 mt-1 border-t border-slate-200/70 flex items-center justify-between text-[10px] gap-1">
                                 <span className="text-slate-500 font-medium">
@@ -3185,7 +3299,7 @@ Warm regards,
                         type="text"
                         value={calcRoute}
                         onChange={(e) => setCalcRoute(e.target.value)}
-                        placeholder="e.g. Guindy to Kona Falls & Return"
+                        placeholder="Enter route or destinations (e.g. Chennai to Pondicherry & Return)"
                         className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
                       />
                     </div>
@@ -3243,7 +3357,7 @@ Warm regards,
                         type="text"
                         value={calcTimingNote}
                         onChange={(e) => setCalcTimingNote(e.target.value)}
-                        placeholder="e.g. 6:00 AM Pickup – 10:00 PM Return (Single Pickup)"
+                        placeholder="e.g. 06:00 AM Pickup – 10:00 PM Return"
                         className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
                       />
                     </div>
@@ -3290,7 +3404,7 @@ Warm regards,
                           type="text"
                           value={calcCustName}
                           onChange={(e) => setCalcCustName(e.target.value)}
-                          placeholder="e.g. Ramesh"
+                          placeholder="Customer Name"
                           className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800"
                         />
                       </div>
@@ -3300,7 +3414,7 @@ Warm regards,
                           type="tel"
                           value={calcCustPhone}
                           onChange={(e) => setCalcCustPhone(e.target.value)}
-                          placeholder="e.g. 9840100000"
+                          placeholder="10-digit mobile number"
                           className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-slate-800"
                         />
                       </div>
@@ -3666,7 +3780,7 @@ Warm regards,
                         required
                         value={newDriverName}
                         onChange={(e) => setNewDriverName(e.target.value)}
-                        placeholder="e.g. Ramesh Kumar"
+                        placeholder="Driver Full Name"
                         className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 focus:outline-none focus:border-blue-500 font-medium"
                       />
                     </div>
@@ -3772,7 +3886,7 @@ Warm regards,
                             value={newDriverPlate}
                             maxLength={13}
                             onChange={(e) => setNewDriverPlate(formatIndianPlateNumber(e.target.value))}
-                            placeholder="e.g. TN 14 AK 2026"
+                            placeholder="e.g. TN 01 AB 1234"
                             className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 uppercase font-mono font-bold focus:outline-none focus:border-blue-500"
                           />
                         </div>
@@ -4789,7 +4903,7 @@ Warm regards,
                       required
                       value={customDriverName}
                       onChange={(e) => setCustomDriverName(e.target.value)}
-                      placeholder="e.g. Rajesh Kumar"
+                      placeholder="Driver Full Name"
                       className="w-full text-xs bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-800 font-medium focus:outline-none focus:border-blue-500"
                     />
                   </div>
@@ -4800,7 +4914,7 @@ Warm regards,
                       type="tel"
                       value={customDriverPhone}
                       onChange={(e) => setCustomDriverPhone(e.target.value)}
-                      placeholder="e.g. 9840123456"
+                      placeholder="10-digit mobile number"
                       className="w-full text-xs bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-800 font-mono font-medium focus:outline-none focus:border-blue-500"
                     />
                   </div>
@@ -4811,7 +4925,7 @@ Warm regards,
                       type="text"
                       value={customVehicleNumber}
                       onChange={(e) => setCustomVehicleNumber(formatIndianPlateNumber(e.target.value))}
-                      placeholder="e.g. TN 14 AK 2026"
+                      placeholder="e.g. TN 01 AB 1234"
                       className="w-full text-xs bg-white border border-slate-300 rounded-xl px-3 py-2 text-slate-800 font-mono font-bold focus:outline-none focus:border-blue-500"
                     />
                   </div>
@@ -4906,7 +5020,7 @@ Warm regards,
                     maxLength={13}
                     value={editingDriver.plate || ''}
                     onChange={(e) => setEditingDriver({ ...editingDriver, plate: formatIndianPlateNumber(e.target.value) })}
-                    placeholder="e.g. TN 14 AK 2026"
+                    placeholder="e.g. TN 01 AB 1234"
                     className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 uppercase font-mono font-bold focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -5143,22 +5257,38 @@ Warm regards,
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Pickup Location</label>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                    Pickup Location / Reporting Address
+                  </label>
                   <input
                     type="text"
                     value={editingTrip.pickupLocation || ''}
                     onChange={(e) => setEditingTrip({ ...editingTrip, pickupLocation: e.target.value })}
+                    placeholder="Exact Chennai address, street, landmark or airport terminal"
                     className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
                   />
+                  {(!editingTrip.pickupLocation || /^chennai$/i.test(editingTrip.pickupLocation.trim())) && (
+                    <span className="text-[10px] text-amber-600 font-semibold mt-1 block">
+                      ⚠️ Please specify exact pickup landmark/street so chauffeur knows where to report
+                    </span>
+                  )}
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Drop / Route</label>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                    Drop / Destination
+                  </label>
                   <input
                     type="text"
                     value={editingTrip.dropLocation || ''}
                     onChange={(e) => setEditingTrip({ ...editingTrip, dropLocation: e.target.value })}
+                    placeholder="e.g. Thirukadaiyur / HVXP+RRW / Tirupati Balaji"
                     className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
                   />
+                  {/\b[23456789CFGHJMPQRVWX]{4,8}\+[23456789CFGHJMPQRVWX]{2,4}\b/i.test(editingTrip.dropLocation || '') && (
+                    <span className="text-[10px] text-blue-600 font-semibold mt-1 block">
+                      📍 Plus Code detected: clickable Google Maps link will be attached for chauffeur
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label className="block text-[11px] font-bold text-slate-600 mb-1">Vehicle</label>
@@ -5294,7 +5424,7 @@ Warm regards,
                     required
                     value={confirmingTrip.customerName || ''}
                     onChange={(e) => setConfirmingTrip({ ...confirmingTrip, customerName: e.target.value })}
-                    placeholder="e.g. Rajesh Kumar"
+                    placeholder="Customer Name"
                     className="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 font-medium focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -5305,7 +5435,7 @@ Warm regards,
                     required
                     value={confirmingTrip.phone || ''}
                     onChange={(e) => setConfirmingTrip({ ...confirmingTrip, phone: e.target.value })}
-                    placeholder="e.g. 9840123456"
+                    placeholder="10-digit mobile number"
                     className="w-full text-xs bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 font-mono font-semibold focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -5329,24 +5459,38 @@ Warm regards,
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Pickup Address</label>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                    Pickup Location / Reporting Address
+                  </label>
                   <input
                     type="text"
                     value={confirmingTrip.pickupLocation || ''}
                     onChange={(e) => setConfirmingTrip({ ...confirmingTrip, pickupLocation: e.target.value })}
-                    placeholder="Exact Chennai address / landmark"
+                    placeholder="Exact Chennai pickup address / landmark"
                     className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-medium focus:outline-none focus:border-blue-500"
                   />
+                  {(!confirmingTrip.pickupLocation || /^chennai$/i.test(confirmingTrip.pickupLocation.trim())) && (
+                    <span className="text-[10px] text-amber-600 font-semibold mt-1 block">
+                      ⚠️ Please specify exact pickup landmark/street so chauffeur knows where to report
+                    </span>
+                  )}
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Drop / Destination</label>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                    Drop / Destination
+                  </label>
                   <input
                     type="text"
                     value={confirmingTrip.dropLocation || ''}
                     onChange={(e) => setConfirmingTrip({ ...confirmingTrip, dropLocation: e.target.value })}
-                    placeholder="e.g. Tirupati Balaji"
+                    placeholder="e.g. Tirupati Balaji / HVXP+RRW / Thirukadaiyur"
                     className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-medium focus:outline-none focus:border-blue-500"
                   />
+                  {/\b[23456789CFGHJMPQRVWX]{4,8}\+[23456789CFGHJMPQRVWX]{2,4}\b/i.test(confirmingTrip.dropLocation || '') && (
+                    <span className="text-[10px] text-blue-600 font-semibold mt-1 block">
+                      📍 Plus Code detected: clickable Google Maps link will be attached for chauffeur
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label className="block text-[11px] font-bold text-slate-700 mb-1">Agreed Fare (₹)</label>

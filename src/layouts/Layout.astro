@@ -11,6 +11,7 @@ interface Props {
   showFloatingActions?: boolean;
   preloadHero?: { href: string; srcset?: string; sizes?: string; media?: string };
   whatsappMsg?: string;
+  robots?: string;
 }
 
 import siteContent from "../data/siteContent.json";
@@ -42,6 +43,7 @@ const {
   showFloatingActions = true,
   preloadHero,
   whatsappMsg,
+  robots = "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
 } = Astro.props;
 
 const siteUrl = "https://kalidasstravels.in";
@@ -734,11 +736,11 @@ const unifiedSchemaGraph = {
     <meta name="author" content="Kalidass Travels" />
     <meta
       name="robots"
-      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+      content={robots}
     />
-    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <meta name="google-extended" content="index, follow" />
-    <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content={robots} />
+    <meta name="google-extended" content={robots.includes("noindex") ? "noindex, nofollow" : "index, follow"} />
+    <meta name="bingbot" content={robots} />
     <link rel="canonical" href={canonicalURL} />
     <!-- Machine-Readable LLM Discovery Files -->
     <link rel="alternate" type="text/markdown" href="/llms.txt" title="AI / LLM Context Summary (llms.txt)" />
