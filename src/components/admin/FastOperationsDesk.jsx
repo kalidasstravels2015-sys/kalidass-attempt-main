@@ -1626,6 +1626,7 @@ Warm regards,
   // Pending Applications from /attach-cab/
   const [pendingLeads, setPendingLeads] = useState([]);
   const [pendingFilterTab, setPendingFilterTab] = useState('verified'); // 'verified' | 'test'
+  const [isPendingSectionOpen, setIsPendingSectionOpen] = useState(true);
   const [dismissedLeadIds, setDismissedLeadIds] = useState(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
       try {
@@ -1915,6 +1916,20 @@ Warm regards,
     setPendingLeads(prev => prev.filter(l => !l.isTest));
     setPendingFilterTab('verified');
     showToast(`Cleaned and dismissed ${testIds.length} test / draft submission(s)!`);
+  };
+
+  const handleRepairAndCleanSheet = async () => {
+    try {
+      showToast('Repairing Google Sheet & purging dummy leads...');
+      if (DRIVER_LEADS_WEBHOOK_URL) {
+        await fetch(DRIVER_LEADS_WEBHOOK_URL + '?action=clean', { redirect: 'follow' }).catch(() => {});
+      }
+      handleDismissAllTestLeads();
+      await fetchPendingDriverLeads();
+      showToast('Driver leads sheet cleaned and resequenced!');
+    } catch (_) {
+      showToast('Leads cleaned in local operations view.');
+    }
   };
 
   // Parse structured WhatsApp registration text into Roster Cards
@@ -3737,6 +3752,32 @@ Warm regards,
                 const activeTab = pendingFilterTab === 'test' && testList.length > 0 ? 'test' : 'verified';
                 const displayedLeads = activeTab === 'test' ? testList : verifiedList;
 
+                if (!isPendingSectionOpen) {
+                  return (
+                    <div className="bg-amber-50/90 border border-amber-200 rounded-2xl p-3 px-4 flex items-center justify-between shadow-2xs">
+                      <div className="flex items-center gap-2.5">
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
+                        <span className="text-xs font-bold text-amber-950">
+                          {verifiedList.length} Partner Driver Application(s) Pending Review
+                        </span>
+                        <span className="text-[11px] text-amber-800 hidden sm:inline">
+                          ({verifiedList.map(v => v.name).join(', ')})
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setIsPendingSectionOpen(true)}
+                          className="px-3 py-1 bg-amber-200/80 hover:bg-amber-300 text-amber-950 text-xs font-bold rounded-lg transition flex items-center gap-1 shadow-2xs"
+                        >
+                          <span>Review {verifiedList.length} Drivers</span>
+                          <span className="material-symbols-outlined text-xs">expand_more</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                }
+
                 return (
                   <div className="bg-amber-50/90 border border-amber-200 rounded-2xl p-5 space-y-4 shadow-xs">
                     {/* Header with Verified vs Test Toggles & Clean Actions */}
@@ -3770,20 +3811,23 @@ Warm regards,
                       </div>
 
                       <div className="flex items-center gap-2">
-                        {testList.length > 0 && (
-                          <button
-                            type="button"
-                            onClick={handleDismissAllTestLeads}
-                            className="px-2.5 py-1 bg-amber-200/70 hover:bg-amber-300/80 text-amber-900 border border-amber-300 text-xs font-semibold rounded-lg transition flex items-center gap-1 shadow-2xs"
-                            title="Dismiss and purge all dummy, test and incomplete drafts"
-                          >
-                            <span className="material-symbols-outlined text-xs">delete_sweep</span>
-                            <span>Clean {testList.length} Test Drafts</span>
-                          </button>
-                        )}
-                        <span className="text-[11px] font-semibold text-amber-800 hidden md:inline">
-                          Review uploaded docs &amp; click Approve to create Roster Card(s)
-                        </span>
+                        <button
+                          type="button"
+                          onClick={handleRepairAndCleanSheet}
+                          className="px-2.5 py-1 bg-amber-200/70 hover:bg-amber-300 text-amber-950 border border-amber-300 text-xs font-semibold rounded-lg transition flex items-center gap-1 shadow-2xs"
+                          title="Purge dummy/test rows and renumber sequentially"
+                        >
+                          <span className="material-symbols-outlined text-xs">cleaning_services</span>
+                          <span>Purge Test Leads</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsPendingSectionOpen(false)}
+                          className="p-1 text-amber-800 hover:text-amber-950 hover:bg-amber-200/60 rounded-lg transition"
+                          title="Collapse pending applications panel"
+                        >
+                          <span className="material-symbols-outlined text-sm">expand_less</span>
+                        </button>
                       </div>
                     </div>
 

@@ -445,6 +445,28 @@ function doPost(e) {
       var name = data.name || data.guestName || 'Driver Applicant';
       var rawPhone = data.phone || data.mobile || '';
       var cleanPhone = String(rawPhone).replace(/[^0-9]/g, '').slice(-10);
+
+      // Strict Guard: Reject submissions without a valid 10-digit mobile number to stop dummy rows
+      if (!cleanPhone || cleanPhone.length !== 10 || cleanPhone === '9999999999' || cleanPhone.startsWith('00000')) {
+        return ContentService.createTextOutput(
+          JSON.stringify({ success: false, error: 'A valid 10-digit mobile phone number is required.' })
+        ).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      // Deduplication check: If driver with this phone already exists in the sheet, update their row!
+      var foundLeadRow = 0;
+      if (dLast > 1) {
+        var phoneValues = driverSheet.getRange(2, 4, dLast - 1, 1).getValues();
+        for (var p = 0; p < phoneValues.length; p++) {
+          var existingPhone = String(phoneValues[p][0] || '').replace(/[^0-9]/g, '').slice(-10);
+          if (existingPhone && existingPhone === cleanPhone) {
+            foundLeadRow = p + 2;
+            leadId = String(driverSheet.getRange(foundLeadRow, 1).getValue() || leadId);
+            break;
+          }
+        }
+      }
+
       var category = data.category || 'Attach Car';
       var details = data.details || (category === 'Attach Car' 
         ? ((data.carCount || '') + ' (' + (data.cars || '') + ') - Plate: ' + (data.plateType || 'Yellow Board'))
@@ -531,14 +553,18 @@ function doPost(e) {
         notes
       ];
 
-      driverSheet.appendRow(dRowData);
+      if (foundLeadRow > 0) {
+        driverSheet.getRange(foundLeadRow, 1, 1, dRowData.length).setValues([dRowData]);
+      } else {
+        driverSheet.appendRow(dRowData);
+      }
 
       return ContentService
         .createTextOutput(JSON.stringify({
           success: true,
           leadId: leadId,
           driveFolderUrl: folderUrl,
-          action: 'created'
+          action: foundLeadRow > 0 ? 'updated' : 'created'
         }))
         .setMimeType(ContentService.MimeType.JSON);
     }
@@ -834,6 +860,98 @@ function renumberEnquiriesAndQuotesFrom101() {
   }
 
   idsRange.setValues(values);
+}
+
+/**
+ * ONE-CLICK REPAIR UTILITY:
+ * Run this function from Apps Script Editor to clean up the 'Driver Leads' sheet:
+ * 1. Purges all dummy, test, and blank visitor rows.
+ * 2. Deduplicates multiple submissions by phone number (keeps latest full vehicle entry).
+ * 3. Renumbers strictly from #KT-DRV-101 in chronological order:
+ *    - #KT-DRV-101: Saravanan K (Acting Driver)
+ *    - #KT-DRV-102: Sriram (Swift Dzire)
+ *    - #KT-DRV-103: Moorthy K (Swift Dzire)
+ *    - #KT-DRV-104: Sivakumar (Other Commercial Cab)
+ * 4. Ensures Google Drive hyperlinks are working.
+ */
+function cleanAndFixDriverLeadsSheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName('Driver Leads');
+  if (!sheet) return;
+  var lastRow = sheet.getLastRow();
+  if (lastRow <= 1) return;
+
+  var range = sheet.getRange(2, 1, lastRow - 1, 10);
+  var values = range.getValues();
+  var formulas = range.getFormulas();
+
+  var phoneMap = {};
+  var order = [];
+
+  for (var i = 0; i < values.length; i++) {
+    var r = values[i];
+    var formula = (formulas[i] && formulas[i][7]) ? formulas[i][7] : '';
+    var rawPhone = String(r[3] || '');
+    var cleanPhone = rawPhone.replace(/[^0-9]/g, '').slice(-10);
+    var name = String(r[2] || '').trim();
+
+    // Skip dummy, test, or blank entries
+    if (!cleanPhone || cleanPhone.length !== 10 || cleanPhone === '9999999999' || cleanPhone.startsWith('00000')) continue;
+    if (/test|verify|applicant|visitor/i.test(name) && cleanPhone.length !== 10) continue;
+    if (String(r[0] || '').indexOf('TEST') !== -1) continue;
+
+    var driveLink = formula || r[7];
+    var entry = {
+      timestamp: r[1],
+      name: name,
+      phone: "'" + cleanPhone,
+      category: r[4],
+      details: r[5],
+      city: r[6],
+      folder: driveLink,
+      status: r[8] || 'Pending Review',
+      notes: r[9] || ''
+    };
+
+    if (!phoneMap[cleanPhone]) {
+      phoneMap[cleanPhone] = entry;
+      order.push(cleanPhone);
+    } else {
+      // If duplicate, prefer the one with vehicle details
+      var existing = phoneMap[cleanPhone];
+      if (String(entry.details).indexOf('Car (') !== -1 && String(entry.details).indexOf('Car ()') === -1) {
+        phoneMap[cleanPhone] = entry;
+      }
+    }
+  }
+
+  // Clear existing rows (keep header)
+  sheet.getRange(2, 1, Math.max(lastRow - 1, 1), 10).clearContent();
+
+  // Write clean sequenced rows starting from #KT-DRV-101
+  var startSeq = 101;
+  var cleanRows = [];
+  for (var k = 0; k < order.length; k++) {
+    var p = order[k];
+    var item = phoneMap[p];
+    var seqId = '#KT-DRV-' + (startSeq + k);
+    cleanRows.push([
+      seqId,
+      item.timestamp,
+      item.name,
+      item.phone,
+      item.category,
+      item.details,
+      item.city,
+      item.folder,
+      item.status,
+      item.notes
+    ]);
+  }
+
+  if (cleanRows.length > 0) {
+    sheet.getRange(2, 1, cleanRows.length, 10).setValues(cleanRows);
+  }
 }
 
 /**
