@@ -1051,46 +1051,25 @@ export default function DriverFeeEstimator({
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2">
                 <WhatsAppButton
                   href={result.whatsapp}
-                  onClick={async (e) => {
-                    e?.preventDefault?.();
-                    const waWin = typeof window !== 'undefined' ? window.open('', '_blank') : null;
-                    if (waWin) {
-                      try { waWin.opener = null; } catch (_) {}
-                    }
-                    let claimedQuoteId = quoteRefId;
+                  onClick={() => {
+                    const usedQuoteId = quoteRefId;
 
                     if (typeof fetch === 'function') {
-                      try {
-                        const controller = new AbortController();
-                        const timer = setTimeout(() => controller.abort(), 1800);
-                        const res = await fetch('/api/next-quote-id', {
-                          method: 'POST',
-                          keepalive: true,
-                          signal: controller.signal
-                        });
-                        clearTimeout(timer);
-                        if (res.ok) {
-                          const data = await res.json();
+                      fetch('/api/next-quote-id', {
+                        method: 'POST',
+                        keepalive: true
+                      })
+                        .then((res) => (res.ok ? res.json() : null))
+                        .then((data) => {
                           if (data && data.quoteId) {
-                            claimedQuoteId = data.quoteId;
                             setQuoteRefId(data.nextQuoteId || data.quoteId);
                           }
-                        }
-                      } catch (_) {}
+                        })
+                        .catch(() => {});
                     }
 
-                    const finalWaUrl = claimedQuoteId && claimedQuoteId !== quoteRefId
-                      ? result.whatsapp.replace(/Q-\d{6}-\d+/i, encodeURIComponent(claimedQuoteId))
-                      : result.whatsapp;
-
-                    if (waWin && !waWin.closed) {
-                      waWin.location.href = finalWaUrl;
-                    } else if (typeof window !== 'undefined') {
-                      window.location.href = finalWaUrl;
-                    }
-
-                    markQuoteConverted(claimedQuoteId, {
-                      quoteId: claimedQuoteId,
+                    markQuoteConverted(usedQuoteId, {
+                      quoteId: usedQuoteId,
                       sourcePage: '/services/acting-drivers/',
                       calculatorEngine: 'Acting Driver Cost Calculator',
                       tripType: result.type === 'round' ? `Round Trip (${days} Days)` : 'One Way Drop',
@@ -1107,7 +1086,7 @@ export default function DriverFeeEstimator({
                       trip_type: result.type,
                       vehicle: vehicle.label,
                       fare: result.total,
-                      quote_id: claimedQuoteId
+                      quote_id: usedQuoteId
                     });
                   }}
                   variant="filled"

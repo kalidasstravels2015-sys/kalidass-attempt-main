@@ -1474,90 +1474,60 @@ export default function BookingEngine({
     } catch (_) {}
   };
 
-  // Dispatches booking intent to server & Google Sheets before launching WhatsApp
-  const handleWhatsAppBookClick = async (e, vehicleName, fare) => {
-    e?.preventDefault?.();
-    const waWin = typeof window !== 'undefined' ? window.open('', '_blank') : null;
-    if (waWin) {
-      try { waWin.opener = null; } catch (_) {}
-    }
-    let claimedQuoteId = quoteRefId;
+  // Dispatches booking intent to server & Google Sheets in the background while native <a> opens WhatsApp immediately
+  const handleWhatsAppBookClick = (_e, vehicleName, fare) => {
+    const usedQuoteId = quoteRefId;
 
-    try {
-      // 1. Atomically claim a unique sequential quote ID BEFORE opening WhatsApp
-      if (typeof fetch === 'function') {
-        try {
-          const controller = new AbortController();
-          const timer = setTimeout(() => controller.abort(), 1800);
-          const res = await fetch('/api/next-quote-id', {
-            method: 'POST',
-            keepalive: true,
-            signal: controller.signal
-          });
-          clearTimeout(timer);
-          if (res.ok) {
-            const data = await res.json();
-            if (data && data.quoteId) {
-              claimedQuoteId = data.quoteId;
-              setQuoteRefId(data.nextQuoteId || data.quoteId);
-              if (data.dateCode && data.seq !== undefined) {
-                try {
-                  localStorage.setItem(`kt_last_quotation_seq_${data.dateCode}`, String(data.seq));
-                } catch (_) {}
-              }
+    if (typeof fetch === 'function') {
+      fetch('/api/next-quote-id', {
+        method: 'POST',
+        keepalive: true
+      })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data && data.quoteId) {
+            setQuoteRefId(data.nextQuoteId || data.quoteId);
+            if (data.dateCode && data.seq !== undefined) {
+              try {
+                localStorage.setItem(`kt_last_quotation_seq_${data.dateCode}`, String(data.seq));
+              } catch (_) {}
             }
           }
-        } catch (_) {
-          // Fallback to local increment only if network request fails or times out
+        })
+        .catch(() => {
           try {
             const nextLocal = getNextQuotationId?.();
             if (nextLocal) {
-              claimedQuoteId = nextLocal;
               setQuoteRefId(nextLocal);
             }
           } catch (_) {}
-        }
-      }
+        });
+    }
 
-      const finalWaUrl = buildWhatsAppUrl(getWhatsAppMessage(claimedQuoteId));
-      if (waWin && !waWin.closed) {
-        waWin.location.href = finalWaUrl;
-      } else if (typeof window !== 'undefined') {
-        window.location.href = finalWaUrl;
-      }
+    logCalculationEvent(vehicleName, fare, usedQuoteId);
 
-      logCalculationEvent(vehicleName, fare, claimedQuoteId);
-
-      // Report Google Ads conversion event (Request quote)
-      if (typeof window !== 'undefined') {
-        const finalFare = Number(fare || currentBreakdown.totalFare || 1.0);
-        if (typeof window.reportGoogleAdsConversion === 'function') {
-          window.reportGoogleAdsConversion('booking', {
-            value: finalFare,
-            fare: finalFare,
-            quoteId: claimedQuoteId,
-            event_label: `Booking Engine - ${selectedVehicle?.fullName || 'Cab'} (${currentBreakdown.routeSummary || 'Outstation'})`
-          });
-        } else if (typeof window.gtag === 'function') {
-          window.gtag('event', 'ads_conversion_Request_quote_1', {
-            value: finalFare,
-            currency: 'INR',
-            event_category: 'Qualified Lead',
-            event_label: `Booking Engine - ${selectedVehicle?.fullName || 'Cab'}`
-          });
-        }
-      }
-
-      // Website WhatsApp quotations are intentionally NOT auto-pushed to Live Dispatch.
-      // Confirmed quotes are pasted manually via Admin -> New Booking.
-    } catch (_) {
-      const fallbackUrl = buildWhatsAppUrl(getWhatsAppMessage(claimedQuoteId));
-      if (waWin && !waWin.closed) {
-        waWin.location.href = fallbackUrl;
-      } else if (typeof window !== 'undefined') {
-        window.location.href = fallbackUrl;
+    // Report Google Ads conversion event (Request quote)
+    if (typeof window !== 'undefined') {
+      const finalFare = Number(fare || currentBreakdown.totalFare || 1.0);
+      if (typeof window.reportGoogleAdsConversion === 'function') {
+        window.reportGoogleAdsConversion('booking', {
+          value: finalFare,
+          fare: finalFare,
+          quoteId: usedQuoteId,
+          event_label: `Booking Engine - ${selectedVehicle?.fullName || 'Cab'} (${currentBreakdown.routeSummary || 'Outstation'})`
+        });
+      } else if (typeof window.gtag === 'function') {
+        window.gtag('event', 'ads_conversion_Request_quote_1', {
+          value: finalFare,
+          currency: 'INR',
+          event_category: 'Qualified Lead',
+          event_label: `Booking Engine - ${selectedVehicle?.fullName || 'Cab'}`
+        });
       }
     }
+
+    // Website WhatsApp quotations are intentionally NOT auto-pushed to Live Dispatch.
+    // Confirmed quotes are pasted manually via Admin -> New Booking.
   };
 
   // WhatsApp Message (Auditor-Approved Short-Line Format: Zero Fake Date/Number Links, 100% Transparent Math)
