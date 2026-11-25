@@ -1,4 +1,13 @@
 import { getVehiclePermitCategory } from './masterTariff.js';
+import nhaiTollData from '../data/nhaiTollPlazas.json' with { type: 'json' };
+
+const PLAZA_BY_ID = new Map((nhaiTollData?.plazas || []).map((p) => [p.id, p]));
+
+function resolvePlazasByIds(ids) {
+  if (!Array.isArray(ids)) return null;
+  const resolved = ids.map((id) => PLAZA_BY_ID.get(id)).filter(Boolean);
+  return resolved.length === ids.length ? resolved : null;
+}
 
 /**
  * Master database of known outstation destinations from Chennai.
@@ -10,30 +19,30 @@ export const KNOWN_DESTINATIONS = {
   tirumala: { name: 'Tirumala Hills', oneWayKm: 155, roundTripKm: 310, stateCode: 'AP', defaultDays: 1, corridor: 'nh16_tirupati' },
   srikalahasti: { name: 'Srikalahasti Temple', oneWayKm: 115, roundTripKm: 230, stateCode: 'AP', defaultDays: 1, corridor: 'nh16_tirupati' },
   kanipakam: { name: 'Kanipakam Vinayaka', oneWayKm: 165, roundTripKm: 330, stateCode: 'AP', defaultDays: 1, corridor: 'nh48_vellore' },
-  pondicherry: { name: 'Pondicherry & Auroville', oneWayKm: 151, roundTripKm: 302, stateCode: 'PY', defaultDays: 1, corridor: 'ecr_coastal' },
-  puducherry: { name: 'Pondicherry & Auroville', oneWayKm: 151, roundTripKm: 302, stateCode: 'PY', defaultDays: 1, corridor: 'ecr_coastal' },
-  auroville: { name: 'Auroville & Pondicherry', oneWayKm: 145, roundTripKm: 290, stateCode: 'PY', defaultDays: 1, corridor: 'ecr_coastal' },
-  thiruvannamalai: { name: 'Thiruvannamalai Girivalam', oneWayKm: 195, roundTripKm: 390, stateCode: 'TN', defaultDays: 1, corridor: 'nh32_tindivanam' },
-  tiruvannamalai: { name: 'Thiruvannamalai Girivalam', oneWayKm: 195, roundTripKm: 390, stateCode: 'TN', defaultDays: 1, corridor: 'nh32_tindivanam' },
-  kanchipuram: { name: 'Kanchipuram Temples', oneWayKm: 75, roundTripKm: 150, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_kanchi' },
-  kancheepuram: { name: 'Kanchipuram Temples', oneWayKm: 75, roundTripKm: 150, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_kanchi' },
-  kanchi: { name: 'Kanchipuram Temples', oneWayKm: 75, roundTripKm: 150, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_kanchi' },
-  kanchepuram: { name: 'Kanchipuram Temples', oneWayKm: 75, roundTripKm: 150, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_kanchi' },
-  kanjipuram: { name: 'Kanchipuram Temples', oneWayKm: 75, roundTripKm: 150, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_kanchi' },
-  kanhipuram: { name: 'Kanchipuram Temples', oneWayKm: 75, roundTripKm: 150, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_kanchi' },
-  vellore: { name: 'Vellore Golden Temple & CMC', oneWayKm: 140, roundTripKm: 280, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_vellore' },
-  sholingur: { name: 'Sholingur Narasimhar', oneWayKm: 110, roundTripKm: 220, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_kanchi' },
-  mahabalipuram: { name: 'Mahabalipuram Shore', oneWayKm: 55, roundTripKm: 110, stateCode: 'TN', defaultDays: 1, corridor: 'ecr_short' },
-  mamallapuram: { name: 'Mahabalipuram Shore', oneWayKm: 55, roundTripKm: 110, stateCode: 'TN', defaultDays: 1, corridor: 'ecr_short' },
+  pondicherry: { name: 'Pondicherry & Auroville', oneWayKm: 151, roundTripKm: 302, stateCode: 'PY', defaultDays: 1, corridor: 'ecr_coastal', plazaIds: ['akkarai-ecr'] },
+  puducherry: { name: 'Pondicherry & Auroville', oneWayKm: 151, roundTripKm: 302, stateCode: 'PY', defaultDays: 1, corridor: 'ecr_coastal', plazaIds: ['akkarai-ecr'] },
+  auroville: { name: 'Auroville & Pondicherry', oneWayKm: 145, roundTripKm: 290, stateCode: 'PY', defaultDays: 1, corridor: 'ecr_coastal', plazaIds: ['akkarai-ecr'] },
+  thiruvannamalai: { name: 'Thiruvannamalai Girivalam', oneWayKm: 195, roundTripKm: 390, stateCode: 'TN', defaultDays: 1, corridor: 'nh32_tindivanam', plazaIds: ['paranur', 'athur'] },
+  tiruvannamalai: { name: 'Thiruvannamalai Girivalam', oneWayKm: 195, roundTripKm: 390, stateCode: 'TN', defaultDays: 1, corridor: 'nh32_tindivanam', plazaIds: ['paranur', 'athur'] },
+  kanchipuram: { name: 'Kanchipuram Temples', oneWayKm: 75, roundTripKm: 150, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_kanchi', plazaIds: ['nemili-sriperumbudur'] },
+  kancheepuram: { name: 'Kanchipuram Temples', oneWayKm: 75, roundTripKm: 150, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_kanchi', plazaIds: ['nemili-sriperumbudur'] },
+  kanchi: { name: 'Kanchipuram Temples', oneWayKm: 75, roundTripKm: 150, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_kanchi', plazaIds: ['nemili-sriperumbudur'] },
+  kanchepuram: { name: 'Kanchipuram Temples', oneWayKm: 75, roundTripKm: 150, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_kanchi', plazaIds: ['nemili-sriperumbudur'] },
+  kanjipuram: { name: 'Kanchipuram Temples', oneWayKm: 75, roundTripKm: 150, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_kanchi', plazaIds: ['nemili-sriperumbudur'] },
+  kanhipuram: { name: 'Kanchipuram Temples', oneWayKm: 75, roundTripKm: 150, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_kanchi', plazaIds: ['nemili-sriperumbudur'] },
+  vellore: { name: 'Vellore Golden Temple & CMC', oneWayKm: 140, roundTripKm: 280, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_vellore', plazaIds: ['nemili-sriperumbudur', 'chennasamudram'] },
+  sholingur: { name: 'Sholingur Narasimhar', oneWayKm: 110, roundTripKm: 220, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_kanchi', plazaIds: ['nemili-sriperumbudur'] },
+  mahabalipuram: { name: 'Mahabalipuram Shore', oneWayKm: 55, roundTripKm: 110, stateCode: 'TN', defaultDays: 1, corridor: 'ecr_short', plazaIds: ['akkarai-ecr'] },
+  mamallapuram: { name: 'Mahabalipuram Shore', oneWayKm: 55, roundTripKm: 110, stateCode: 'TN', defaultDays: 1, corridor: 'ecr_short', plazaIds: ['akkarai-ecr'] },
 
   // Dharmapuri / Krishnagiri / Hogenakkal / Salem / Hills
-  hogenakkal: { name: 'Hogenakkal Water Falls', oneWayKm: 327, roundTripKm: 654, stateCode: 'TN', defaultDays: 2, corridor: 'nh48_dharmapuri' },
-  dharmapuri: { name: 'Dharmapuri', oneWayKm: 295, roundTripKm: 590, stateCode: 'TN', defaultDays: 2, corridor: 'nh48_dharmapuri' },
-  krishnagiri: { name: 'Krishnagiri', oneWayKm: 255, roundTripKm: 510, stateCode: 'TN', defaultDays: 2, corridor: 'nh48_dharmapuri' },
-  hosur: { name: 'Hosur', oneWayKm: 305, roundTripKm: 610, stateCode: 'TN', defaultDays: 2, corridor: 'nh48_dharmapuri' },
-  yelagiri: { name: 'Yelagiri Hills', oneWayKm: 230, roundTripKm: 460, stateCode: 'TN', defaultDays: 2, corridor: 'nh48_vellore' },
-  yercaud: { name: 'Yercaud Hills', oneWayKm: 365, roundTripKm: 730, stateCode: 'TN', defaultDays: 2, corridor: 'nh32_salem' },
-  salem: { name: 'Salem', oneWayKm: 340, roundTripKm: 680, stateCode: 'TN', defaultDays: 2, corridor: 'nh32_salem' },
+  hogenakkal: { name: 'Hogenakkal Water Falls', oneWayKm: 327, roundTripKm: 654, stateCode: 'TN', defaultDays: 1, corridor: 'nh48_dharmapuri', plazaIds: ['nemili-sriperumbudur', 'chennasamudram', 'pallikonda', 'vaniyambadi', 'krishnagiri'] },
+  dharmapuri: { name: 'Dharmapuri', oneWayKm: 295, roundTripKm: 590, stateCode: 'TN', defaultDays: 2, corridor: 'nh48_dharmapuri', plazaIds: ['nemili-sriperumbudur', 'chennasamudram', 'pallikonda', 'vaniyambadi', 'krishnagiri'] },
+  krishnagiri: { name: 'Krishnagiri', oneWayKm: 255, roundTripKm: 510, stateCode: 'TN', defaultDays: 2, corridor: 'nh48_dharmapuri', plazaIds: ['nemili-sriperumbudur', 'chennasamudram', 'pallikonda', 'vaniyambadi', 'krishnagiri'] },
+  hosur: { name: 'Hosur', oneWayKm: 305, roundTripKm: 610, stateCode: 'TN', defaultDays: 2, corridor: 'nh48_dharmapuri', plazaIds: ['nemili-sriperumbudur', 'chennasamudram', 'pallikonda', 'vaniyambadi', 'krishnagiri'] },
+  yelagiri: { name: 'Yelagiri Hills', oneWayKm: 230, roundTripKm: 460, stateCode: 'TN', defaultDays: 2, corridor: 'nh48_vellore', plazaIds: ['nemili-sriperumbudur', 'chennasamudram', 'pallikonda'] },
+  yercaud: { name: 'Yercaud Hills', oneWayKm: 365, roundTripKm: 730, stateCode: 'TN', defaultDays: 2, corridor: 'nh32_salem', plazaIds: ['paranur', 'athur', 'vikravandi', 'sengurichi'] },
+  salem: { name: 'Salem', oneWayKm: 340, roundTripKm: 680, stateCode: 'TN', defaultDays: 2, corridor: 'nh32_salem', plazaIds: ['paranur', 'athur', 'vikravandi', 'sengurichi'] },
   'kolli hills': { name: 'Kolli Hills', oneWayKm: 375, roundTripKm: 750, stateCode: 'TN', defaultDays: 2, corridor: 'nh32_salem' },
 
   // Delta / Trichy / South TN
@@ -179,8 +188,8 @@ export function matchKnownDestination(destinationText = '') {
 }
 
 /**
- * Computes Round-Trip package km with local sightseeing buffer,
- * rounded up to the nearest 10 km, respecting minimum daily km.
+ * Computes Round-Trip package km from exact highway round-trip distance,
+ * respecting minimum daily km without adding upfront local buffers that overcharge.
  */
 export function computeRoundTripPackageKm(oneWayKm, minDailyKm = 250, days = 1) {
   const safeOneWay = Math.max(0, Number(oneWayKm) || 0);
@@ -198,13 +207,12 @@ export function computeRoundTripPackageKm(oneWayKm, minDailyKm = 250, days = 1) 
   }
 
   const highwayRoundTripKm = Math.round(safeOneWay * 2);
-  const localBufferKm = Math.min(60, Math.max(30, Math.round(highwayRoundTripKm * 0.06)));
-  const suggestedRoundTripKm = Math.ceil((highwayRoundTripKm + localBufferKm) / 10) * 10;
-  const billedKm = Math.max(minPackageKm, suggestedRoundTripKm);
+  const suggestedRoundTripKm = highwayRoundTripKm;
+  const billedKm = Math.max(minPackageKm, highwayRoundTripKm);
 
   return {
     highwayRoundTripKm,
-    localBufferKm: billedKm > highwayRoundTripKm ? billedKm - highwayRoundTripKm : 0,
+    localBufferKm: 0,
     suggestedRoundTripKm,
     minPackageKm,
     billedKm,
@@ -283,15 +291,18 @@ export async function resolveExactRouteDistance({
 
   const matched = matchKnownDestination(cleanDest);
   if (matched && isChennaiOrigin(cleanOrigin)) {
+    const knownPlazas = resolvePlazasByIds(matched.plazaIds);
     return {
       oneWayKm: matched.oneWayKm,
+      plazas: knownPlazas || [],
+      verified: Boolean(knownPlazas),
       source: 'known',
       matchedDest: matched,
     };
   }
 
   if (!cleanDest && !(originCoords && destCoords)) {
-    return { oneWayKm: null, source: 'none', matchedDest: null };
+    return { oneWayKm: null, plazas: [], verified: false, source: 'none', matchedDest: null };
   }
 
   const coordKey = originCoords && destCoords
@@ -330,6 +341,8 @@ export async function resolveExactRouteDistance({
           const result = {
             oneWayKm: Math.round(Number(data.oneWayKm)),
             durationMinutes: data.durationMinutes || null,
+            plazas: Array.isArray(data.plazas) ? data.plazas : [],
+            verified: Boolean(data.verified),
             source: data.source || 'osrm',
           };
           writeCachedRoute(coordKey, result);
@@ -394,69 +407,95 @@ export function getNhaiTollClass(vehicleNameOrId = '') {
  * - Corridor toll plazas (or highway-km fallback ~1 plaza per 65 km)
  * - Return-journey discount (~1.5x for <= 1 day / 24h return, 2.0x for >= 2 days)
  */
-export function estimateRouteToll({
+/**
+ * Calculates EXACT NHAI FASTag toll charges from verified plaza geometry.
+ * Safe Strict Mode: returns verified: false (exactToll: 0) whenever plazas
+ * cannot be 100% verified, so callers fall back to "Toll & Parking Extra".
+ */
+export function calculateExactRouteToll({
+  plazas = null,
+  verified = false,
   destinationText = '',
-  oneWayKm = 0,
+  originText = 'Chennai',
   vehicleNameOrId = '',
   tripType = 'round',
+  durationHours = 0,
   days = 1,
-  corridorHint = null,
 } = {}) {
-  const safeOneWay = Math.max(0, Number(oneWayKm) || 0);
-  const safeDays = Math.max(1, Number(days) || 1);
-  const isRound = String(tripType || '').toLowerCase().includes('round');
   const tollClass = getNhaiTollClass(vehicleNameOrId);
+  const isRound = String(tripType || '').toLowerCase().includes('round');
+  const safeDays = Math.max(1, Number(days) || 1);
+  const within24h = isRound && (Number(durationHours) > 0 ? Number(durationHours) <= 24 : safeDays <= 1);
 
-  const matched = matchKnownDestination(destinationText);
-  const corridorKey = corridorHint || matched?.corridor || null;
-  const profile = corridorKey ? CORRIDOR_TOLL_PROFILES[corridorKey] : null;
+  let resolvedPlazas = Array.isArray(plazas) && verified ? plazas : null;
 
-  let plazaCount = 0;
-  let singleWayToll = 0;
-
-  if (profile) {
-    plazaCount = profile.plazas;
-    singleWayToll = profile[tollClass.key] || profile.car;
-  } else {
-    // Fallback for unmapped corridors: ~1 toll plaza per 65 km of highway
-    plazaCount = safeOneWay >= 40 ? Math.max(1, Math.round(safeOneWay / 65)) : 0;
-    const perPlaza = tollClass.key === 'bus' ? 235 : tollClass.key === 'lcv' ? 115 : 70;
-    singleWayToll = plazaCount * perPlaza;
-  }
-
-  if (singleWayToll <= 0) {
-    return {
-      estimatedToll: 0,
-      singleWayToll: 0,
-      plazaCount: 0,
-      tollClass: tollClass.key,
-      tollClassLabel: tollClass.label,
-      returnRule: 'No highway toll',
-      isEstimated: true,
-    };
-  }
-
-  let multiplier = 1;
-  let returnRule = 'One-Way FASTag';
-  if (isRound) {
-    if (safeDays <= 1) {
-      multiplier = 1.5; // NHAI 24-hour return discount
-      returnRule = 'Same-day 24h return discount';
-    } else {
-      multiplier = 2.0; // Multi-day trip pays full both-way toll
-      returnRule = `${safeDays}-Day both-way toll`;
+  // Synchronous fallback for verified Chennai-area KNOWN_DESTINATIONS
+  if (!resolvedPlazas && isChennaiOrigin(originText) && destinationText) {
+    const matched = matchKnownDestination(destinationText);
+    if (matched?.plazaIds) {
+      resolvedPlazas = resolvePlazasByIds(matched.plazaIds);
     }
   }
 
-  const estimatedToll = Math.round((singleWayToll * multiplier) / 10) * 10;
+  if (!resolvedPlazas) {
+    return {
+      verified: false,
+      exactToll: 0,
+      singleWayToll: 0,
+      plazaCount: 0,
+      plazaNames: [],
+      tollClass: tollClass.key,
+      tollClassLabel: tollClass.label,
+      returnRule: 'Unverified route — pay as per slip',
+    };
+  }
+
+  let singleWayToll = 0;
+  let exactToll = 0;
+
+  for (const plaza of resolvedPlazas) {
+    const rateObj = plaza?.rates?.[tollClass.key] || plaza?.rates?.car;
+    if (!rateObj) continue;
+    const s = Number(rateObj.single) || 0;
+    const r24 = Number(rateObj.return24h) || Math.round((s * 1.5) / 5) * 5;
+    singleWayToll += s;
+
+    if (!isRound) {
+      exactToll += s;
+    } else if (within24h) {
+      exactToll += r24;
+    } else {
+      exactToll += s * 2;
+    }
+  }
+
+  const returnRule = !isRound
+    ? 'One-Way FASTag'
+    : within24h
+      ? '24h Return FASTag'
+      : `${safeDays}-Day Both-Way FASTag`;
 
   return {
-    estimatedToll,
+    verified: true,
+    exactToll,
     singleWayToll,
-    plazaCount,
+    plazaCount: resolvedPlazas.length,
+    plazaNames: resolvedPlazas.map((p) => p.name),
     tollClass: tollClass.key,
     tollClassLabel: tollClass.label,
     returnRule,
-    isEstimated: true,
+  };
+}
+
+/**
+ * Legacy wrapper preserved for callers migrating to calculateExactRouteToll.
+ * Returns verified exactToll in estimatedToll when verified, or 0 when unverified.
+ */
+export function estimateRouteToll(opts = {}) {
+  const res = calculateExactRouteToll(opts);
+  return {
+    ...res,
+    estimatedToll: res.verified ? res.exactToll : 0,
+    isEstimated: !res.verified,
   };
 }

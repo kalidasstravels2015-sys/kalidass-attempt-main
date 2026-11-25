@@ -31,7 +31,7 @@ import { estimateRoadExtrasFromMaster } from '../utils/masterTariff';
 import {
   computeRoundTripPackageKm,
   resolveExactRouteDistance,
-  estimateRouteToll,
+  calculateExactRouteToll,
   matchKnownDestination
 } from '../utils/routeDistanceAndToll';
 
@@ -488,15 +488,20 @@ export default function OutstationQuotationModal() {
       const bataTotal = (days || 1) * bata;
       const kmCost = chargeableKm * rate;
       const extras = estimateRoadExtras(pickup, drop, effDistance, days, true, vehicle.key || vehicle.name);
-      const tollInfo = estimateRouteToll({
+      const durationHours = (date && returnDate)
+        ? Math.max(1, (new Date(returnDate).getTime() - new Date(date).getTime()) / (1000 * 60 * 60))
+        : (days || 1) * 24;
+      const tollInfo = calculateExactRouteToll({
         destinationText: drop,
-        oneWayKm: effDistance,
+        originText: pickup || 'Chennai',
         vehicleNameOrId: vehicle.key || vehicle.name,
         tripType: 'round',
+        durationHours,
         days: days || 1,
       });
+      const includedToll = tollInfo.verified ? tollInfo.exactToll : 0;
       const permitAmount = extras?.statePermitEst || 0;
-      totalCost = kmCost + bataTotal + permitAmount;
+      totalCost = kmCost + bataTotal + permitAmount + includedToll;
 
       bObj = {
         base_km: minKm,
@@ -510,7 +515,10 @@ export default function OutstationQuotationModal() {
         days: days || 1,
         state_name: extras.stateName,
         state_permit_est: extras.statePermitEst,
-        tolls_est: tollInfo.estimatedToll || extras.tollsEst,
+        toll_verified: tollInfo.verified,
+        toll_included: includedToll,
+        toll_plaza_count: tollInfo.plazaCount,
+        tolls_est: tollInfo.verified ? includedToll : extras.tollsEst,
         driver_night_stay_est: extras.driverNightStayEst,
         road_extras_est: extras.roadExtrasEst
       };
@@ -521,15 +529,17 @@ export default function OutstationQuotationModal() {
       const chargeableKm = Math.max(minDropKm, effDistance);
       const kmCost = chargeableKm * rate;
       const extras = estimateRoadExtras(pickup, drop, effDistance, 1, false, vehicle.key || vehicle.name);
-      const tollInfo = estimateRouteToll({
+      const tollInfo = calculateExactRouteToll({
         destinationText: drop,
-        oneWayKm: chargeableKm,
+        originText: pickup || 'Chennai',
         vehicleNameOrId: vehicle.key || vehicle.name,
         tripType: 'oneway',
+        durationHours: 12,
         days: 1,
       });
+      const includedToll = tollInfo.verified ? tollInfo.exactToll : 0;
       const permitAmount = extras?.statePermitEst || 0;
-      totalCost = kmCost + bata + permitAmount;
+      totalCost = kmCost + bata + permitAmount + includedToll;
 
       bObj = {
         base_km: minDropKm,
@@ -543,7 +553,10 @@ export default function OutstationQuotationModal() {
         days: 1,
         state_name: extras.stateName,
         state_permit_est: extras.statePermitEst,
-        tolls_est: tollInfo.estimatedToll || extras.tollsEst,
+        toll_verified: tollInfo.verified,
+        toll_included: includedToll,
+        toll_plaza_count: tollInfo.plazaCount,
+        tolls_est: tollInfo.verified ? includedToll : extras.tollsEst,
         road_extras_est: extras.roadExtrasEst,
         is_oneway: true
       };
@@ -792,8 +805,8 @@ export default function OutstationQuotationModal() {
 💰 *ESTIMATED FARE & TERMS:*
 • Base Vehicle Meter Fare: ₹${(breakdown?.km_cost || finalEstimate).toLocaleString('en-IN')} (${breakdown?.chargeable_km || roundKm} km @ ₹${breakdown?.rate_per_km || (tripType === 'round' ? vehicle.roundTripRate : vehicle.oneWayRate)}/km)
 • Chauffeur Duty & Day Bata: ₹${(breakdown?.driver_bata || vehicle.bata * days).toLocaleString('en-IN')} (${days} ${days > 1 ? 'Days' : 'Day'})
-${breakdown?.state_permit_est > 0 ? `• State Entry Permit (${breakdown.state_name}): ₹${breakdown.state_permit_est.toLocaleString('en-IN')}\n` : ''}• Quoted Total Fare: *₹${finalEstimate.toLocaleString('en-IN')} + Tolls/Parking Extra*
-• Highway FASTag Tolls: ${breakdown?.tolls_est > 0 ? `Approx. ~₹${breakdown.tolls_est} (Pay at Actuals as per FASTag receipts)` : 'Pay at Actuals as per FASTag receipts'}
+${breakdown?.toll_verified && breakdown?.toll_included > 0 ? `• FASTag Tolls (${breakdown.toll_plaza_count} Plazas): ₹${breakdown.toll_included.toLocaleString('en-IN')}\n` : ''}${breakdown?.state_permit_est > 0 ? `• State Entry Permit (${breakdown.state_name}): ₹${breakdown.state_permit_est.toLocaleString('en-IN')}\n` : ''}• Quoted Total Fare: *₹${finalEstimate.toLocaleString('en-IN')} + ${breakdown?.toll_verified ? 'Parking Extra' : 'Tolls/Parking Extra'}*
+• Highway FASTag Tolls: ${breakdown?.toll_verified ? `Included (₹${breakdown.toll_included.toLocaleString('en-IN')})` : (breakdown?.tolls_est > 0 ? `Approx. ~₹${breakdown.tolls_est} (Pay at Actuals as per FASTag receipts)` : 'Pay at Actuals as per FASTag receipts')}
 • Parking Charges: Pay at Actuals as per receipts
 • Payment Policy: Pay 50% (₹${Math.round(finalEstimate * 0.5).toLocaleString('en-IN')}) on cab arrival, balance after trip completion
 • Booking Advance: ₹${((vehicle?.seats && vehicle.seats >= 9) || vehicle?.category === 'tempo' || /tempo|urbania/i.test(vehicle?.fullName || vehicle?.name || '')) ? '2,000' : '500'} to confirm & lock cab (100% deducted from final bill)

@@ -1,8 +1,70 @@
+import nhaiTollData from '../../src/data/nhaiTollPlazas.json' with { type: 'json' };
+
 /**
- * Free-tier driving distance endpoint (Zero API Billing).
- * Uses OpenRouteService (if ORS_API_KEY is configured, 2,000 req/day free)
- * or public OSRM (router.project-osrm.org, no API key required).
+ * Free-tier driving distance & exact NHAI plaza matching endpoint (Zero API Billing).
+ * Uses free OSRM (router.project-osrm.org) route geometry to find exact toll plazas
+ * crossed along the driving route.
  */
+
+function toRad(deg) {
+  return (deg * Math.PI) / 180;
+}
+
+function haversineKm(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+/**
+ * Minimum distance (km) from a point (pLat, pLng) to a segment (a -> b).
+ * GeoJSON coordinates are [lng, lat].
+ */
+function pointToSegmentKm(pLat, pLng, a, b) {
+  const [aLng, aLat] = a;
+  const [bLng, bLat] = b;
+  const dx = bLng - aLng;
+  const dy = bLat - aLat;
+  if (dx === 0 && dy === 0) return haversineKm(pLat, pLng, aLat, aLng);
+
+  const t = Math.max(0, Math.min(1, ((pLng - aLng) * dx + (pLat - aLat) * dy) / (dx * dx + dy * dy)));
+  const projLng = aLng + t * dx;
+  const projLat = aLat + t * dy;
+  return haversineKm(pLat, pLng, projLat, projLng);
+}
+
+/**
+ * Matches NHAI toll plazas within 0.6 km (600 m) of the OSRM route polyline.
+ */
+function matchPlazasOnPolyline(coords) {
+  if (!Array.isArray(coords) || coords.length < 2) return [];
+  const plazas = nhaiTollData?.plazas || [];
+  const matched = [];
+
+  for (const plaza of plazas) {
+    let minKm = Infinity;
+    let firstIdx = Infinity;
+    for (let i = 0; i < coords.length - 1; i++) {
+      const d = pointToSegmentKm(plaza.lat, plaza.lng, coords[i], coords[i + 1]);
+      if (d < minKm) {
+        minKm = d;
+        firstIdx = i;
+      }
+      if (minKm <= 0.15) break;
+    }
+    if (minKm <= 0.6) {
+      matched.push({ ...plaza, _order: firstIdx });
+    }
+  }
+
+  matched.sort((a, b) => a._order - b._order);
+  return matched.map(({ _order, ...rest }) => rest);
+}
 
 async function geocodePlace(text) {
   const q = String(text || '').trim();
@@ -28,7 +90,7 @@ async function geocodePlace(text) {
   return { lat, lng };
 }
 
-export async function onRequestGet({ request, env }) {
+export async function onRequestGet({ request }) {
   try {
     const url = new URL(request.url);
     let originLat = parseFloat(url.searchParams.get('originLat') || '');
@@ -64,49 +126,8 @@ export async function onRequestGet({ request, env }) {
       });
     }
 
-    // 1. Try OpenRouteService if a free API key is configured
-    if (env && env.ORS_API_KEY) {
-      try {
-        const orsRes = await fetch('https://api.openrouteservice.org/v2/directions/driving-car', {
-          method: 'POST',
-          headers: {
-            Authorization: env.ORS_API_KEY,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            coordinates: [
-              [originLng, originLat],
-              [destLng, destLat],
-            ],
-          }),
-        });
-        if (orsRes.ok) {
-          const orsData = await orsRes.json();
-          const summary = orsData?.routes?.[0]?.summary;
-          if (summary && summary.distance > 0) {
-            return new Response(
-              JSON.stringify({
-                oneWayKm: Math.round(summary.distance / 1000),
-                durationMinutes: Math.round((summary.duration || 0) / 60),
-                source: 'ors',
-              }),
-              {
-                status: 200,
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Cache-Control': 'public, max-age=86400',
-                },
-              }
-            );
-          }
-        }
-      } catch (_) {
-        // Fall through to OSRM
-      }
-    }
-
-    // 2. Free public OSRM routing
-    const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${originLng},${originLat};${destLng},${destLat}?overview=false`;
+    // Free public OSRM routing with simplified GeoJSON geometry for plaza matching
+    const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${originLng},${originLat};${destLng},${destLat}?overview=simplified&geometries=geojson`;
     const osrmRes = await fetch(osrmUrl, {
       headers: { 'User-Agent': 'KalidassTravels/1.0' },
     });
@@ -127,10 +148,15 @@ export async function onRequestGet({ request, env }) {
       });
     }
 
+    const polyCoords = route.geometry?.coordinates || [];
+    const plazas = matchPlazasOnPolyline(polyCoords);
+
     return new Response(
       JSON.stringify({
         oneWayKm: Math.round(route.distance / 1000),
         durationMinutes: Math.round((route.duration || 0) / 60),
+        plazas,
+        verified: polyCoords.length >= 2,
         source: 'osrm',
       }),
       {

@@ -29,7 +29,7 @@ import {
   ROUTE_REALISTIC_HOURS,
   computeRoundTripPackageKm,
   resolveExactRouteDistance,
-  estimateRouteToll,
+  calculateExactRouteToll,
   matchKnownDestination
 } from '../utils/routeDistanceAndToll';
 
@@ -1088,17 +1088,16 @@ export default function BookingEngine({
   }, [pickupDateTime, resolvedDestination, outstationDrop, minDaysForTrip]);
 
   // Handle pickup change
-  // Calculate calendar days between pickup and return dates
+  // Calculate billing days by 24-hour elapsed cycles (up to 24 hrs = 1 Day)
   const getDaysBetween = (pIso, rIso) => {
     if (!pIso || !rIso) return 1;
     const p = new Date(pIso);
     const r = new Date(rIso);
     if (isNaN(p.getTime()) || isNaN(r.getTime())) return 1;
-    const pDay = new Date(p.getFullYear(), p.getMonth(), p.getDate());
-    const rDay = new Date(r.getFullYear(), r.getMonth(), r.getDate());
-    const diffTime = rDay.getTime() - pDay.getTime();
-    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24)) + 1;
-    return Math.max(1, diffDays);
+    if (r <= p) return 1;
+    const diffHours = (r.getTime() - p.getTime()) / (1000 * 60 * 60);
+    if (diffHours <= 24) return 1;
+    return Math.max(1, Math.ceil(diffHours / 24));
   };
 
   // Handle pickup change and auto-shift return date
@@ -1178,6 +1177,10 @@ export default function BookingEngine({
       const ratePerKm = isRound ? (vConfig.round_trip_rate || 14) : (vConfig.one_way_rate || 16);
       const bataPerDay = vConfig.driver_bata || 500;
 
+      const tripDurationHours = (isRound && pickupDateTime && returnDateTime)
+        ? Math.max(1, (new Date(returnDateTime).getTime() - new Date(pickupDateTime).getTime()) / (1000 * 60 * 60))
+        : (outstationDays * 24);
+
       if (isRound) {
         const pkgKm = computeRoundTripPackageKm(
           resolvedDestination.oneWayKm > 0 ? resolvedDestination.oneWayKm : 0,
@@ -1187,21 +1190,24 @@ export default function BookingEngine({
         const billedKm = Math.max(pkgKm.billedKm, resolvedDestination.roundTripKm || 0);
         const kmCost = billedKm * ratePerKm;
         const totalBata = outstationDays * bataPerDay;
-        const tollEstimate = estimateRouteToll({
+        const tollResult = calculateExactRouteToll({
+          plazas: resolvedRouteDistance?.plazas,
+          verified: resolvedRouteDistance?.verified,
           destinationText: outstationDrop,
-          oneWayKm: resolvedDestination.oneWayKm,
+          originText: outstationPickup || 'Chennai',
           vehicleNameOrId: vKey,
           tripType: 'round',
+          durationHours: tripDurationHours,
           days: outstationDays,
-          corridorHint: resolvedDestination.corridor,
         });
+        const includedToll = tollResult.verified ? tollResult.exactToll : 0;
         
         const stateCode = resolvedDestination.stateCode;
         const isInterstate = Boolean(stateCode && stateCode !== 'TN');
         const vehicleCategory = vehicleMeta.category || 'sedan';
         const statePermit = isInterstate ? (tariffConfig.state_permits?.[stateCode]?.rates?.[vehicleCategory] || 0) : 0;
-        const baseSubtotal = kmCost + totalBata + statePermit;
-        const taxableAmount = kmCost + totalBata;
+        const baseSubtotal = kmCost + totalBata + statePermit + includedToll;
+        const taxableAmount = kmCost + totalBata + includedToll;
         const gstAmount = needGst ? Math.round(taxableAmount * 0.05) : 0;
         const totalFare = baseSubtotal + gstAmount;
 
@@ -1214,7 +1220,8 @@ export default function BookingEngine({
           extraKmRate: ratePerKm,
           kmCost,
           driverBata: totalBata,
-          tollEstimate,
+          includedToll,
+          tollResult,
           isInterstate,
           stateCode,
           statePermit,
@@ -1239,20 +1246,23 @@ export default function BookingEngine({
         const billedKm = Math.max(estimatedKm, minDropKm);
         const kmCost = billedKm * ratePerKm;
         const totalBata = bataPerDay;
-        const tollEstimate = estimateRouteToll({
+        const tollResult = calculateExactRouteToll({
+          plazas: resolvedRouteDistance?.plazas,
+          verified: resolvedRouteDistance?.verified,
           destinationText: outstationDrop,
-          oneWayKm: billedKm,
+          originText: outstationPickup || 'Chennai',
           vehicleNameOrId: vKey,
           tripType: 'oneway',
+          durationHours: 12,
           days: 1,
-          corridorHint: resolvedDestination.corridor,
         });
+        const includedToll = tollResult.verified ? tollResult.exactToll : 0;
         const stateCode = resolvedDestination.stateCode;
         const isInterstate = Boolean(stateCode && stateCode !== 'TN');
         const vehicleCategory = vehicleMeta.category || 'sedan';
         const statePermit = isInterstate ? (tariffConfig.state_permits?.[stateCode]?.rates?.[vehicleCategory] || 0) : 0;
-        const baseSubtotal = kmCost + totalBata + statePermit;
-        const taxableAmount = kmCost + totalBata;
+        const baseSubtotal = kmCost + totalBata + statePermit + includedToll;
+        const taxableAmount = kmCost + totalBata + includedToll;
         const gstAmount = needGst ? Math.round(taxableAmount * 0.05) : 0;
         const totalFare = baseSubtotal + gstAmount;
 
@@ -1265,7 +1275,8 @@ export default function BookingEngine({
           extraKmRate: ratePerKm,
           kmCost,
           driverBata: totalBata,
-          tollEstimate,
+          includedToll,
+          tollResult,
           isInterstate,
           stateCode,
           statePermit,
@@ -1642,10 +1653,12 @@ Ref: ${cleanRef}`;
       ? `\n(Pickup to drop + local visits)`
       : `\n(Pickup to drop one-way)`;
 
-    const estTollAmt = currentBreakdown.tollEstimate?.estimatedToll || 0;
-    const tollNote = estTollAmt > 0
-      ? ` (Est. FASTag Toll: ~₹${estTollAmt.toLocaleString('en-IN')})`
+    const tollVerified = Boolean(currentBreakdown.tollResult?.verified && currentBreakdown.includedToll > 0);
+    const tollBillingLine = tollVerified
+      ? `\n• FASTag Tolls (${currentBreakdown.tollResult.plazaCount} Plazas) = ₹${currentBreakdown.includedToll.toLocaleString('en-IN')}`
       : '';
+    const extraLabel = tollVerified ? 'Parking Extra' : 'Extra';
+    const extraSlipLine = tollVerified ? '• Parking' : '• Toll & Parking';
 
     return `*KALIDASS TRAVELS*
 ${currentBreakdown.routeSummary || 'Outstation Trip'} (${tripModeStr})
@@ -1654,18 +1667,18 @@ Vehicle: ${selectedVehicle.name} AC
 
 *BILLING (${billedKm} KM PACKAGE)*
 • ${billedKm} km × ₹${ratePerKm}/km = ₹${kmCost.toLocaleString('en-IN')}
-• Driver Bata (${isRound ? `${outstationDays} Day${outstationDays > 1 ? 's' : ''}` : '1 Day'}) = ₹${driverBata.toLocaleString('en-IN')}${permitLine}${gstLine}
-*Estimated Fare: ${fareFormatted} + Extra*${usageSubNote}
+• Driver Bata (${isRound ? `${outstationDays} Day${outstationDays > 1 ? 's' : ''}` : '1 Day'}) = ₹${driverBata.toLocaleString('en-IN')}${tollBillingLine}${permitLine}${gstLine}
+*Estimated Fare: ${fareFormatted} + ${extraLabel}*${usageSubNote}
 
 *Extra (Pay as per slip):*
-• Toll & Parking${tollNote}
+${extraSlipLine}
 
 *Over-limit (Only if > ${billedKm} km):*
 • Extra km: ₹${currentBreakdown.extraKmRate || ratePerKm} / km
 
 *To Confirm:*
 • Advance now: ${advanceAmount}
-• Balance to driver: ${balanceAmount} + Extra
+• Balance to driver: ${balanceAmount} + ${extraLabel}
 Call: +91 89395 39211
 Ref: ${cleanRef}`;
   };
@@ -2636,12 +2649,9 @@ Ref: ${cleanRef}`;
                         ₹{currentBreakdown.totalFare.toLocaleString('en-IN')}
                       </span>
                       <span className="text-[10px] font-semibold text-slate-500 dark:text-gray-400">
-                        + Toll &amp; Parking as per actual slip
-                        {currentBreakdown.tollEstimate?.estimatedToll > 0 && (
-                          <span className="block text-amber-700 dark:text-amber-400">
-                            Est. FASTag Toll: ~₹{currentBreakdown.tollEstimate.estimatedToll.toLocaleString('en-IN')} ({currentBreakdown.tollEstimate.tollClassLabel})
-                          </span>
-                        )}
+                        {currentBreakdown.tollResult?.verified
+                          ? '+ Only Parking as per actual slip (Tolls Included)'
+                          : '+ Toll & Parking as per actual slip'}
                       </span>
                     </div>
                   </div>
@@ -2815,6 +2825,15 @@ Ref: ${cleanRef}`;
                     </div>
                   )}
 
+                  {currentBreakdown.tollResult?.verified && currentBreakdown.includedToll > 0 && (
+                    <div className="flex justify-between items-center py-0.5">
+                      <span>FASTag Tolls ({currentBreakdown.tollResult.plazaCount} Plazas • {currentBreakdown.tollResult.returnRule})</span>
+                      <span className="font-bold text-slate-900 dark:text-white">
+                        ₹{currentBreakdown.includedToll?.toLocaleString('en-IN')}
+                      </span>
+                    </div>
+                  )}
+
                   {currentBreakdown.isInterstate && currentBreakdown.statePermit > 0 && (
                     <div className="flex justify-between items-center py-0.5">
                       <span>State Entry Tax ({currentBreakdown.stateCode})</span>
@@ -2885,12 +2904,9 @@ Ref: ${cleanRef}`;
                         ₹{currentBreakdown.totalFare.toLocaleString('en-IN')}
                       </span>
                       <span className="text-[10px] font-semibold text-slate-500 dark:text-gray-400">
-                        + Toll &amp; Parking as per actual slip
-                        {currentBreakdown.tollEstimate?.estimatedToll > 0 && (
-                          <span className="block text-amber-700 dark:text-amber-400">
-                            Est. FASTag Toll: ~₹{currentBreakdown.tollEstimate.estimatedToll.toLocaleString('en-IN')} ({currentBreakdown.tollEstimate.tollClassLabel})
-                          </span>
-                        )}
+                        {currentBreakdown.tollResult?.verified
+                          ? '+ Only Parking as per actual slip (Tolls Included)'
+                          : '+ Toll & Parking as per actual slip'}
                       </span>
                     </div>
                   </div>

@@ -240,16 +240,18 @@ export default function FastQuoteDesk() {
     const statePermitEst = statePermitInfo.amount || 0;
     const tollEstimate = estimateRouteToll({
       destinationText: destination,
+      originText: pickup || 'Chennai',
       oneWayKm: distanceKmOneWay,
       vehicleNameOrId: vKey,
       tripType: tripType === 'Round Trip' ? 'round' : 'oneway',
       days,
     });
-    const totalFare = carHire + driverBataTotal + statePermitEst;
+    const includedToll = tollEstimate.verified ? tollEstimate.exactToll : 0;
+    const totalFare = carHire + driverBataTotal + statePermitEst + includedToll;
 
     const mileage = vKey.includes('Tempo') ? 7.5 : vKey.includes('Innova') ? 11.5 : 16.5;
     const realFuelCost = Math.round((actualEstimatedRun / mileage) * 93.5);
-    const hardCost = realFuelCost + driverBataTotal + statePermitEst;
+    const hardCost = realFuelCost + driverBataTotal + statePermitEst + includedToll;
     const netProfit = totalFare - hardCost;
 
     return {
@@ -261,6 +263,7 @@ export default function FastQuoteDesk() {
       statePermitEst,
       statePermitInfo,
       tollEstimate,
+      includedToll,
       totalFare,
       realFuelCost,
       netProfit
@@ -308,8 +311,10 @@ export default function FastQuoteDesk() {
           tag = '\n*(Pushback bucket seats, high roof, extra space for 7+ seats & large bags)*';
         }
         const permitLine = c.statePermitEst > 0 ? `\n• State Entry Permit (${c.statePermitInfo.stateName}) : ₹${c.statePermitEst.toLocaleString('en-IN')}` : '';
-        const tollLine = c.tollEstimate?.estimatedToll > 0 ? ` | Est. FASTag Toll: ~₹${c.tollEstimate.estimatedToll.toLocaleString('en-IN')}` : '';
-        return `• ${label}\n  Fare: ₹${c.totalFare.toLocaleString('en-IN')} (Includes ${c.billableKm.toLocaleString('en-IN')} km, Fuel & Driver Bata${permitLine})\n  Extra km: ₹${c.rate}/km${tollLine}${tag}`;
+        const tollLine = c.tollEstimate?.verified && c.includedToll > 0
+          ? ` & FASTag Tolls (₹${c.includedToll.toLocaleString('en-IN')})`
+          : '';
+        return `• ${label}\n  Fare: ₹${c.totalFare.toLocaleString('en-IN')} (Includes ${c.billableKm.toLocaleString('en-IN')} km, Fuel, Driver Bata${tollLine}${permitLine})\n  Extra km: ₹${c.rate}/km${tag}`;
       }).join('\n\n');
 
       const bill = `KALIDASS TRAVELS

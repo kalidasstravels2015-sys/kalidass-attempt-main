@@ -740,10 +740,18 @@ export default function FastOperationsDesk() {
     return 'TN';
   }, [calcRoute, calcStateOverride]);
 
-  // Auto-resolve exact route km from KNOWN_DESTINATIONS / free OSRM when calcRoute changes
+  // Auto-resolve exact route km & verified NHAI plazas from KNOWN_DESTINATIONS / free OSRM when calcRoute changes
+  const [calcRoutePlazas, setCalcRoutePlazas] = useState([]);
+  const [calcTollVerified, setCalcTollVerified] = useState(false);
+  const [calcIncludeToll, setCalcIncludeToll] = useState(true);
+
   useEffect(() => {
     const raw = String(calcRoute || '').trim();
-    if (!raw || (calcTripType !== 'outstation_round' && calcTripType !== 'outstation_oneway')) return;
+    if (!raw || (calcTripType !== 'outstation_round' && calcTripType !== 'outstation_oneway')) {
+      setCalcRoutePlazas([]);
+      setCalcTollVerified(false);
+      return;
+    }
 
     const parts = raw.split(/\s*(?:⇄|➔|->|to)\s*/i).map(s => s.trim()).filter(Boolean);
     const originText = parts.length >= 2 ? parts[0] : 'Chennai';
@@ -753,6 +761,8 @@ export default function FastOperationsDesk() {
     const timer = setTimeout(async () => {
       const res = await resolveExactRouteDistance({ originText, destText });
       if (cancelled || !res?.oneWayKm) return;
+      setCalcRoutePlazas(Array.isArray(res.plazas) ? res.plazas : []);
+      setCalcTollVerified(Boolean(res.verified));
       const v = tariffConfig.vehicles[calcVehicle] || tariffConfig.vehicles['Swift Dzire'];
       if (calcTripType === 'outstation_round') {
         const pkg = computeRoundTripPackageKm(res.oneWayKm, v.min_km_per_day || 250, calcDays);
@@ -779,18 +789,21 @@ export default function FastOperationsDesk() {
     let tollEstimate = Number(calcTollParking) || 0;
     let breakdownLines = [];
 
-    const estOneWayKm = calcTripType === 'outstation_round'
-      ? Math.round((Number(calcDistanceKm) || 250) / 2)
-      : (Number(calcDistanceKm) || 130);
+    const parts = String(calcRoute || '').split(/\s*(?:⇄|➔|->|to)\s*/i).map(s => s.trim()).filter(Boolean);
+    const originText = parts.length >= 2 ? parts[0] : 'Chennai';
+    const destText = parts.length >= 2 ? parts[parts.length - 1] : calcRoute;
     const autoToll = (calcTripType === 'outstation_round' || calcTripType === 'outstation_oneway')
       ? estimateRouteToll({
-          destinationText: calcRoute,
-          oneWayKm: estOneWayKm,
+          plazas: calcRoutePlazas,
+          verified: calcTollVerified,
+          destinationText: destText,
+          originText,
           vehicleNameOrId: calcVehicle,
           tripType: calcTripType === 'outstation_round' ? 'round' : 'oneway',
           days: calcDays,
         })
       : null;
+    const includedExactToll = (calcIncludeToll && autoToll?.verified && tollEstimate === 0) ? autoToll.exactToll : 0;
 
     if (calcTripType === 'outstation_round') {
       const minKmPerDay = v.min_km_per_day || 250;
@@ -863,7 +876,7 @@ export default function FastOperationsDesk() {
       breakdownLines.push(`Toll & Parking (Est.): ₹${tollEstimate.toLocaleString('en-IN')}`);
     }
 
-    const total = baseTotal + statePermitAmt + tollEstimate;
+    const total = baseTotal + statePermitAmt + tollEstimate + includedExactToll;
     return {
       base,
       driverBata: driverBataTotal,
@@ -876,11 +889,12 @@ export default function FastOperationsDesk() {
       seats: v.seats || 'AC',
       advanceAmt: 500,
       tollEstimate,
+      includedExactToll,
       autoToll,
       total,
       breakdownLines
     };
-  }, [calcTripType, calcVehicle, calcLocalPkg, calcTourKey, calcDays, calcDistanceKm, calcTollParking, calcExtraHours, calcExtraKm, detectedStateCode]);
+  }, [calcTripType, calcVehicle, calcLocalPkg, calcTourKey, calcDays, calcDistanceKm, calcTollParking, calcExtraHours, calcExtraKm, detectedStateCode, calcRoute, calcRoutePlazas, calcTollVerified, calcIncludeToll]);
 
   // Unified Contact Book (Past Customers + Drivers + Imported Phonebook .vcf/.csv)
   const [importedContacts, setImportedContacts] = useState(() => loadImportedContacts());
@@ -942,9 +956,12 @@ export default function FastOperationsDesk() {
       : '';
     const balanceAmt = Math.max(0, calculatedFare.total - calculatedFare.advanceAmt);
 
-    const tollNote = calculatedFare.autoToll?.estimatedToll > 0
-      ? ` (Est. FASTag Toll: ~₹${calculatedFare.autoToll.estimatedToll.toLocaleString('en-IN')})`
+    const tollIncluded = Boolean(calculatedFare.includedExactToll > 0 && calculatedFare.autoToll?.verified);
+    const tollBillingLine = tollIncluded
+      ? `\n• FASTag Tolls (${calculatedFare.autoToll.plazaCount} Plazas) = ₹${calculatedFare.includedExactToll.toLocaleString('en-IN')}`
       : '';
+    const extraLabel = tollIncluded ? 'Parking Extra' : 'Extra';
+    const extraSlipLine = tollIncluded ? '• Parking' : '• Toll & Parking';
 
     // Option 1: Auditor Short-Line WhatsApp Quote
     const opt1 = `*KALIDASS TRAVELS*
@@ -953,19 +970,19 @@ Vehicle: ${calcVehicle} AC
 
 *BILLING (${calculatedFare.chargeableKm} KM PACKAGE)*
 • ${calculatedFare.chargeableKm} km × ₹${calculatedFare.kmRate}/km = ₹${calculatedFare.base.toLocaleString('en-IN')}
-• Driver Bata (${calcDays} Day${calcDays > 1 ? 's' : ''}) = ₹${calculatedFare.driverBata.toLocaleString('en-IN')}${permitLine}
-*Estimated Fare: ₹${calculatedFare.total.toLocaleString('en-IN')} + Extra*
+• Driver Bata (${calcDays} Day${calcDays > 1 ? 's' : ''}) = ₹${calculatedFare.driverBata.toLocaleString('en-IN')}${tollBillingLine}${permitLine}
+*Estimated Fare: ₹${calculatedFare.total.toLocaleString('en-IN')} + ${extraLabel}*
 (Pickup to drop + local visits)
 
 *Extra (Pay as per slip):*
-• Toll & Parking${tollNote}
+${extraSlipLine}
 
 *Over-limit (Only if > ${calculatedFare.chargeableKm} km):*
 • Extra km: ₹${calculatedFare.extraKmRate} / km
 
 *To Confirm:*
 • Advance now: ₹${calculatedFare.advanceAmt.toLocaleString('en-IN')}
-• Balance to driver: ₹${balanceAmt.toLocaleString('en-IN')} + Extra
+• Balance to driver: ₹${balanceAmt.toLocaleString('en-IN')} + ${extraLabel}
 Call: +91 89395 39211
 Ref: ${cleanRef}`;
 

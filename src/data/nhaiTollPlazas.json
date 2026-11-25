@@ -1,0 +1,214 @@
+{
+  "updatedAt": "2026-11-25",
+  "source": "NHAI TIS & TNRDC Official Gazette Rates (2025-2026)",
+  "plazas": [
+    {
+      "id": "nemili-sriperumbudur",
+      "name": "Sriperumbudur (Nemili)",
+      "highway": "NH-48",
+      "state": "Tamil Nadu",
+      "lat": 12.9819,
+      "lng": 79.9690,
+      "rates": {
+        "car": { "single": 50, "return24h": 75 },
+        "lcv": { "single": 170, "return24h": 255 },
+        "bus": { "single": 270, "return24h": 405 }
+      }
+    },
+    {
+      "id": "chennasamudram",
+      "name": "Chennasamudram",
+      "highway": "NH-48",
+      "state": "Tamil Nadu",
+      "lat": 12.9109,
+      "lng": 79.4012,
+      "rates": {
+        "car": { "single": 50, "return24h": 80 },
+        "lcv": { "single": 85, "return24h": 125 },
+        "bus": { "single": 175, "return24h": 260 }
+      }
+    },
+    {
+      "id": "pallikonda",
+      "name": "Pallikonda",
+      "highway": "NH-48",
+      "state": "Tamil Nadu",
+      "lat": 12.9058,
+      "lng": 78.9517,
+      "rates": {
+        "car": { "single": 115, "return24h": 170 },
+        "lcv": { "single": 185, "return24h": 275 },
+        "bus": { "single": 385, "return24h": 580 }
+      }
+    },
+    {
+      "id": "vaniyambadi",
+      "name": "Vaniyambadi",
+      "highway": "NH-48",
+      "state": "Tamil Nadu",
+      "lat": 12.6485,
+      "lng": 78.5833,
+      "rates": {
+        "car": { "single": 105, "return24h": 160 },
+        "lcv": { "single": 175, "return24h": 260 },
+        "bus": { "single": 360, "return24h": 545 }
+      }
+    },
+    {
+      "id": "krishnagiri",
+      "name": "Krishnagiri",
+      "highway": "NH-44 / NH-48",
+      "state": "Tamil Nadu",
+      "lat": 12.5446,
+      "lng": 78.2011,
+      "rates": {
+        "car": { "single": 85, "return24h": 130 },
+        "lcv": { "single": 140, "return24h": 205 },
+        "bus": { "single": 290, "return24h": 435 }
+      }
+    },
+    {
+      "id": "attibele",
+      "name": "Attibele (BETL)",
+      "highway": "NH-44",
+      "state": "Karnataka",
+      "lat": 12.7796,
+      "lng": 77.7720,
+      "rates": {
+        "car": { "single": 40, "return24h": 60 },
+        "lcv": { "single": 65, "return24h": 100 },
+        "bus": { "single": 130, "return24h": 195 }
+      }
+    },
+    {
+      "id": "thoppur",
+      "name": "Thoppur (Palayam)",
+      "highway": "NH-44",
+      "state": "Tamil Nadu",
+      "lat": 11.9390,
+      "lng": 78.0570,
+      "rates": {
+        "car": { "single": 120, "return24h": 180 },
+        "lcv": { "single": 205, "return24h": 310 },
+        "bus": { "single": 415, "return24h": 620 }
+      }
+    },
+    {
+      "id": "paranur",
+      "name": "Paranur",
+      "highway": "NH-32 / NH-45",
+      "state": "Tamil Nadu",
+      "lat": 12.7239,
+      "lng": 79.9819,
+      "rates": {
+        "car": { "single": 75, "return24h": 115 },
+        "lcv": { "single": 125, "return24h": 185 },
+        "bus": { "single": 250, "return24h": 375 }
+      }
+    },
+    {
+      "id": "athur",
+      "name": "Athur",
+      "highway": "NH-32 / NH-45",
+      "state": "Tamil Nadu",
+      "lat": 12.3469,
+      "lng": 79.7799,
+      "rates": {
+        "car": { "single": 70, "return24h": 105 },
+        "lcv": { "single": 110, "return24h": 165 },
+        "bus": { "single": 235, "return24h": 350 }
+      }
+    },
+    {
+      "id": "vikravandi",
+      "name": "Vikravandi",
+      "highway": "NH-32 / NH-45",
+      "state": "Tamil Nadu",
+      "lat": 12.0243,
+      "lng": 79.5381,
+      "rates": {
+        "car": { "single": 105, "return24h": 160 },
+        "lcv": { "single": 185, "return24h": 275 },
+        "bus": { "single": 370, "return24h": 555 }
+      }
+    },
+    {
+      "id": "sengurichi",
+      "name": "Sengurichi (Ulundurpet)",
+      "highway": "NH-38",
+      "state": "Tamil Nadu",
+      "lat": 11.7064,
+      "lng": 79.3223,
+      "rates": {
+        "car": { "single": 70, "return24h": 100 },
+        "lcv": { "single": 120, "return24h": 180 },
+        "bus": { "single": 240, "return24h": 355 }
+      }
+    },
+    {
+      "id": "thirumandurai",
+      "name": "Thirumandurai",
+      "highway": "NH-38",
+      "state": "Tamil Nadu",
+      "lat": 11.3968,
+      "lng": 78.9936,
+      "rates": {
+        "car": { "single": 70, "return24h": 100 },
+        "lcv": { "single": 120, "return24h": 180 },
+        "bus": { "single": 240, "return24h": 355 }
+      }
+    },
+    {
+      "id": "samayapuram",
+      "name": "Samayapuram",
+      "highway": "NH-38",
+      "state": "Tamil Nadu",
+      "lat": 10.9294,
+      "lng": 78.7441,
+      "rates": {
+        "car": { "single": 55, "return24h": 85 },
+        "lcv": { "single": 95, "return24h": 145 },
+        "bus": { "single": 195, "return24h": 290 }
+      }
+    },
+    {
+      "id": "akkarai-ecr",
+      "name": "Akkarai (ECR)",
+      "highway": "SH-49 ECR",
+      "state": "Tamil Nadu",
+      "lat": 12.8790,
+      "lng": 80.2520,
+      "rates": {
+        "car": { "single": 50, "return24h": 75 },
+        "lcv": { "single": 170, "return24h": 255 },
+        "bus": { "single": 185, "return24h": 280 }
+      }
+    },
+    {
+      "id": "morattandi",
+      "name": "Morattandi",
+      "highway": "NH-66 / NH-32",
+      "state": "Tamil Nadu",
+      "lat": 11.9833,
+      "lng": 79.7884,
+      "rates": {
+        "car": { "single": 70, "return24h": 100 },
+        "lcv": { "single": 115, "return24h": 170 },
+        "bus": { "single": 215, "return24h": 320 }
+      }
+    },
+    {
+      "id": "nallur",
+      "name": "Nallur",
+      "highway": "NH-16",
+      "state": "Tamil Nadu",
+      "lat": 13.2170,
+      "lng": 80.1694,
+      "rates": {
+        "car": { "single": 80, "return24h": 120 },
+        "lcv": { "single": 130, "return24h": 200 },
+        "bus": { "single": 275, "return24h": 415 }
+      }
+    }
+  ]
+}
