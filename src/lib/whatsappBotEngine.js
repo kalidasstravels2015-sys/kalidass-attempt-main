@@ -2,6 +2,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import tariffConfig from '../data/tariff_config.json' with { type: 'json' };
 import siteContent from '../data/siteContent.json' with { type: 'json' };
+import {
+  computeRoundTripPackageKm,
+  estimateRouteToll,
+  matchKnownDestination
+} from '../utils/routeDistanceAndToll.js';
 
 // Rolling conversation context per sender JID (up to 10 turns)
 const conversationHistories = new Map();
@@ -108,7 +113,7 @@ CORE OPERATIONAL RULES (ZERO AI GIMMICKS - 100% FACTUAL & GROUNDED):
    (Pickup to drop + local visits)
 
    *Extra (Pay as per slip):*
-   • Toll & Parking
+   • Toll & Parking [If known, add: (Est. FASTag Toll: ~₹EstToll)]
 
    *Over-limit (Only if > [Billed km] km):*
    • Extra km: ₹[ExtraKmRate] / km
@@ -144,8 +149,27 @@ CORE OPERATIONAL RULES (ZERO AI GIMMICKS - 100% FACTUAL & GROUNDED):
    - Use the active customer & trip details from the recent conversation.
    - Output an official, forwardable *KALIDASS TRAVELS — OFFICIAL DRIVER DUTY SLIP*.`;
 
+function buildBotRouteContext(text = '') {
+  const matched = matchKnownDestination(text);
+  if (!matched) return '';
+
+  const daysMatch = String(text).match(/(\d+)\s*(?:day|days|d)\b/i);
+  const days = daysMatch ? Math.max(1, Number(daysMatch[1])) : (matched.defaultDays || 1);
+  const sedanPkg = computeRoundTripPackageKm(matched.oneWayKm, 250, days);
+  const tempoPkg = computeRoundTripPackageKm(matched.oneWayKm, 300, days);
+  const carToll = estimateRouteToll({ destinationText: matched.name, oneWayKm: matched.oneWayKm, vehicleNameOrId: 'Swift Dzire', tripType: 'round', days });
+  const tempoToll = estimateRouteToll({ destinationText: matched.name, oneWayKm: matched.oneWayKm, vehicleNameOrId: '17-Seater Tempo', tripType: 'round', days });
+  const busToll = estimateRouteToll({ destinationText: matched.name, oneWayKm: matched.oneWayKm, vehicleNameOrId: '26-Seater Mini Bus', tripType: 'round', days });
+
+  return `\n\n[VERIFIED ROUTE & TOLL DATA FOR ${matched.name.toUpperCase()} (${days} Day${days > 1 ? 's' : ''})]:
+- Exact One-Way Distance: ${matched.oneWayKm} km | Highway Round-Trip: ${sedanPkg.highwayRoundTripKm} km
+- Recommended Round-Trip Package (incl. local visits): Sedan/SUV/Innova = ${sedanPkg.billedKm} km | Tempo/Urbania = ${tempoPkg.billedKm} km
+- Est. FASTag Toll (${carToll.returnRule}): Car/SUV/Innova ~₹${carToll.estimatedToll} | Tempo/LCV ~₹${tempoToll.estimatedToll} | Bus ~₹${busToll.estimatedToll} (pay as per slip)`;
+}
+
 export async function processWhatsAppMessage(incomingText = '', audioBuffer = null, senderJid = '') {
   let promptText = (incomingText || '').trim();
+  const routeContext = buildBotRouteContext(promptText);
   const apiKey = getGeminiApiKey();
 
   if (!apiKey) {
@@ -189,7 +213,7 @@ export async function processWhatsAppMessage(incomingText = '', audioBuffer = nu
   } else {
     contents.push({
       role: 'user',
-      parts: [{ text: promptText }]
+      parts: [{ text: promptText + routeContext }]
     });
   }
 

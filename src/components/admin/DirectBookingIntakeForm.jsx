@@ -10,6 +10,11 @@ import {
   formatShortDate,
   normalizePhoneNumber
 } from '../../utils/adminBookingHelper.js';
+import {
+  computeRoundTripPackageKm,
+  resolveExactRouteDistance,
+  estimateRouteToll
+} from '../../utils/routeDistanceAndToll.js';
 
 const TRIP_TYPE_META = [
   { id: 'Local Chennai Rental', short: 'Local Package', icon: 'schedule', hint: '4/8/10/12 Hr Chennai' },
@@ -268,6 +273,57 @@ export default function DirectBookingIntakeForm({
       setIncludedKm((v.min_km_per_day || 250) * computedDays);
     }
   };
+
+  // Auto-resolve exact outstation km & indicative FASTag toll when pickup/drop changes
+  const [resolvedOneWayKm, setResolvedOneWayKm] = useState(0);
+  useEffect(() => {
+    const isOutstation = tripCategory === 'Outstation Round Trip' || tripCategory === 'Outstation One-Way Drop';
+    const drop = String(dropLocation || '').trim();
+    if (!isOutstation || drop.length < 3) {
+      setResolvedOneWayKm(0);
+      return;
+    }
+
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      const res = await resolveExactRouteDistance({
+        originText: pickupLocation || 'Chennai',
+        destText: drop,
+      });
+      if (cancelled || !res?.oneWayKm) return;
+      setResolvedOneWayKm(res.oneWayKm);
+
+      const v = tariffConfig?.vehicles?.[vehicle] || {};
+      if (tripCategory === 'Outstation Round Trip') {
+        const pkg = computeRoundTripPackageKm(res.oneWayKm, v.min_km_per_day || 250, computedDays || 1);
+        setIncludedKm(pkg.billedKm);
+        setPackageLabel(`${pkg.billedKm} Km Round Trip`);
+      } else {
+        const minDrop = v.min_drop_km || 130;
+        setIncludedKm(Math.max(minDrop, res.oneWayKm));
+      }
+    }, 400);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [tripCategory, pickupLocation, dropLocation, vehicle, computedDays, tariffConfig]);
+
+  const estimatedTollInfo = useMemo(() => {
+    const isOutstation = tripCategory === 'Outstation Round Trip' || tripCategory === 'Outstation One-Way Drop';
+    if (!isOutstation || !(resolvedOneWayKm > 0 || Number(includedKm) > 0)) return null;
+    const oneWay = resolvedOneWayKm > 0
+      ? resolvedOneWayKm
+      : (tripCategory === 'Outstation Round Trip' ? Math.round((Number(includedKm) || 250) / 2) : Number(includedKm) || 130);
+    return estimateRouteToll({
+      destinationText: dropLocation,
+      oneWayKm: oneWay,
+      vehicleNameOrId: vehicle,
+      tripType: tripCategory === 'Outstation Round Trip' ? 'round' : 'oneway',
+      days: computedDays || 1,
+    });
+  }, [tripCategory, resolvedOneWayKm, includedKm, dropLocation, vehicle, computedDays]);
 
   // Multi-Day Custom Itinerary row helpers
   const updateDayRow = (idx, field, value) => {
@@ -1536,6 +1592,11 @@ export default function DirectBookingIntakeForm({
                     <option value="Extra at Actuals">Extra at Actuals</option>
                     <option value="All-Inclusive">All-Inclusive</option>
                   </select>
+                  {estimatedTollInfo?.estimatedToll > 0 && (
+                    <div className="text-[10px] font-semibold text-amber-700 mt-1">
+                      Est. FASTag: ~₹{estimatedTollInfo.estimatedToll.toLocaleString('en-IN')} ({estimatedTollInfo.tollClassLabel})
+                    </div>
+                  )}
                 </div>
                 <div>
                   <label className="block text-[11px] font-bold text-slate-600 mb-1">Extra Km (₹/km)</label>

@@ -31,6 +31,11 @@ import { DRIVER_LEADS_WEBHOOK_URL } from '../../config/googleSheets.js';
 import { getFormattedDateCode, getNextDriverRosterId, formatWhatsAppRefId, peekNextQuotationId } from '../../utils/sequenceGenerator.js';
 import { loadImportedContacts, buildUnifiedContactsList } from '../../utils/contactBookHelper.js';
 import {
+  resolveExactRouteDistance,
+  computeRoundTripPackageKm,
+  estimateRouteToll
+} from '../../utils/routeDistanceAndToll.js';
+import {
   encodeTripForSheet,
   decodeTripFromSheet,
   getCleanNotes,
@@ -735,6 +740,34 @@ export default function FastOperationsDesk() {
     return 'TN';
   }, [calcRoute, calcStateOverride]);
 
+  // Auto-resolve exact route km from KNOWN_DESTINATIONS / free OSRM when calcRoute changes
+  useEffect(() => {
+    const raw = String(calcRoute || '').trim();
+    if (!raw || (calcTripType !== 'outstation_round' && calcTripType !== 'outstation_oneway')) return;
+
+    const parts = raw.split(/\s*(?:⇄|➔|->|to)\s*/i).map(s => s.trim()).filter(Boolean);
+    const originText = parts.length >= 2 ? parts[0] : 'Chennai';
+    const destText = parts.length >= 2 ? parts[parts.length - 1] : raw;
+
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      const res = await resolveExactRouteDistance({ originText, destText });
+      if (cancelled || !res?.oneWayKm) return;
+      const v = tariffConfig.vehicles[calcVehicle] || tariffConfig.vehicles['Swift Dzire'];
+      if (calcTripType === 'outstation_round') {
+        const pkg = computeRoundTripPackageKm(res.oneWayKm, v.min_km_per_day || 250, calcDays);
+        setCalcDistanceKm(pkg.suggestedRoundTripKm);
+      } else {
+        setCalcDistanceKm(res.oneWayKm);
+      }
+    }, 350);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [calcRoute, calcTripType, calcDays, calcVehicle]);
+
   const calculatedFare = useMemo(() => {
     const v = tariffConfig.vehicles[calcVehicle] || tariffConfig.vehicles['Swift Dzire'];
     const vehCat = v.category || 'sedan';
@@ -745,6 +778,19 @@ export default function FastOperationsDesk() {
     let kmRate = v.round_trip_rate || 14;
     let tollEstimate = Number(calcTollParking) || 0;
     let breakdownLines = [];
+
+    const estOneWayKm = calcTripType === 'outstation_round'
+      ? Math.round((Number(calcDistanceKm) || 250) / 2)
+      : (Number(calcDistanceKm) || 130);
+    const autoToll = (calcTripType === 'outstation_round' || calcTripType === 'outstation_oneway')
+      ? estimateRouteToll({
+          destinationText: calcRoute,
+          oneWayKm: estOneWayKm,
+          vehicleNameOrId: calcVehicle,
+          tripType: calcTripType === 'outstation_round' ? 'round' : 'oneway',
+          days: calcDays,
+        })
+      : null;
 
     if (calcTripType === 'outstation_round') {
       const minKmPerDay = v.min_km_per_day || 250;
@@ -830,6 +876,7 @@ export default function FastOperationsDesk() {
       seats: v.seats || 'AC',
       advanceAmt: 500,
       tollEstimate,
+      autoToll,
       total,
       breakdownLines
     };
@@ -895,6 +942,10 @@ export default function FastOperationsDesk() {
       : '';
     const balanceAmt = Math.max(0, calculatedFare.total - calculatedFare.advanceAmt);
 
+    const tollNote = calculatedFare.autoToll?.estimatedToll > 0
+      ? ` (Est. FASTag Toll: ~₹${calculatedFare.autoToll.estimatedToll.toLocaleString('en-IN')})`
+      : '';
+
     // Option 1: Auditor Short-Line WhatsApp Quote
     const opt1 = `*KALIDASS TRAVELS*
 ${calcRoute || 'Chennai Outstation'} (${tripTitle})${calcTimingNote ? `\nPickup: ${calcTimingNote}` : ''}
@@ -907,7 +958,7 @@ Vehicle: ${calcVehicle} AC
 (Pickup to drop + local visits)
 
 *Extra (Pay as per slip):*
-• Toll & Parking
+• Toll & Parking${tollNote}
 
 *Over-limit (Only if > ${calculatedFare.chargeableKm} km):*
 • Extra km: ₹${calculatedFare.extraKmRate} / km

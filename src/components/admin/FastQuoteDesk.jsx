@@ -23,6 +23,11 @@ import {
 } from 'lucide-react';
 import tariffConfig from '../../data/tariff_config.json';
 import { getStatePermitForRoute } from '../../utils/masterTariff';
+import {
+  resolveExactRouteDistance,
+  computeRoundTripPackageKm,
+  estimateRouteToll
+} from '../../utils/routeDistanceAndToll';
 
 const POPULAR_DESTINATIONS = [
   { name: 'Puducherry / Pondy', km: 151, short: 'Pondy' },
@@ -187,18 +192,45 @@ export default function FastQuoteDesk() {
     }
   };
 
+  // Auto-resolve exact one-way distance when pickup or destination changes (zero paid API calls)
+  useEffect(() => {
+    const dest = String(destination || '').trim();
+    if (!dest) return;
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      const res = await resolveExactRouteDistance({
+        originText: pickup || 'Chennai',
+        destText: dest,
+      });
+      if (!cancelled && res?.oneWayKm > 0) {
+        setDistanceKmOneWay(res.oneWayKm);
+      }
+    }, 350);
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [pickup, destination]);
+
   // Helper for computing vehicle fare
   const getVehicleCalc = (vKey) => {
     const vConfig = tariffConfig.vehicles[vKey] || tariffConfig.vehicles['Swift Dzire'];
-    const minKm = days * (vConfig.min_km_per_day || 250);
+    const minDailyKm = vConfig.min_km_per_day || 250;
     const rate = tripType === 'One Way Drop' ? vConfig.one_way_rate : vConfig.round_trip_rate;
     const dailyBata = vConfig.driver_bata || 500;
 
-    const baseDistance = tripType === 'Round Trip' ? distanceKmOneWay * 2 : distanceKmOneWay;
-    const localRunBuffer = tripType === 'Round Trip' && days > 1 ? (days - 1) * 40 : 20;
-    const actualEstimatedRun = baseDistance + localRunBuffer;
+    let billableKm = 0;
+    let actualEstimatedRun = 0;
+    if (tripType === 'Round Trip') {
+      const pkg = computeRoundTripPackageKm(distanceKmOneWay, minDailyKm, days);
+      billableKm = pkg.billedKm;
+      actualEstimatedRun = pkg.suggestedRoundTripKm;
+    } else {
+      const minDropKm = vConfig.min_drop_km || 130;
+      billableKm = Math.max(minDropKm, distanceKmOneWay);
+      actualEstimatedRun = billableKm;
+    }
 
-    const billableKm = Math.max(minKm, actualEstimatedRun);
     const carHire = billableKm * rate;
     const driverBataTotal = days * dailyBata;
     const statePermitInfo = getStatePermitForRoute({
@@ -206,6 +238,13 @@ export default function FastQuoteDesk() {
       vehicleIdOrName: vKey
     });
     const statePermitEst = statePermitInfo.amount || 0;
+    const tollEstimate = estimateRouteToll({
+      destinationText: destination,
+      oneWayKm: distanceKmOneWay,
+      vehicleNameOrId: vKey,
+      tripType: tripType === 'Round Trip' ? 'round' : 'oneway',
+      days,
+    });
     const totalFare = carHire + driverBataTotal + statePermitEst;
 
     const mileage = vKey.includes('Tempo') ? 7.5 : vKey.includes('Innova') ? 11.5 : 16.5;
@@ -221,6 +260,7 @@ export default function FastQuoteDesk() {
       driverBataTotal,
       statePermitEst,
       statePermitInfo,
+      tollEstimate,
       totalFare,
       realFuelCost,
       netProfit
@@ -268,7 +308,8 @@ export default function FastQuoteDesk() {
           tag = '\n*(Pushback bucket seats, high roof, extra space for 7+ seats & large bags)*';
         }
         const permitLine = c.statePermitEst > 0 ? `\n• State Entry Permit (${c.statePermitInfo.stateName}) : ₹${c.statePermitEst.toLocaleString('en-IN')}` : '';
-        return `• ${label}\n  Fare: ₹${c.totalFare.toLocaleString('en-IN')} (Includes ${c.billableKm.toLocaleString('en-IN')} km, Fuel & Driver Bata${permitLine})\n  Extra km: ₹${c.rate}/km${tag}`;
+        const tollLine = c.tollEstimate?.estimatedToll > 0 ? ` | Est. FASTag Toll: ~₹${c.tollEstimate.estimatedToll.toLocaleString('en-IN')}` : '';
+        return `• ${label}\n  Fare: ₹${c.totalFare.toLocaleString('en-IN')} (Includes ${c.billableKm.toLocaleString('en-IN')} km, Fuel & Driver Bata${permitLine})\n  Extra km: ₹${c.rate}/km${tollLine}${tag}`;
       }).join('\n\n');
 
       const bill = `KALIDASS TRAVELS
@@ -290,6 +331,9 @@ To confirm: Call +91 89395 39211 (₹500 advance)`;
         ? `\n• ${primaryCalc.statePermitInfo.stateName} Permit = ₹${primaryCalc.statePermitEst.toLocaleString('en-IN')}`
         : '';
       const balanceAmt = Math.max(0, primaryCalc.totalFare - 500);
+      const tollNote = primaryCalc.tollEstimate?.estimatedToll > 0
+        ? ` (Est. FASTag Toll: ~₹${primaryCalc.tollEstimate.estimatedToll.toLocaleString('en-IN')})`
+        : '';
 
       const bill = `*KALIDASS TRAVELS*
 ${pickup} ⇄ ${destination} (${days} Day${days > 1 ? 's' : ''})
@@ -303,7 +347,7 @@ Vehicle: ${vehicleKey} AC
 (Pickup to drop + local visits)
 
 *Extra (Pay as per slip):*
-• Toll & Parking
+• Toll & Parking${tollNote}
 
 *Over-limit (Only if > ${primaryCalc.billableKm.toLocaleString('en-IN')} km):*
 • Extra km: ₹${primaryCalc.rate} / km

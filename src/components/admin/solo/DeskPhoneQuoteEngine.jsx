@@ -4,6 +4,7 @@ import tnBusFares from '../../../data/tnBusFares.json';
 import { buildWhatsAppUrl, buildMapsBlock } from '../../../utils/whatsapp';
 import { getNextQuotationId } from '../../../utils/sequenceGenerator';
 import { getStatePermitForRoute } from '../../../utils/masterTariff';
+import { computeRoundTripPackageKm, estimateRouteToll } from '../../../utils/routeDistanceAndToll';
 
 // Preset high-ticket highway outstation and airport routes targeting Google Ads & Outstation callers
 const POPULAR_CALL_ROUTES = [
@@ -11,6 +12,9 @@ const POPULAR_CALL_ROUTES = [
   { label: 'Vellore CMC / Golden Temple', destination: 'Vellore', distanceKm: 138, defaultType: 'One Way Drop' },
   { label: 'Pondicherry / Auroville (ECR)', destination: 'Pondicherry', distanceKm: 151, defaultType: 'Round Trip' },
   { label: 'Tiruvannamalai Girivalam', destination: 'Tiruvannamalai', distanceKm: 195, defaultType: 'Round Trip' },
+  { label: 'Hogenakkal Water Falls (2D)', destination: 'Hogenakkal', distanceKm: 327, defaultType: 'Round Trip' },
+  { label: 'Yelagiri Hills (2D)', destination: 'Yelagiri', distanceKm: 230, defaultType: 'Round Trip' },
+  { label: 'Yercaud Hills (2D)', destination: 'Yercaud', distanceKm: 365, defaultType: 'Round Trip' },
   { label: 'Kumbakonam Navagraha', destination: 'Kumbakonam', distanceKm: 295, defaultType: 'Round Trip' },
   { label: 'Bangalore / Bengaluru (NH48)', destination: 'Bangalore', distanceKm: 346, defaultType: 'One Way Drop' },
   { label: 'Trichy / Srirangam Temple', destination: 'Trichy', distanceKm: 332, defaultType: 'Round Trip' },
@@ -100,8 +104,8 @@ export default function DeskPhoneQuoteEngine({
       let driverBataTotal = v.driver_bata * travelDays;
 
       if (tripType === 'Round Trip') {
-        const totalKm = distanceKmOneWay * 2;
-        const billableKm = Math.max(minKm, totalKm);
+        const pkg = computeRoundTripPackageKm(distanceKmOneWay, v.min_km_per_day || 250, travelDays);
+        const billableKm = pkg.billedKm;
         const permitInfo = getStatePermitForRoute(`${activePickup} ${activeDrop}`, key, true, distanceKmOneWay);
         calculated = (billableKm * v.round_trip_rate) + driverBataTotal + permitInfo.permitCost;
       } else if (tripType === 'One Way Drop') {
@@ -119,6 +123,16 @@ export default function DeskPhoneQuoteEngine({
         calculated = v.local_8hr_pkg || 2200;
       }
 
+      const tollEstimate = (tripType === 'Round Trip' || tripType === 'One Way Drop')
+        ? estimateRouteToll({
+            destinationText: activeDrop,
+            oneWayKm: distanceKmOneWay,
+            vehicleNameOrId: key,
+            tripType: tripType === 'Round Trip' ? 'round' : 'oneway',
+            days: travelDays,
+          })
+        : null;
+
       // Round to nearest 50
       const finalFare = Math.round(calculated / 50) * 50;
       const driverShare = Math.round((finalFare * 0.82) / 50) * 50;
@@ -130,7 +144,8 @@ export default function DeskPhoneQuoteEngine({
         companyMargin,
         advance: 500,
         balanceDue: Math.max(0, finalFare - 500),
-        ratePerKm: tripType === 'One Way Drop' ? v.one_way_rate : v.round_trip_rate
+        ratePerKm: tripType === 'One Way Drop' ? v.one_way_rate : v.round_trip_rate,
+        tollEstimate
       };
     });
 
@@ -173,13 +188,17 @@ export default function DeskPhoneQuoteEngine({
     const custLabel = callerName.trim() ? callerName.trim() : 'Sir/Madam';
     const mapsBlock = buildMapsBlock(activePickup, activeDrop, tripType);
 
+    const tollHint = currentVehicleRate?.tollEstimate?.estimatedToll > 0
+      ? ` (Est. FASTag Toll: ~₹${currentVehicleRate.tollEstimate.estimatedToll.toLocaleString('en-IN')} extra as per slip)`
+      : '';
+
     return (
       `🚕 *KALIDASS TRAVELS — TRIP QUOTE*\n\n` +
       `Namaskaram ${custLabel}!\n` +
       `📍 *Route:* ${activePickup} ➔ ${activeDrop}\n` +
       `🚗 *Car:* ${selectedVehicle} (${tripType})\n` +
-      `💰 *All-Inclusive Fare:* ₹${effectiveFare.toLocaleString('en-IN')}\n` +
-      `*(Includes Toll, Driver Beta & Fuel. No hidden charges)*\n\n` +
+      `💰 *Estimated Fare:* ₹${effectiveFare.toLocaleString('en-IN')} + Extra\n` +
+      `*(Includes Fuel & Driver Bata. Toll & Parking as per slip${tollHint})*\n\n` +
       `🔒 *To Confirm Booking:*\n` +
       `Pay *₹500 Advance* via UPI: *8939539211@okbizaxis* (Kalidass Travels)\n` +
       `Vehicle & driver allocated instantly upon payment. Balance ₹${effectiveBalance.toLocaleString('en-IN')} payable to driver directly.\n\n` +

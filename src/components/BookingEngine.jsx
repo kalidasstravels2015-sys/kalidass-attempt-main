@@ -24,80 +24,14 @@ import tariffConfig from '../data/tariff_config.json';
 import { peekNextQuotationId, getNextQuotationId, getFormattedDateCode, formatWhatsAppRefId } from '../utils/sequenceGenerator';
 import { loadGoogleMaps } from '../lib/googleMapsLoader';
 import { getFleetImageDimensions } from '../utils/vehicleMetadata';
-
-// ── Master database of known outstation destinations from Chennai ──────────
-const KNOWN_DESTINATIONS = {
-  'tirupati': { name: 'Tirupati Balaji', roundTripKm: 320, oneWayKm: 135, stateCode: 'AP', defaultDays: 1 },
-  'tirumala': { name: 'Tirumala Hills', roundTripKm: 340, oneWayKm: 155, stateCode: 'AP', defaultDays: 1 },
-  'pondicherry': { name: 'Pondicherry & Auroville', roundTripKm: 310, oneWayKm: 151, stateCode: 'PY', defaultDays: 1 },
-  'puducherry': { name: 'Pondicherry & Auroville', roundTripKm: 310, oneWayKm: 151, stateCode: 'PY', defaultDays: 1 },
-  'thiruvannamalai': { name: 'Thiruvannamalai Girivalam', roundTripKm: 390, oneWayKm: 195, stateCode: 'TN', defaultDays: 1 },
-  'tiruvannamalai': { name: 'Thiruvannamalai Girivalam', roundTripKm: 390, oneWayKm: 195, stateCode: 'TN', defaultDays: 1 },
-  'kanchipuram': { name: 'Kanchipuram Temples', roundTripKm: 150, oneWayKm: 75, stateCode: 'TN', defaultDays: 1 },
-  'kancheepuram': { name: 'Kanchipuram Temples', roundTripKm: 150, oneWayKm: 75, stateCode: 'TN', defaultDays: 1 },
-  'kanchi': { name: 'Kanchipuram Temples', roundTripKm: 150, oneWayKm: 75, stateCode: 'TN', defaultDays: 1 },
-  'kanchepuram': { name: 'Kanchipuram Temples', roundTripKm: 150, oneWayKm: 75, stateCode: 'TN', defaultDays: 1 },
-  'kanjipuram': { name: 'Kanchipuram Temples', roundTripKm: 150, oneWayKm: 75, stateCode: 'TN', defaultDays: 1 },
-  'kanhipuram': { name: 'Kanchipuram Temples', roundTripKm: 150, oneWayKm: 75, stateCode: 'TN', defaultDays: 1 },
-  'vellore': { name: 'Vellore Golden Temple & CMC', roundTripKm: 280, oneWayKm: 140, stateCode: 'TN', defaultDays: 1 },
-  'mahabalipuram': { name: 'Mahabalipuram Shore', roundTripKm: 120, oneWayKm: 55, stateCode: 'TN', defaultDays: 1 },
-  'mamallapuram': { name: 'Mahabalipuram Shore', roundTripKm: 120, oneWayKm: 55, stateCode: 'TN', defaultDays: 1 },
-  'chidambaram': { name: 'Chidambaram Natarajar', roundTripKm: 450, oneWayKm: 230, stateCode: 'TN', defaultDays: 1 },
-  'kumbakonam': { name: 'Kumbakonam Navagraha', roundTripKm: 650, oneWayKm: 310, stateCode: 'TN', defaultDays: 2 },
-  'navagraha': { name: 'Kumbakonam Navagraha', roundTripKm: 650, oneWayKm: 310, stateCode: 'TN', defaultDays: 2 },
-  'rameswaram': { name: 'Rameswaram Jyotirlinga', roundTripKm: 1100, oneWayKm: 550, stateCode: 'TN', defaultDays: 3 },
-  'sabarimala': { name: 'Sabarimala Pilgrimage', roundTripKm: 1300, oneWayKm: 650, stateCode: 'KL', defaultDays: 3 },
-  'nilakkal': { name: 'Sabarimala (Nilakkal)', roundTripKm: 1300, oneWayKm: 650, stateCode: 'KL', defaultDays: 3 },
-  'pamba': { name: 'Sabarimala (Pamba)', roundTripKm: 1300, oneWayKm: 650, stateCode: 'KL', defaultDays: 3 },
-  'tiruchendur': { name: 'Tiruchendur Murugan', roundTripKm: 1250, oneWayKm: 625, stateCode: 'TN', defaultDays: 2 },
-  'bangalore': { name: 'Bangalore / Bengaluru', roundTripKm: 700, oneWayKm: 350, stateCode: 'KA', defaultDays: 2 },
-  'bengaluru': { name: 'Bangalore / Bengaluru', roundTripKm: 700, oneWayKm: 350, stateCode: 'KA', defaultDays: 2 },
-  'mysore': { name: 'Mysore Palace', roundTripKm: 960, oneWayKm: 480, stateCode: 'KA', defaultDays: 3 },
-  'coimbatore': { name: 'Coimbatore Isha Yoga', roundTripKm: 1010, oneWayKm: 505, stateCode: 'TN', defaultDays: 2 },
-  'madurai': { name: 'Madurai Meenakshi', roundTripKm: 924, oneWayKm: 462, stateCode: 'TN', defaultDays: 2 },
-  'trichy': { name: 'Trichy Srirangam', roundTripKm: 664, oneWayKm: 332, stateCode: 'TN', defaultDays: 2 },
-  'salem': { name: 'Salem', roundTripKm: 680, oneWayKm: 340, stateCode: 'TN', defaultDays: 2 },
-  'ooty': { name: 'Ooty Nilgiris', roundTripKm: 1110, oneWayKm: 555, stateCode: 'TN', defaultDays: 3 },
-  'kodaikanal': { name: 'Kodaikanal Hills', roundTripKm: 1060, oneWayKm: 530, stateCode: 'TN', defaultDays: 3 },
-  'munnar': { name: 'Munnar Tea Hills', roundTripKm: 1180, oneWayKm: 590, stateCode: 'KL', defaultDays: 3 }
-};
-
-// Route-specific minimum realistic round-trip hours
-const ROUTE_REALISTIC_HOURS = {
-  'tirupati': 12,
-  'tirumala': 12,
-  'thiruvannamalai': 14,
-  'tiruvannamalai': 14,
-  'pondicherry': 11,
-  'puducherry': 11,
-  'kanchipuram': 8,
-  'kancheepuram': 8,
-  'kanchi': 8,
-  'kanchepuram': 8,
-  'kanjipuram': 8,
-  'kanhipuram': 8,
-  'vellore': 10,
-  'mahabalipuram': 8,
-  'mamallapuram': 8,
-  'chidambaram': 14,
-  'kumbakonam': 36,
-  'navagraha': 36,
-  'rameswaram': 48,
-  'sabarimala': 48,
-  'nilakkal': 48,
-  'pamba': 48,
-  'tiruchendur': 36,
-  'bangalore': 24,
-  'bengaluru': 24,
-  'mysore': 36,
-  'coimbatore': 24,
-  'madurai': 24,
-  'trichy': 24,
-  'salem': 24,
-  'ooty': 48,
-  'kodaikanal': 48,
-  'munnar': 48
-};
+import {
+  KNOWN_DESTINATIONS,
+  ROUTE_REALISTIC_HOURS,
+  computeRoundTripPackageKm,
+  resolveExactRouteDistance,
+  estimateRouteToll,
+  matchKnownDestination
+} from '../utils/routeDistanceAndToll';
 
 // Local Chennai localities to prevent mistaken outstation bookings inside Chennai
 const CHENNAI_LOCAL_KEYWORDS = [
@@ -827,7 +761,11 @@ export default function BookingEngine({
         ac.addListener('place_changed', () => {
           const place = ac.getPlace();
           const addr = place?.formatted_address || place?.name;
-          if (addr) onSelect(addr);
+          const loc = place?.geometry?.location;
+          const coords = loc && typeof loc.lat === 'function' && typeof loc.lng === 'function'
+            ? { lat: loc.lat(), lng: loc.lng() }
+            : null;
+          if (addr) onSelect(addr, coords);
           // Dismiss mobile soft keyboard upon selection to reveal rates
           try { el.blur(); } catch (_) {}
         });
@@ -835,12 +773,14 @@ export default function BookingEngine({
       } catch (_) {}
     };
 
-    attach(pickupInputRef, (addr) => {
+    attach(pickupInputRef, (addr, coords) => {
       setOutstationPickup(addr);
+      setOriginCoords(coords);
       setValidationError('');
     });
-    attach(dropInputRef, (addr) => {
+    attach(dropInputRef, (addr, coords) => {
       setOutstationDrop(addr);
+      setDestCoords(coords);
       setValidationError('');
     });
     attach(localPickupInputRef, (addr) => {
@@ -1010,13 +950,58 @@ export default function BookingEngine({
     return first.slice(0, 24).trim();
   }, []);
 
+  // Coordinates captured from Google Places Autocomplete (0 extra API calls) + Free route distance state
+  const [originCoords, setOriginCoords] = useState(null);
+  const [destCoords, setDestCoords] = useState(null);
+  const [resolvedRouteDistance, setResolvedRouteDistance] = useState({ oneWayKm: null, source: 'none' });
+
+  useEffect(() => {
+    if (activeTab !== 'outstation') return;
+    const drop = (outstationDrop || '').trim();
+    if (!drop && !(originCoords && destCoords)) {
+      setResolvedRouteDistance({ oneWayKm: null, source: 'none' });
+      return;
+    }
+
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      const result = await resolveExactRouteDistance({
+        originText: outstationPickup || 'Chennai',
+        destText: drop,
+        originCoords,
+        destCoords,
+      });
+      if (!cancelled && result) {
+        setResolvedRouteDistance(result);
+      }
+    }, 350);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [activeTab, outstationPickup, outstationDrop, originCoords, destCoords]);
+
   // Resolve current destination object
   const resolvedDestination = useMemo(() => {
-    const raw = (outstationDrop || '').toLowerCase().trim();
-    for (const [key, dest] of Object.entries(KNOWN_DESTINATIONS)) {
-      if (raw.includes(key)) return dest;
+    const matched = matchKnownDestination(outstationDrop || '');
+    const liveOneWayKm = resolvedRouteDistance?.oneWayKm;
+
+    if (matched) {
+      const effectiveOneWay = liveOneWayKm && resolvedRouteDistance?.source !== 'known'
+        ? liveOneWayKm
+        : matched.oneWayKm;
+      const pkgKm = computeRoundTripPackageKm(effectiveOneWay, 250, outstationDays);
+      return {
+        ...matched,
+        oneWayKm: effectiveOneWay,
+        highwayRoundTripKm: pkgKm.highwayRoundTripKm,
+        roundTripKm: pkgKm.suggestedRoundTripKm,
+      };
     }
+
     // Also check state_permits keywords
+    const raw = (outstationDrop || '').toLowerCase().trim();
     let detectedState = 'TN';
     for (const [code, entry] of Object.entries(tariffConfig.state_permits || {})) {
       if (code === 'TN') continue;
@@ -1025,14 +1010,19 @@ export default function BookingEngine({
         break;
       }
     }
+
+    const fallbackOneWay = liveOneWayKm || Math.max(130, outstationDays * 125);
+    const pkgKm = computeRoundTripPackageKm(liveOneWayKm || 0, 250, outstationDays);
     return {
       name: shortenPlaceName(outstationDrop, 'Outstation Trip'),
-      roundTripKm: outstationDays * 250,
-      oneWayKm: 130,
+      roundTripKm: liveOneWayKm ? pkgKm.suggestedRoundTripKm : outstationDays * 250,
+      highwayRoundTripKm: liveOneWayKm ? pkgKm.highwayRoundTripKm : outstationDays * 250,
+      oneWayKm: fallbackOneWay,
       stateCode: detectedState,
-      defaultDays: outstationDays
+      defaultDays: outstationDays,
+      corridor: null,
     };
-  }, [outstationDrop, outstationDays, shortenPlaceName]);
+  }, [outstationDrop, outstationDays, shortenPlaceName, resolvedRouteDistance]);
 
   // Check if drop location entered for outstation is actually within Chennai
   const isDropInChennai = useMemo(() => {
@@ -1189,11 +1179,22 @@ export default function BookingEngine({
       const bataPerDay = vConfig.driver_bata || 500;
 
       if (isRound) {
-        const totalMinKm = outstationDays * minDailyKm;
-        const estimatedKm = resolvedDestination.roundTripKm || totalMinKm;
-        const billedKm = Math.max(estimatedKm, totalMinKm);
+        const pkgKm = computeRoundTripPackageKm(
+          resolvedDestination.oneWayKm > 0 ? resolvedDestination.oneWayKm : 0,
+          minDailyKm,
+          outstationDays
+        );
+        const billedKm = Math.max(pkgKm.billedKm, resolvedDestination.roundTripKm || 0);
         const kmCost = billedKm * ratePerKm;
         const totalBata = outstationDays * bataPerDay;
+        const tollEstimate = estimateRouteToll({
+          destinationText: outstationDrop,
+          oneWayKm: resolvedDestination.oneWayKm,
+          vehicleNameOrId: vKey,
+          tripType: 'round',
+          days: outstationDays,
+          corridorHint: resolvedDestination.corridor,
+        });
         
         const stateCode = resolvedDestination.stateCode;
         const isInterstate = Boolean(stateCode && stateCode !== 'TN');
@@ -1213,6 +1214,7 @@ export default function BookingEngine({
           extraKmRate: ratePerKm,
           kmCost,
           driverBata: totalBata,
+          tollEstimate,
           isInterstate,
           stateCode,
           statePermit,
@@ -1237,6 +1239,14 @@ export default function BookingEngine({
         const billedKm = Math.max(estimatedKm, minDropKm);
         const kmCost = billedKm * ratePerKm;
         const totalBata = bataPerDay;
+        const tollEstimate = estimateRouteToll({
+          destinationText: outstationDrop,
+          oneWayKm: billedKm,
+          vehicleNameOrId: vKey,
+          tripType: 'oneway',
+          days: 1,
+          corridorHint: resolvedDestination.corridor,
+        });
         const stateCode = resolvedDestination.stateCode;
         const isInterstate = Boolean(stateCode && stateCode !== 'TN');
         const vehicleCategory = vehicleMeta.category || 'sedan';
@@ -1255,6 +1265,7 @@ export default function BookingEngine({
           extraKmRate: ratePerKm,
           kmCost,
           driverBata: totalBata,
+          tollEstimate,
           isInterstate,
           stateCode,
           statePermit,
@@ -1428,8 +1439,9 @@ export default function BookingEngine({
   ]);
 
   // Log calculation event silently for lead capture
-  const logCalculationEvent = (vehicleName, fare) => {
+  const logCalculationEvent = (vehicleName, fare, overrideQuoteId = null) => {
     try {
+      const activeQuoteId = overrideQuoteId || quoteRefId;
       const payload = {
         calculatorEngine: 'Kalidass Unified Booking Engine',
         tripType: activeTab === 'outstation' ? (outstationTripType === 'round' ? 'Outstation Round Trip' : 'One-Way Drop') : activeTab,
@@ -1439,7 +1451,7 @@ export default function BookingEngine({
         distanceKm: currentBreakdown.billedKm || 'N/A',
         estimatedFare: fare,
         meta: {
-          quoteRefId,
+          quoteRefId: activeQuoteId,
           tab: activeTab,
           days: outstationDays,
           pickupDate: formattedPickupDate,
@@ -1452,34 +1464,55 @@ export default function BookingEngine({
   };
 
   // Dispatches booking intent to server & Google Sheets before launching WhatsApp
-  const handleWhatsAppBookClick = (vehicleName, fare) => {
-    try {
-      const confirmedId = formatWhatsAppRefId(quoteRefId);
+  const handleWhatsAppBookClick = async (e, vehicleName, fare) => {
+    e?.preventDefault?.();
+    const waWin = typeof window !== 'undefined' ? window.open('', '_blank', 'noopener,noreferrer') : null;
+    let claimedQuoteId = quoteRefId;
 
-      // 1. Commit and advance sequential counter on centralized server
+    try {
+      // 1. Atomically claim a unique sequential quote ID BEFORE opening WhatsApp
       if (typeof fetch === 'function') {
-        fetch('/api/next-quote-id', { method: 'POST', keepalive: true })
-          .then(res => res.json())
-          .then(data => {
-            if (data && data.nextQuoteId) {
-              setQuoteRefId(data.nextQuoteId);
+        try {
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 1800);
+          const res = await fetch('/api/next-quote-id', {
+            method: 'POST',
+            keepalive: true,
+            signal: controller.signal
+          });
+          clearTimeout(timer);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.quoteId) {
+              claimedQuoteId = data.quoteId;
+              setQuoteRefId(data.nextQuoteId || data.quoteId);
               if (data.dateCode && data.seq !== undefined) {
                 try {
                   localStorage.setItem(`kt_last_quotation_seq_${data.dateCode}`, String(data.seq));
                 } catch (_) {}
               }
             }
-          })
-          .catch(() => {
-            // Fallback to local increment only if network request fails
-            try {
-              const nextLocal = getNextQuotationId?.();
-              if (nextLocal) setQuoteRefId(nextLocal);
-            } catch (_) {}
-          });
+          }
+        } catch (_) {
+          // Fallback to local increment only if network request fails or times out
+          try {
+            const nextLocal = getNextQuotationId?.();
+            if (nextLocal) {
+              claimedQuoteId = nextLocal;
+              setQuoteRefId(nextLocal);
+            }
+          } catch (_) {}
+        }
       }
 
-      logCalculationEvent(vehicleName, fare);
+      const finalWaUrl = buildWhatsAppUrl(getWhatsAppMessage(claimedQuoteId));
+      if (waWin && !waWin.closed) {
+        waWin.location.href = finalWaUrl;
+      } else if (typeof window !== 'undefined') {
+        window.location.href = finalWaUrl;
+      }
+
+      logCalculationEvent(vehicleName, fare, claimedQuoteId);
 
       // Report Google Ads conversion event (Request quote)
       if (typeof window !== 'undefined') {
@@ -1488,7 +1521,7 @@ export default function BookingEngine({
           window.reportGoogleAdsConversion('booking', {
             value: finalFare,
             fare: finalFare,
-            quoteId: quoteRefId,
+            quoteId: claimedQuoteId,
             event_label: `Booking Engine - ${selectedVehicle?.fullName || 'Cab'} (${currentBreakdown.routeSummary || 'Outstation'})`
           });
         } else if (typeof window.gtag === 'function') {
@@ -1503,11 +1536,18 @@ export default function BookingEngine({
 
       // Website WhatsApp quotations are intentionally NOT auto-pushed to Live Dispatch.
       // Confirmed quotes are pasted manually via Admin -> New Booking.
-    } catch (_) {}
+    } catch (_) {
+      const fallbackUrl = buildWhatsAppUrl(getWhatsAppMessage(claimedQuoteId));
+      if (waWin && !waWin.closed) {
+        waWin.location.href = fallbackUrl;
+      } else if (typeof window !== 'undefined') {
+        window.location.href = fallbackUrl;
+      }
+    }
   };
 
   // WhatsApp Message (Auditor-Approved Short-Line Format: Zero Fake Date/Number Links, 100% Transparent Math)
-  const getWhatsAppMessage = () => {
+  const getWhatsAppMessage = (overrideQuoteId = null) => {
     const isLocal = activeTab === 'local';
     const isAirport = activeTab === 'airport';
     const totalFareNum = Number(currentBreakdown.totalFare || 0);
@@ -1516,7 +1556,7 @@ export default function BookingEngine({
     const fareFormatted = `₹${totalFareNum.toLocaleString('en-IN')}`;
     const advanceAmount = `₹${advNum.toLocaleString('en-IN')}`;
     const balanceAmount = `₹${balNum.toLocaleString('en-IN')}`;
-    const cleanRef = formatWhatsAppRefId(quoteRefId);
+    const cleanRef = formatWhatsAppRefId(overrideQuoteId || quoteRefId);
 
     if (isLocal) {
       const pkgHours = currentBreakdown.packageHours || 8;
@@ -1602,6 +1642,11 @@ Ref: ${cleanRef}`;
       ? `\n(Pickup to drop + local visits)`
       : `\n(Pickup to drop one-way)`;
 
+    const estTollAmt = currentBreakdown.tollEstimate?.estimatedToll || 0;
+    const tollNote = estTollAmt > 0
+      ? ` (Est. FASTag Toll: ~₹${estTollAmt.toLocaleString('en-IN')})`
+      : '';
+
     return `*KALIDASS TRAVELS*
 ${currentBreakdown.routeSummary || 'Outstation Trip'} (${tripModeStr})
 Pickup: ${formattedPickupDate || 'As requested'}${returnLine}
@@ -1613,7 +1658,7 @@ Vehicle: ${selectedVehicle.name} AC
 *Estimated Fare: ${fareFormatted} + Extra*${usageSubNote}
 
 *Extra (Pay as per slip):*
-• Toll & Parking
+• Toll & Parking${tollNote}
 
 *Over-limit (Only if > ${billedKm} km):*
 • Extra km: ₹${currentBreakdown.extraKmRate || ratePerKm} / km
@@ -2592,6 +2637,11 @@ Ref: ${cleanRef}`;
                       </span>
                       <span className="text-[10px] font-semibold text-slate-500 dark:text-gray-400">
                         + Toll &amp; Parking as per actual slip
+                        {currentBreakdown.tollEstimate?.estimatedToll > 0 && (
+                          <span className="block text-amber-700 dark:text-amber-400">
+                            Est. FASTag Toll: ~₹{currentBreakdown.tollEstimate.estimatedToll.toLocaleString('en-IN')} ({currentBreakdown.tollEstimate.tollClassLabel})
+                          </span>
+                        )}
                       </span>
                     </div>
                   </div>
@@ -2630,7 +2680,7 @@ Ref: ${cleanRef}`;
                   target="_blank"
                   rel="noopener noreferrer nofollow"
                   data-direct-whatsapp="true"
-                  onClick={() => handleWhatsAppBookClick(selectedVehicle.fullName, currentBreakdown.totalFare)}
+                  onClick={(e) => handleWhatsAppBookClick(e, selectedVehicle.fullName, currentBreakdown.totalFare)}
                   className="w-full min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-m3-full bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white font-bold text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#20bd5a]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]"
                 >
                   <WhatsAppIcon variant="white" className="w-5 h-5 shrink-0" />
@@ -2836,6 +2886,11 @@ Ref: ${cleanRef}`;
                       </span>
                       <span className="text-[10px] font-semibold text-slate-500 dark:text-gray-400">
                         + Toll &amp; Parking as per actual slip
+                        {currentBreakdown.tollEstimate?.estimatedToll > 0 && (
+                          <span className="block text-amber-700 dark:text-amber-400">
+                            Est. FASTag Toll: ~₹{currentBreakdown.tollEstimate.estimatedToll.toLocaleString('en-IN')} ({currentBreakdown.tollEstimate.tollClassLabel})
+                          </span>
+                        )}
                       </span>
                     </div>
                   </div>
@@ -2874,7 +2929,7 @@ Ref: ${cleanRef}`;
                     target="_blank"
                     rel="noopener noreferrer nofollow"
                     data-direct-whatsapp="true"
-                    onClick={() => handleWhatsAppBookClick(selectedVehicle.fullName, currentBreakdown.totalFare)}
+                    onClick={(e) => handleWhatsAppBookClick(e, selectedVehicle.fullName, currentBreakdown.totalFare)}
                     className="flex-1 min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#20bd5a]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]"
                   >
                     <WhatsAppIcon variant="white" className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />

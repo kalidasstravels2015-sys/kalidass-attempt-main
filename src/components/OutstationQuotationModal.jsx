@@ -28,6 +28,12 @@ import tnBusFares from '../data/tnBusFares.json';
 import tripsData from '../data/trips.json';
 import tariffConfig from '../data/tariff_config.json';
 import { estimateRoadExtrasFromMaster } from '../utils/masterTariff';
+import {
+  computeRoundTripPackageKm,
+  resolveExactRouteDistance,
+  estimateRouteToll,
+  matchKnownDestination
+} from '../utils/routeDistanceAndToll';
 
 // Distance lookup table for South India routes from Chennai
 const COMMON_DISTANCES_FROM_CHENNAI = {
@@ -192,6 +198,13 @@ const findKnownDistance = (origin, destination) => {
       return {
         distance: 285,
         duration: '5.5 - 6 hrs (Est)'
+      };
+    }
+    const knownMatch = matchKnownDestination(other);
+    if (knownMatch) {
+      return {
+        distance: knownMatch.oneWayKm,
+        duration: `${Math.max(1, Math.round(knownMatch.oneWayKm / 50))} hrs (Est)`
       };
     }
     for (const [city, km] of Object.entries(COMMON_DISTANCES_FROM_CHENNAI)) {
@@ -468,12 +481,20 @@ export default function OutstationQuotationModal() {
 
     if (tripType === 'round') {
       const minKm = (days || 1) * (vehicle.minKm || 250);
-      const actualRoundTripKm = effDistance * 2;
-      const chargeableKm = Math.max(minKm, actualRoundTripKm);
+      const pkgKm = computeRoundTripPackageKm(effDistance, vehicle.minKm || 250, days || 1);
+      const actualRoundTripKm = pkgKm.highwayRoundTripKm;
+      const chargeableKm = pkgKm.billedKm;
       const freeBufferKm = Math.max(0, chargeableKm - actualRoundTripKm);
       const bataTotal = (days || 1) * bata;
       const kmCost = chargeableKm * rate;
       const extras = estimateRoadExtras(pickup, drop, effDistance, days, true, vehicle.key || vehicle.name);
+      const tollInfo = estimateRouteToll({
+        destinationText: drop,
+        oneWayKm: effDistance,
+        vehicleNameOrId: vehicle.key || vehicle.name,
+        tripType: 'round',
+        days: days || 1,
+      });
       const permitAmount = extras?.statePermitEst || 0;
       totalCost = kmCost + bataTotal + permitAmount;
 
@@ -489,7 +510,7 @@ export default function OutstationQuotationModal() {
         days: days || 1,
         state_name: extras.stateName,
         state_permit_est: extras.statePermitEst,
-        tolls_est: extras.tollsEst,
+        tolls_est: tollInfo.estimatedToll || extras.tollsEst,
         driver_night_stay_est: extras.driverNightStayEst,
         road_extras_est: extras.roadExtrasEst
       };
@@ -500,6 +521,13 @@ export default function OutstationQuotationModal() {
       const chargeableKm = Math.max(minDropKm, effDistance);
       const kmCost = chargeableKm * rate;
       const extras = estimateRoadExtras(pickup, drop, effDistance, 1, false, vehicle.key || vehicle.name);
+      const tollInfo = estimateRouteToll({
+        destinationText: drop,
+        oneWayKm: chargeableKm,
+        vehicleNameOrId: vehicle.key || vehicle.name,
+        tripType: 'oneway',
+        days: 1,
+      });
       const permitAmount = extras?.statePermitEst || 0;
       totalCost = kmCost + bata + permitAmount;
 
@@ -515,7 +543,7 @@ export default function OutstationQuotationModal() {
         days: 1,
         state_name: extras.stateName,
         state_permit_est: extras.statePermitEst,
-        tolls_est: extras.tollsEst,
+        tolls_est: tollInfo.estimatedToll || extras.tollsEst,
         road_extras_est: extras.roadExtrasEst,
         is_oneway: true
       };
@@ -541,7 +569,7 @@ export default function OutstationQuotationModal() {
     setLoading(false);
   };
 
-  // Calculate distance between pickup and drop
+  // Calculate distance between pickup and drop (Zero API billing: KNOWN_DESTINATIONS + free OSRM /api/route-distance)
   const resolveDistance = async (origin, destination) => {
     const o = (origin || pickup || '').trim();
     const d = (destination || drop || '').trim();
@@ -550,79 +578,24 @@ export default function OutstationQuotationModal() {
     setLoading(true);
     setErrors({});
 
-    // Ensure Google Maps is loaded
-    if (typeof window !== 'undefined' && (!window.google || !window.google.maps || !window.google.maps.DistanceMatrixService)) {
-      try {
-        await Promise.race([
-          loadGoogleMaps(),
-          new Promise((_, reject) => setTimeout(() => reject(new Error('Maps timeout')), 2500))
-        ]);
-      } catch (_) {}
-    }
-
-    const fallbackToKnown = () => {
-      const known = findKnownDistance(o, d);
-      if (known) {
-        applyResolvedDistance(known.distance, known.duration);
+    try {
+      const exact = await resolveExactRouteDistance({ originText: o, destText: d });
+      if (exact && exact.oneWayKm > 0) {
+        const estHrs = exact.durationMinutes
+          ? `${Math.max(1, Math.round(exact.durationMinutes / 60))} hrs`
+          : `${Math.max(1, Math.round(exact.oneWayKm / 50))} hrs (Est)`;
+        applyResolvedDistance(exact.oneWayKm, estHrs);
         return;
       }
-      const fallbackKm = tripType === 'round' ? 250 : 150;
-      applyResolvedDistance(fallbackKm, tripType === 'round' ? 'Full Day' : '3-4 hrs (Est)');
-    };
+    } catch (_) {}
 
-    // Google Maps Distance Matrix API (Primary)
-    let resolved = false;
-    const fallbackTimer = setTimeout(() => {
-      if (!resolved) {
-        resolved = true;
-        fallbackToKnown();
-      }
-    }, 3500);
-
-    if (window.google && window.google.maps && window.google.maps.DistanceMatrixService) {
-      try {
-        const service = new window.google.maps.DistanceMatrixService();
-        service.getDistanceMatrix(
-          {
-            origins: [o],
-            destinations: [d],
-            travelMode: window.google.maps.TravelMode.DRIVING,
-            unitSystem: window.google.maps.UnitSystem.METRIC,
-          },
-          (response, status) => {
-            if (resolved) return;
-            resolved = true;
-            clearTimeout(fallbackTimer);
-            if (
-              status === 'OK' &&
-              response &&
-              response.rows[0] &&
-              response.rows[0].elements[0] &&
-              response.rows[0].elements[0].status === 'OK'
-            ) {
-              const element = response.rows[0].elements[0];
-              const distValue = Math.round((element.distance.value / 1000) * 10) / 10;
-              const durText = element.duration.text;
-              applyResolvedDistance(distValue, durText);
-              return;
-            }
-            fallbackToKnown();
-          }
-        );
-      } catch (e) {
-        if (!resolved) {
-          resolved = true;
-          clearTimeout(fallbackTimer);
-          fallbackToKnown();
-        }
-      }
-    } else {
-      if (!resolved) {
-        resolved = true;
-        clearTimeout(fallbackTimer);
-        fallbackToKnown();
-      }
+    const known = findKnownDistance(o, d);
+    if (known) {
+      applyResolvedDistance(known.distance, known.duration);
+      return;
     }
+    const fallbackKm = tripType === 'round' ? 250 : 150;
+    applyResolvedDistance(fallbackKm, tripType === 'round' ? 'Full Day' : '3-4 hrs (Est)');
   };
 
   // Google Places Autocomplete on modal open
