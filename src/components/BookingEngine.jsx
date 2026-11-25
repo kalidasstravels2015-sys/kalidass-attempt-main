@@ -1477,7 +1477,10 @@ export default function BookingEngine({
   // Dispatches booking intent to server & Google Sheets before launching WhatsApp
   const handleWhatsAppBookClick = async (e, vehicleName, fare) => {
     e?.preventDefault?.();
-    const waWin = typeof window !== 'undefined' ? window.open('', '_blank', 'noopener,noreferrer') : null;
+    const waWin = typeof window !== 'undefined' ? window.open('', '_blank') : null;
+    if (waWin) {
+      try { waWin.opener = null; } catch (_) {}
+    }
     let claimedQuoteId = quoteRefId;
 
     try {

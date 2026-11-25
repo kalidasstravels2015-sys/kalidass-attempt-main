@@ -1053,7 +1053,10 @@ export default function DriverFeeEstimator({
                   href={result.whatsapp}
                   onClick={async (e) => {
                     e?.preventDefault?.();
-                    const waWin = typeof window !== 'undefined' ? window.open('', '_blank', 'noopener,noreferrer') : null;
+                    const waWin = typeof window !== 'undefined' ? window.open('', '_blank') : null;
+                    if (waWin) {
+                      try { waWin.opener = null; } catch (_) {}
+                    }
                     let claimedQuoteId = quoteRefId;
 
                     if (typeof fetch === 'function') {
