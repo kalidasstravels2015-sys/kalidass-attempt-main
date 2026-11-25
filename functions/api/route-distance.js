@@ -1,4 +1,4 @@
-import nhaiTollData from '../../src/data/nhaiTollPlazas.json' with { type: 'json' };
+import nhaiTollData from '../../src/data/nhaiTollPlazas.json';
 
 /**
  * Free-tier driving distance & exact NHAI plaza matching endpoint (Zero API Billing).
