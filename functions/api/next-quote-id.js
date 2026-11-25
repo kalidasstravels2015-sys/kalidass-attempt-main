@@ -7,6 +7,37 @@ const DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzyfKwbaG83
 let edgeDateCode = '';
 let edgeSeq = 0;
 
+async function readEdgeCacheSeq(dateCode) {
+  try {
+    if (typeof caches !== 'undefined' && caches.default) {
+      const cacheKey = new Request(`https://kt-internal-seq.local/seq/${dateCode}`);
+      const cached = await caches.default.match(cacheKey);
+      if (cached) {
+        const data = await cached.json();
+        const val = Number(data?.seq || 0);
+        if (!isNaN(val) && val > edgeSeq) edgeSeq = val;
+      }
+    }
+  } catch (_) {}
+  return edgeSeq;
+}
+
+async function writeEdgeCacheSeq(dateCode, seq) {
+  if (seq > edgeSeq) edgeSeq = seq;
+  try {
+    if (typeof caches !== 'undefined' && caches.default) {
+      const cacheKey = new Request(`https://kt-internal-seq.local/seq/${dateCode}`);
+      const res = new Response(JSON.stringify({ dateCode, seq: edgeSeq }), {
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'public, max-age=86400'
+        }
+      });
+      await caches.default.put(cacheKey, res);
+    }
+  } catch (_) {}
+}
+
 function sanitizeTripsWebhookUrl(rawUrl) {
   const clean = (rawUrl || '').trim();
   if (!clean || !clean.startsWith('http') || clean.includes('AKfycbzjPh0a2ju')) {
@@ -87,7 +118,8 @@ async function fetchFromGoogleSheets(webhookUrl, dateCode, claim = false) {
           currentSeq: baseSeq,
           nextSeq,
           quoteId: `Q-${dateCode}-${nextSeq}`,
-          claimed: claim
+          claimed: claim,
+          gasOutdated: true
         };
       }
     } catch (_) {}
@@ -102,6 +134,7 @@ export async function onRequestGet({ request, env }) {
       edgeDateCode = dateCode;
       edgeSeq = 0;
     }
+    await readEdgeCacheSeq(dateCode);
 
     const url = new URL(request.url);
     const claim = url.searchParams.get('claim') === 'true' || url.searchParams.get('advance') === 'true';
@@ -114,7 +147,9 @@ export async function onRequestGet({ request, env }) {
         const committedSeq = claim
           ? Number(gData.nextSeq || gData.currentSeq || 0)
           : Number(gData.currentSeq || 0);
-        if (committedSeq > edgeSeq) edgeSeq = committedSeq;
+        if (committedSeq > edgeSeq) {
+          await writeEdgeCacheSeq(dateCode, committedSeq);
+        }
         return new Response(JSON.stringify({
           success: true,
           dateCode,
@@ -122,7 +157,7 @@ export async function onRequestGet({ request, env }) {
           nextSeq: gData.nextSeq,
           quoteId: gData.quoteId,
           claimed: Boolean(gData.claimed ?? claim),
-          source: 'GoogleSheet'
+          source: gData.gasOutdated ? 'EdgeCache_GASOutdated' : 'GoogleSheet'
         }), {
           status: 200,
           headers: {
@@ -139,7 +174,7 @@ export async function onRequestGet({ request, env }) {
     // 2. Resilient Edge Memory Fallback (GET without claim is strictly read-only peek!)
     const nextSeq = edgeSeq + 1;
     if (claim) {
-      edgeSeq = nextSeq;
+      await writeEdgeCacheSeq(dateCode, nextSeq);
     }
     const quoteId = `Q-${dateCode}-${nextSeq}`;
 
@@ -185,6 +220,7 @@ export async function onRequestPost({ request, env }) {
       edgeDateCode = dateCode;
       edgeSeq = 0;
     }
+    await readEdgeCacheSeq(dateCode);
 
     const url = new URL(request.url);
     const webhookUrl = url.searchParams.get('webhook') || (env && (env.GOOGLE_SHEET_WEBHOOK_URL || env.PUBLIC_GOOGLE_SHEET_WEBHOOK_URL)) || DEFAULT_WEBHOOK_URL;
@@ -194,14 +230,16 @@ export async function onRequestPost({ request, env }) {
       const gData = await fetchFromGoogleSheets(webhookUrl, dateCode, true);
       if (gData && gData.quoteId) {
         const remoteSeq = Number(gData.nextSeq || gData.currentSeq || 0);
-        if (remoteSeq > edgeSeq) edgeSeq = remoteSeq;
+        if (remoteSeq > edgeSeq) {
+          await writeEdgeCacheSeq(dateCode, remoteSeq);
+        }
         return new Response(JSON.stringify({
           success: true,
           dateCode,
           seq: remoteSeq,
           quoteId: gData.quoteId,
           nextQuoteId: `Q-${dateCode}-${remoteSeq + 1}`,
-          source: 'GoogleSheet'
+          source: gData.gasOutdated ? 'EdgeCache_GASOutdated' : 'GoogleSheet'
         }), {
           status: 200,
           headers: {
@@ -213,14 +251,15 @@ export async function onRequestPost({ request, env }) {
       }
     } catch (_) {}
 
-    edgeSeq += 1;
+    const nextSeq = edgeSeq + 1;
+    await writeEdgeCacheSeq(dateCode, nextSeq);
     return new Response(JSON.stringify({
       success: true,
       dateCode,
       seq: edgeSeq,
       quoteId: `Q-${dateCode}-${edgeSeq}`,
       nextQuoteId: `Q-${dateCode}-${edgeSeq + 1}`,
-      source: 'EdgeMemory'
+      source: 'EdgeCache'
     }), {
       status: 200,
       headers: {
