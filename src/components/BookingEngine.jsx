@@ -265,6 +265,66 @@ const VEHICLE_SWITCHER_LIST = [
     category: 'coach',
     airportMultiplier: 4.5,
     airportMinFare: 4500
+  },
+  {
+    key: '14-Seater Executive Force Tempo',
+    altKeys: ['14-Seater', '14', 'tempo-14', 'tempo 14', '14-Seater Executive Force Tempo'],
+    name: '14-Seater',
+    fullName: '14-Seater Executive Force Tempo (14+1)',
+    seats: 14,
+    bags: 12,
+    paxLabel: '14 Seats',
+    capacityLabel: '14 Seats + 12 Bags',
+    sizeTag: 'Exec Van 14S',
+    image: '/images/fleet/tempo-12.webp',
+    category: 'tempo',
+    airportMultiplier: 3.0,
+    airportMinFare: 2600
+  },
+  {
+    key: '17-Seater Executive Force Tempo',
+    altKeys: ['17-Seater', '17', 'tempo-17', 'tempo 17', '17-Seater Executive Force Tempo', '17-Seater Executive Force Tempo (4020 WB)'],
+    name: '17-Seater',
+    fullName: '17-Seater Executive Force Tempo (17+1)',
+    seats: 17,
+    bags: 15,
+    paxLabel: '17 Seats',
+    capacityLabel: '17 Seats + 15 Bags',
+    sizeTag: 'Group Coach 17S',
+    image: '/images/fleet/tempo-17.webp',
+    category: 'coach',
+    airportMultiplier: 3.2,
+    airportMinFare: 2800
+  },
+  {
+    key: '20-Seater Grand Force Tempo',
+    altKeys: ['20-Seater', '20', 'tempo-20', 'tempo 20', '20-Seater Grand Force Tempo', '20-Seater Grand Force Tempo (High Roof)'],
+    name: '20-Seater',
+    fullName: '20-Seater Grand Force Tempo (20+1)',
+    seats: 20,
+    bags: 18,
+    paxLabel: '20 Seats',
+    capacityLabel: '20 Seats + 18 Bags',
+    sizeTag: 'Grand Coach 20S',
+    image: '/images/fleet/tempo-17.webp',
+    category: 'coach',
+    airportMultiplier: 3.6,
+    airportMinFare: 3200
+  },
+  {
+    key: '26-Seater Mini Bus / Force Tempo',
+    altKeys: ['26-Seater', '26', 'tempo-26', 'tempo 26', '26-Seater Mini Bus', 'mini bus', '26-Seater Force Mini Bus Coach'],
+    name: '26-Seater',
+    fullName: '26-Seater Force Mini Bus Coach (26+1)',
+    seats: 26,
+    bags: 22,
+    paxLabel: '26 Seats',
+    capacityLabel: '26 Seats + 22 Bags',
+    sizeTag: 'Mini Bus 26S',
+    image: '/images/fleet/tempo.webp',
+    category: 'coach',
+    airportMultiplier: 4.2,
+    airportMinFare: 4000
   }
 ];
 
@@ -613,6 +673,10 @@ export default function BookingEngine({
     }
     const slug = (serviceSlug || '').toLowerCase();
     if (v.includes('urbania') || slug.includes('urbania')) return 'Force Urbania VIP Luxury';
+    if (v.includes('14')) return '14-Seater Executive Force Tempo';
+    if (v.includes('17')) return '17-Seater Executive Force Tempo';
+    if (v.includes('20')) return '20-Seater Grand Force Tempo';
+    if (v.includes('26') || v.includes('bus')) return '26-Seater Mini Bus / Force Tempo';
     if (v.includes('tempo') || slug.includes('tempo')) return 'Tempo Traveller';
     if (v.includes('ertiga') || slug.includes('ertiga')) return 'Maruti Ertiga';
     if (v.includes('crysta') || slug.includes('crysta')) return 'Innova Crysta';

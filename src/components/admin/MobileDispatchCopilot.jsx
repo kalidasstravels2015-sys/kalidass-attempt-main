@@ -65,11 +65,13 @@ export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) 
 
   // Multiple attachments: array of { id, name, size, mimeType, isPdf, dataUrl, base64 }
   const [attachments, setAttachments] = useState([]);
+  const [isDragging, setIsDragging] = useState(false);
 
   const messagesEndRef = useRef(null);
   const recognitionRef = useRef(null);
   const inputRef = useRef(null);
   const fileInputRef = useRef(null);
+  const dragCounterRef = useRef(0);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -131,8 +133,11 @@ export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) 
   // Convert File to base64 attachment object
   const readFileAsAttachment = (file) => {
     return new Promise((resolve) => {
-      const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
-      const isImage = file.type.startsWith('image/');
+      const lowerName = (file.name || '').toLowerCase();
+      const isPdf = file.type === 'application/pdf' || lowerName.endsWith('.pdf');
+      const isImage =
+        (file.type && file.type.startsWith('image/')) ||
+        /\.(png|jpe?g|webp|gif|bmp|heic|heif|avif)$/.test(lowerName);
 
       if (!isPdf && !isImage) {
         alert(`Skipped unsupported file: ${file.name}. Only photos (PNG, JPG, WEBP) and PDF documents are supported.`);
@@ -140,15 +145,27 @@ export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) 
         return;
       }
 
+      const inferredImageMime = lowerName.endsWith('.png')
+        ? 'image/png'
+        : lowerName.endsWith('.webp')
+          ? 'image/webp'
+          : lowerName.endsWith('.gif')
+            ? 'image/gif'
+            : 'image/jpeg';
+
       const reader = new FileReader();
       reader.onload = (e) => {
-        const dataUrl = e.target.result;
+        const dataUrl = e.target?.result;
+        if (typeof dataUrl !== 'string' || !dataUrl.includes(',')) {
+          resolve(null);
+          return;
+        }
         const base64 = dataUrl.split(',')[1];
         resolve({
           id: `att-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-          name: file.name,
-          size: file.size,
-          mimeType: isPdf ? 'application/pdf' : (file.type || 'image/jpeg'),
+          name: file.name || `image-${Date.now()}.jpg`,
+          size: file.size || 0,
+          mimeType: isPdf ? 'application/pdf' : (file.type || inferredImageMime),
           isPdf,
           dataUrl: isPdf ? null : dataUrl, // PDF doesn't need dataUrl for thumbnail
           base64
@@ -159,8 +176,8 @@ export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) 
     });
   };
 
-  const handleFilesChange = async (e) => {
-    const files = Array.from(e.target.files || []);
+  const addFiles = async (fileList) => {
+    const files = Array.from(fileList || []);
     if (files.length === 0) return;
 
     const newAttachments = [];
@@ -168,6 +185,7 @@ export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) 
       const att = await readFileAsAttachment(f);
       if (att) newAttachments.push(att);
     }
+    if (newAttachments.length === 0) return;
 
     setAttachments((prev) => {
       const combined = [...prev, ...newAttachments];
@@ -177,12 +195,55 @@ export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) 
       }
       return combined;
     });
+  };
 
-    e.target.value = '';
+  const handleFilesChange = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+    await addFiles(files);
   };
 
   const handleRemoveAttachment = (id) => {
     setAttachments((prev) => prev.filter((a) => a.id !== id));
+  };
+
+  // Support drag-and-drop from desktop / File Explorer
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounterRef.current += 1;
+    if (e.dataTransfer?.types?.includes('Files')) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.dataTransfer) {
+      e.dataTransfer.dropEffect = 'copy';
+    }
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounterRef.current = Math.max(0, dragCounterRef.current - 1);
+    if (dragCounterRef.current === 0) {
+      setIsDragging(false);
+    }
+  };
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounterRef.current = 0;
+    setIsDragging(false);
+
+    const files = Array.from(e.dataTransfer?.files || []);
+    if (files.length > 0) {
+      await addFiles(files);
+    }
   };
 
   // Support clipboard paste (e.g. pasted screenshots or PDF files)
@@ -199,12 +260,8 @@ export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) 
     }
 
     if (pastedFiles.length > 0) {
-      const newAttachments = [];
-      for (const f of pastedFiles) {
-        const att = await readFileAsAttachment(f);
-        if (att) newAttachments.push(att);
-      }
-      setAttachments((prev) => [...prev, ...newAttachments].slice(0, 8));
+      e.preventDefault();
+      await addFiles(pastedFiles);
     }
   };
 
@@ -611,18 +668,37 @@ export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) 
   return (
     <div
       onPaste={handlePaste}
-      className="w-full h-full flex flex-col bg-white dark:bg-[#131314] text-slate-800 dark:text-[#E3E3E3] rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-white/10"
+      onDragEnter={handleDragEnter}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      className="relative w-full h-full flex flex-col bg-white dark:bg-[#131314] text-slate-800 dark:text-[#E3E3E3] rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-white/10"
     >
-      {/* Hidden File Input for Multiple Photos & PDF Documents */}
+      {/* Drag-and-Drop Overlay */}
+      {isDragging && (
+        <div className="absolute inset-0 z-50 bg-blue-600/15 dark:bg-blue-500/20 backdrop-blur-xs border-2 border-dashed border-blue-500 rounded-2xl flex flex-col items-center justify-center p-6 pointer-events-none">
+          <div className="bg-white dark:bg-[#1E1F20] px-6 py-5 rounded-2xl shadow-xl border border-blue-500/40 text-center max-w-sm">
+            <div className="text-3xl mb-2">📎</div>
+            <div className="font-bold text-sm text-slate-900 dark:text-white">
+              Drop Photos or PDF Tickets Here
+            </div>
+            <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Release to attach up to 8 images or PDFs for Vision AI
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Visually-Hidden File Input for Multiple Photos & PDF Documents */}
       <input
         type="file"
         id="copilot-file-upload"
         name="attachments"
         aria-label="Upload photos or PDF documents"
         ref={fileInputRef}
-        accept="image/*,application/pdf"
+        accept="image/*,.pdf,application/pdf"
         multiple
-        className="hidden"
+        className="sr-only"
         onChange={handleFilesChange}
       />
 
@@ -736,8 +812,8 @@ export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) 
             </p>
 
             {/* Quick Multi-Upload Feature Highlight Card */}
-            <div
-              onClick={() => fileInputRef.current?.click()}
+            <label
+              htmlFor="copilot-file-upload"
               className="w-full mb-4 p-3.5 rounded-2xl bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-emerald-500/10 border border-blue-500/30 flex items-center justify-between gap-3 cursor-pointer hover:border-blue-500/60 transition-all group"
             >
               <div className="flex items-center gap-3 min-w-0 text-left">
@@ -749,14 +825,14 @@ export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) 
                     Upload Multiple Photos or PDF Tickets
                   </div>
                   <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                    Attach multiple WhatsApp screenshots, IRCTC e-tickets (PDF), flight vouchers, or toll receipts
+                    Click to browse, drag &amp; drop files here, or paste screenshots
                   </div>
                 </div>
               </div>
               <span className="px-3 py-1 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shrink-0">
                 Attach Files
               </span>
-            </div>
+            </label>
 
             {/* Vertically Stacked Prompt Starter Cards */}
             <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-left">
@@ -1081,9 +1157,8 @@ export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) 
           className="relative flex items-center bg-slate-100 dark:bg-[#1E1F20] rounded-full border border-slate-200 dark:border-white/10 focus-within:border-blue-500/80 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all p-1.5 shadow-2xs"
         >
           {/* Photo / PDF Attachment Button */}
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
+          <label
+            htmlFor="copilot-file-upload"
             className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer relative ${
               attachments.length > 0
                 ? 'bg-blue-600 text-white shadow-xs'
@@ -1099,7 +1174,7 @@ export default function MobileDispatchCopilot({ onPushToDispatch = null } = {}) 
                 {attachments.length}
               </span>
             )}
-          </button>
+          </label>
 
           {/* 1-Tap Paste from Clipboard (WhatsApp Enquiry) */}
           <button
