@@ -187,6 +187,17 @@ export function formatShortDate(isoDate, includeYear = false) {
   return includeYear ? `${d} ${mon} ${y}` : `${d} ${mon}`;
 }
 
+export function getTodayIsoIST(offsetDays = 0) {
+  const now = new Date();
+  const todayIst = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).format(now);
+  return offsetDays ? addDaysToIsoDate(todayIst, offsetDays) : todayIst;
+}
+
 export function isTripActiveOnDate(trip, targetIsoDate) {
   const target = toIsoDate(targetIsoDate);
   if (!target) return false;
@@ -225,23 +236,27 @@ export function parseTripPickupTimestampIST(pickupDate, pickupTime) {
   const iso = toIsoDate(pickupDate);
   if (!iso) return null;
 
-  let hours = 0;
-  let minutes = 0;
   const rawTime = String(pickupTime || '').trim();
-  if (rawTime) {
-    const ampm = rawTime.match(/(\d{1,2})\s*[:.]\s*(\d{2})\s*(AM|PM)/i);
-    const h24 = rawTime.match(/\b(\d{1,2})\s*[:.]\s*(\d{2})\b/);
-    if (ampm) {
-      hours = parseInt(ampm[1], 10);
-      minutes = parseInt(ampm[2], 10);
-      const meridiem = ampm[3].toUpperCase();
-      if (meridiem === 'PM' && hours < 12) hours += 12;
-      if (meridiem === 'AM' && hours === 12) hours = 0;
-    } else if (h24) {
-      hours = Math.min(23, parseInt(h24[1], 10));
-      minutes = Math.min(59, parseInt(h24[2], 10));
-    }
+  if (!rawTime) return null;
+
+  let hours = null;
+  let minutes = 0;
+  const ampm = rawTime.match(/(\d{1,2})(?:\s*[:.]\s*(\d{2}))?\s*(AM|PM)\b/i);
+  const h24 = rawTime.match(/\b(\d{1,2})\s*[:.]\s*(\d{2})\b/);
+  if (ampm) {
+    hours = parseInt(ampm[1], 10);
+    minutes = ampm[2] ? parseInt(ampm[2], 10) : 0;
+    const meridiem = ampm[3].toUpperCase();
+    if (meridiem === 'PM' && hours < 12) hours += 12;
+    if (meridiem === 'AM' && hours === 12) hours = 0;
+    hours = Math.max(0, Math.min(23, hours));
+    minutes = Math.max(0, Math.min(59, minutes));
+  } else if (h24) {
+    hours = Math.max(0, Math.min(23, parseInt(h24[1], 10)));
+    minutes = Math.max(0, Math.min(59, parseInt(h24[2], 10)));
   }
+
+  if (hours === null || Number.isNaN(hours) || Number.isNaN(minutes)) return null;
 
   const hh = String(hours).padStart(2, '0');
   const mm = String(minutes).padStart(2, '0');
@@ -438,30 +453,36 @@ export function decodeTripFromSheet(row) {
   const returnDate = toIsoDate(row.returnDate || meta.returnDate) || '';
   const days = Number(row.days || meta.days) || (returnDate ? computeTripDays(pickupDate, returnDate) : 1);
 
+  const status = normalizeManifestStatus(row.manifestStatus);
+  const agreed = Number(row.agreedRate) || 0;
+  const adv = Number(row.advance) || 0;
+  const computedBalance = status === 'Completed' ? 0 : Math.max(0, agreed - adv);
+
   return {
     ...row,
     pickupDate,
     returnDate,
     days,
+    balance: computedBalance,
     paxCount: String(row.paxCount || meta.paxCount || ''),
     guestName: String(row.guestName || meta.guestName || ''),
     guestPhone: String(row.guestPhone || meta.guestPhone || ''),
     quoteRef: String(row.quoteRef || meta.quoteRef || ''),
-    hotelName: String(meta.hotelName || ''),
-    flightNumber: String(meta.flightNumber || ''),
-    terminal: String(meta.terminal || ''),
-    airportDirection: String(meta.airportDirection || ''),
-    packageLabel: String(meta.packageLabel || ''),
-    includedKm: Number(meta.includedKm) || 0,
-    includedHrs: Number(meta.includedHrs) || 0,
-    extraKmRate: Number(meta.extraKmRate) || 0,
-    extraHrRate: Number(meta.extraHrRate) || 0,
-    nightStayCharge: Number(meta.nightStayCharge) || 0,
-    tollPolicy: String(meta.tollPolicy || ''),
-    statePermit: Number(meta.statePermit) || 0,
-    driverBata: Number(meta.driverBata) || 0,
-    quotedFare: Number(meta.quotedFare) || 0,
-    tourKey: String(meta.tourKey || ''),
+    hotelName: String(meta.hotelName ?? row.hotelName ?? ''),
+    flightNumber: String(meta.flightNumber ?? row.flightNumber ?? ''),
+    terminal: String(meta.terminal ?? row.terminal ?? ''),
+    airportDirection: String(meta.airportDirection ?? row.airportDirection ?? ''),
+    packageLabel: String(meta.packageLabel ?? row.packageLabel ?? ''),
+    includedKm: Number(meta.includedKm ?? row.includedKm) || 0,
+    includedHrs: Number(meta.includedHrs ?? row.includedHrs) || 0,
+    extraKmRate: Number(meta.extraKmRate ?? row.extraKmRate) || 0,
+    extraHrRate: Number(meta.extraHrRate ?? row.extraHrRate) || 0,
+    nightStayCharge: Number(meta.nightStayCharge ?? row.nightStayCharge) || 0,
+    tollPolicy: String(meta.tollPolicy ?? row.tollPolicy ?? ''),
+    statePermit: Number(meta.statePermit ?? row.statePermit) || 0,
+    driverBata: Number(meta.driverBata ?? row.driverBata) || 0,
+    quotedFare: Number(meta.quotedFare ?? row.quotedFare) || 0,
+    tourKey: String(meta.tourKey ?? row.tourKey ?? ''),
     commissionPct: meta.commissionPct !== undefined ? Number(meta.commissionPct) : (row.commissionPct !== undefined ? Number(row.commissionPct) : 10),
     extraCharges: Number(meta.extraCharges || row.extraCharges || 0),
     extraChargesNote: String(meta.extraChargesNote || row.extraChargesNote || ''),
@@ -473,7 +494,7 @@ export function decodeTripFromSheet(row) {
     reviewSentAt: String(meta.reviewSentAt || row.reviewSentAt || ''),
     startedAt: String(meta.startedAt || row.startedAt || ''),
     completedAt: String(meta.completedAt || row.completedAt || ''),
-    manifestStatus: normalizeManifestStatus(row.manifestStatus),
+    manifestStatus: status,
     dayPlan,
     notes: getCleanNotes(row.notes)
   };
@@ -1016,9 +1037,10 @@ export function buildCustomerBookingSummaryWA(trip) {
 
   const terms = buildCompactTermsSummary(trip);
   lines.push(``);
+  const bal = Math.max(0, (Number(trip.agreedRate) || 0) - (Number(trip.advance) || 0));
   lines.push(`*Agreed Total:* ₹${Number(trip.agreedRate || 0).toLocaleString('en-IN')}`);
   lines.push(`*Advance Paid:* ₹${Number(trip.advance || 0).toLocaleString('en-IN')}`);
-  lines.push(`*Balance to Driver:* ₹${Number(trip.balance || 0).toLocaleString('en-IN')}${trip.tollPolicy === 'All-Inclusive' ? ' (All-Inclusive)' : ' (+ Tolls & Parking actuals)'}`);
+  lines.push(`*Balance to Driver:* ₹${bal.toLocaleString('en-IN')}${trip.tollPolicy === 'All-Inclusive' ? ' (All-Inclusive)' : ' (+ Tolls & Parking actuals)'}`);
   if (terms) lines.push(`*Terms:* ${terms}`);
 
   const cleanNote = getCleanNotes(trip.notes);

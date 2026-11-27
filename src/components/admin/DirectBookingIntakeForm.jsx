@@ -8,6 +8,7 @@ import {
   addDaysToIsoDate,
   computeTripDays,
   formatShortDate,
+  getTodayIsoIST,
   normalizePhoneNumber
 } from '../../utils/adminBookingHelper.js';
 import {
@@ -38,7 +39,7 @@ const TOUR_VEHICLE_MAP = {
 };
 
 function getTodayIso() {
-  return new Date().toISOString().split('T')[0];
+  return getTodayIsoIST();
 }
 
 export default function DirectBookingIntakeForm({
@@ -137,7 +138,11 @@ export default function DirectBookingIntakeForm({
   // Hydrate when pushed from Rate & Quote Generator or Mobile Co-Pilot
   useEffect(() => {
     if (!prefill) return;
-    setShowFullDetails(true);
+    const hasDetails = Boolean(
+      prefill.customerName || prefill.phone || prefill.vehicle || prefill.pickupLocation ||
+      prefill.dropLocation || prefill.agreedRate || prefill.quoteRef || prefill.notes
+    );
+    if (hasDetails) setShowFullDetails(true);
     if (prefill.customerName) setCustomerName(prefill.customerName);
     if (prefill.phone) setPhone(prefill.phone);
     if (prefill.vehicle && tariffConfig?.vehicles?.[prefill.vehicle]) setVehicle(prefill.vehicle);

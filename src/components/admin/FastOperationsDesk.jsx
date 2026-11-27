@@ -42,6 +42,7 @@ import {
   buildCompactTermsSummary,
   formatShortDate,
   toIsoDate,
+  getTodayIsoIST,
   computeTripDays,
   isTripActiveOnDate,
   buildWhatsAppUrl,
@@ -528,29 +529,34 @@ export default function FastOperationsDesk() {
           return s;
         };
 
-        const formatted = data.trips.map(row => decodeTripFromSheet({
-          ...row,
-          id: row.id || `KT-BK-${Date.now()}`,
-          customerName: row.customerName || 'Customer',
-          phone: String(row.phone || ''),
-          tripCategory: row.tripCategory || 'Outstation',
-          vehicle: row.vehicle || 'Sedan',
-          route: row.route || `${row.pickupLocation || ''} -> ${row.dropLocation || ''}`,
-          pickupDate: cleanDate(row.pickupDate),
-          pickupTime: cleanTime(row.pickupTime),
-          pickupLocation: row.pickupLocation || '',
-          dropLocation: row.dropLocation || '',
-          agreedRate: Number(row.agreedRate) || 0,
-          advance: Number(row.advance) || 0,
-          balance: (Number(row.agreedRate) || 0) - (Number(row.advance) || 0),
-          driverName: row.driverName || '',
-          driverPhone: String(row.driverPhone || ''),
-          vehicleNumber: row.vehicleNumber || '',
-          manifestStatus: row.manifestStatus || 'Unassigned',
-          notes: row.notes || '',
-          createdAt: row.createdAt || new Date().toISOString(),
-          updatedAt: row.updatedAt || new Date().toISOString()
-        })).filter(trip => !isAutoWebsiteLead(trip)).reverse();
+        const formatted = data.trips.map((row, idx) => {
+          const agreed = Number(row.agreedRate) || 0;
+          const adv = Number(row.advance) || 0;
+          const status = normalizeManifestStatus(row.manifestStatus);
+          return decodeTripFromSheet({
+            ...row,
+            id: row.id || `KT-BK-${Date.now()}-${idx}`,
+            customerName: row.customerName || 'Customer',
+            phone: String(row.phone || ''),
+            tripCategory: row.tripCategory || 'Outstation',
+            vehicle: row.vehicle || 'Sedan',
+            route: row.route || `${row.pickupLocation || ''} -> ${row.dropLocation || ''}`,
+            pickupDate: cleanDate(row.pickupDate),
+            pickupTime: cleanTime(row.pickupTime),
+            pickupLocation: row.pickupLocation || '',
+            dropLocation: row.dropLocation || '',
+            agreedRate: agreed,
+            advance: adv,
+            balance: status === 'Completed' ? 0 : Math.max(0, agreed - adv),
+            driverName: row.driverName || '',
+            driverPhone: String(row.driverPhone || ''),
+            vehicleNumber: row.vehicleNumber || '',
+            manifestStatus: row.manifestStatus || 'Unassigned',
+            notes: row.notes || '',
+            createdAt: row.createdAt || new Date().toISOString(),
+            updatedAt: row.updatedAt || new Date().toISOString()
+          });
+        }).filter(trip => !isAutoWebsiteLead(trip)).reverse();
         setTrips(formatted);
 
         // 2-way Drivers sync (when Apps Script v2 is deployed)
@@ -913,7 +919,7 @@ export default function FastOperationsDesk() {
   });
 
   useEffect(() => {
-    if (activeNav !== 'calculator' || typeof fetch !== 'function') return;
+    if (activeNav !== 'quotes' || typeof fetch !== 'function') return;
     const webhookParam = googleSheetUrl ? `?webhook=${encodeURIComponent(googleSheetUrl)}` : '';
     fetch(`/api/next-quote-id${webhookParam}`)
       .then((res) => res.json())
@@ -926,7 +932,24 @@ export default function FastOperationsDesk() {
   }, [activeNav, googleSheetUrl]);
 
   const claimAtomicQuoteRef = async () => {
-    const fallbackRef = formatWhatsAppRefId(calcQuoteId);
+    const todayPrefix = formatWhatsAppRefId(`Q-${getFormattedDateCode()}-1`).replace(/\/\d+$/, '/');
+    let maxTodaySeq = 0;
+    const seqRegex = new RegExp(`^${todayPrefix.replace(/\//g, '\\/')}0*(\\d+)$`, 'i');
+    for (const t of trips) {
+      for (const candidate of [t.id, t.quoteRef]) {
+        const m = String(candidate || '').trim().match(seqRegex);
+        if (m) {
+          const n = parseInt(m[1], 10);
+          if (!Number.isNaN(n) && n > maxTodaySeq) maxTodaySeq = n;
+        }
+      }
+    }
+    const peeked = formatWhatsAppRefId(calcQuoteId);
+    const peekMatch = peeked.match(seqRegex);
+    const peekSeq = peekMatch ? parseInt(peekMatch[1], 10) : 0;
+    const fallbackSeq = Math.max(maxTodaySeq + 1, peekSeq || 1);
+    const fallbackRef = `${todayPrefix}${String(fallbackSeq).padStart(2, '0')}`;
+
     if (typeof fetch !== 'function') return fallbackRef;
     try {
       const webhookParam = googleSheetUrl ? `?webhook=${encodeURIComponent(googleSheetUrl)}` : '';
@@ -1084,17 +1107,29 @@ To confirm booking:
     if (!editingTrip) return;
     const agreed = Number(editingTrip.agreedRate) || 0;
     const adv = Number(editingTrip.advance) || 0;
+    const extras = Number(editingTrip.extraCharges) || 0;
+    const commPct = editingTrip.commissionPct !== undefined && editingTrip.commissionPct !== '' ? Number(editingTrip.commissionPct) : 10;
+    const collector = editingTrip.paymentCollector || 'Driver';
+    const nextStatus = normalizeManifestStatus(editingTrip.manifestStatus);
     const pickupLoc = String(editingTrip.pickupLocation || '').trim();
     const dropLoc = String(editingTrip.dropLocation || '').trim();
     const days = editingTrip.returnDate && editingTrip.pickupDate
       ? computeTripDays(editingTrip.pickupDate, editingTrip.returnDate)
       : (Number(editingTrip.days) || 1);
+    const nowIso = new Date().toISOString();
+    const math = computeSettlementMath(
+      { ...editingTrip, agreedRate: agreed, advance: adv, extraCharges: extras, paymentCollector: collector },
+      commPct
+    );
+    const baseBal = Math.max(0, agreed - adv);
+
     const updatedTrip = {
       ...editingTrip,
+      manifestStatus: nextStatus,
       customerName: String(editingTrip.customerName || '').trim() || 'Customer',
-      phone: String(editingTrip.phone || '').trim(),
+      phone: normalizePhoneNumber(editingTrip.phone) || String(editingTrip.phone || '').trim(),
       guestName: String(editingTrip.guestName || '').trim(),
-      guestPhone: String(editingTrip.guestPhone || '').trim(),
+      guestPhone: normalizePhoneNumber(editingTrip.guestPhone) || String(editingTrip.guestPhone || '').trim(),
       paxCount: String(editingTrip.paxCount || '').trim(),
       quoteRef: String(editingTrip.quoteRef || '').trim(),
       pickupLocation: pickupLoc,
@@ -1103,9 +1138,21 @@ To confirm booking:
       route: pickupLoc || dropLoc ? `${pickupLoc || 'Chennai'} -> ${dropLoc || 'Destination'}` : (editingTrip.route || ''),
       agreedRate: agreed,
       advance: adv,
-      balance: Math.max(0, agreed - adv),
+      extraCharges: extras,
+      extraChargesNote: String(editingTrip.extraChargesNote || '').trim(),
+      paymentCollector: collector,
+      commissionPct: math.pct,
+      commissionAmount: math.commissionAmt,
+      driverNetShare: math.driverNetShare,
+      settlementDirection: math.settlementDirection,
+      settlementAmount: math.settlementAmount,
+      balance: nextStatus === 'Completed' ? 0 : baseBal,
+      ...(nextStatus === 'Completed'
+        ? { finalCollected: baseBal + extras, completedAt: editingTrip.completedAt || nowIso }
+        : {}),
+      ...(nextStatus === 'On Trip' && !editingTrip.startedAt ? { startedAt: nowIso } : {}),
       notes: getCleanNotes(editingTrip.notes),
-      updatedAt: new Date().toISOString()
+      updatedAt: nowIso
     };
     setTrips(prev => prev.map(t => (t.id === updatedTrip.id ? updatedTrip : t)));
     saveTripToGoogleSheet(updatedTrip);
@@ -1160,10 +1207,10 @@ To confirm booking:
           updatedAt: nowIso
         };
 
-    const updated = existingTrip
-      ? trips.map(t => (t.id === existingTrip.id ? savedTrip : t))
-      : [savedTrip, ...trips];
-    setTrips(updated);
+    setTrips(prev => {
+      const exists = prev.some(t => t.id === savedTrip.id);
+      return exists ? prev.map(t => (t.id === savedTrip.id ? savedTrip : t)) : [savedTrip, ...prev];
+    });
     saveTripToGoogleSheet(savedTrip);
     setBookingPrefill(null);
 
@@ -1196,7 +1243,7 @@ To confirm booking:
       ...trip,
       customerName: isPlaceholderName ? '' : (trip.customerName || ''),
       phone: trip.phone || '',
-      pickupDate: trip.pickupDate || new Date().toISOString().split('T')[0],
+      pickupDate: trip.pickupDate || getTodayIsoIST(),
       pickupTime: trip.pickupTime || '06:00 AM',
       pickupLocation: trip.pickupLocation || '',
       dropLocation: trip.dropLocation || '',
@@ -1489,6 +1536,12 @@ Are you available for this upcoming trip?
     const extras = Number(completingTrip.extraCharges) || 0;
     const baseBal = Math.max(0, (Number(completingTrip.agreedRate) || 0) - (Number(completingTrip.advance) || 0));
     const totalCollectedAtEnd = baseBal + extras;
+    const collector = completingTrip.paymentCollector || 'Driver';
+    const commPct = completingTrip.commissionPct !== undefined ? Number(completingTrip.commissionPct) : 10;
+    const math = computeSettlementMath(completingTrip, commPct, {
+      extraCharges: extras,
+      paymentCollector: collector
+    });
     const nowIso = new Date().toISOString();
 
     const updatedTrip = {
@@ -1497,9 +1550,14 @@ Are you available for this upcoming trip?
       extraCharges: extras,
       extraChargesNote: String(completingTrip.extraChargesNote || '').trim(),
       finalCollected: totalCollectedAtEnd,
-      paymentCollector: completingTrip.paymentCollector || 'Driver',
+      paymentCollector: collector,
+      commissionPct: math.pct,
+      commissionAmount: math.commissionAmt,
+      driverNetShare: math.driverNetShare,
+      settlementDirection: math.settlementDirection,
+      settlementAmount: math.settlementAmount,
       commissionSettled: Boolean(completingTrip.commissionSettled),
-      commissionSettledAt: completingTrip.commissionSettled ? nowIso : '',
+      commissionSettledAt: completingTrip.commissionSettled ? (completingTrip.commissionSettledAt || nowIso) : '',
       balance: 0,
       completedAt: nowIso,
       updatedAt: nowIso
@@ -1611,14 +1669,10 @@ Warm regards,
     return false;
   };
 
-  // Filtered Trips for Dispatch Desk (Multi-Day Aware)
+  // Filtered Trips for Dispatch Desk (Multi-Day Aware, IST)
   const filteredTrips = useMemo(() => {
-    const now = new Date();
-    const todayIso = now.toISOString().split('T')[0];
-
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowIso = tomorrow.toISOString().split('T')[0];
+    const todayIso = getTodayIsoIST(0);
+    const tomorrowIso = getTodayIsoIST(1);
 
     return trips.filter(trip => {
       if (isAutoWebsiteLead(trip)) return false;
@@ -2246,12 +2300,16 @@ Warm regards,
     }
     const headers = [
       'Trip ID', 'Customer Name', 'Phone', 'Category', 'Vehicle', 'Route',
-      'Pickup Date', 'Pickup Time', 'Agreed Rate', 'Advance', 'Balance',
+      'Pickup Date', 'Return Date', 'Days', 'Pickup Time',
+      'Agreed Rate', 'Advance', 'Extra Charges', 'Final Collected', 'Balance',
+      'Payment Collector', 'Commission %', 'Commission Settled', 'Review Sent',
       'Driver Name', 'Driver Phone', 'Vehicle Plate', 'Status', 'Notes'
     ];
     const rows = trips.map(t => [
       t.id, t.customerName, t.phone, t.tripCategory, t.vehicle, t.route,
-      t.pickupDate, t.pickupTime, t.agreedRate, t.advance, t.balance,
+      t.pickupDate, t.returnDate || '', t.days || 1, t.pickupTime,
+      t.agreedRate, t.advance, t.extraCharges || 0, t.finalCollected ?? '', t.balance,
+      t.paymentCollector || 'Driver', t.commissionPct ?? 10, t.commissionSettled ? 'Yes' : 'No', t.reviewSent ? 'Yes' : 'No',
       t.driverName, t.driverPhone, t.vehicleNumber, t.manifestStatus, t.notes
     ]);
     const csvContent = [headers.join(','), ...rows.map(r => r.map(c => `"${String(c || '').replace(/"/g, '""')}"`).join(','))].join('\n');
@@ -2259,7 +2317,7 @@ Warm regards,
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `Kalidass_Trips_Export_${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `Kalidass_Trips_Export_${getTodayIsoIST()}.csv`;
     a.click();
     showToast('CSV Export downloaded!');
   };
@@ -3277,6 +3335,14 @@ Warm regards,
                               </button>
                               <button
                                 type="button"
+                                onClick={() => handleOpenAssignModal(trip)}
+                                className="min-h-[44px] min-w-[40px] sm:min-h-0 sm:min-w-0 p-2 sm:p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl sm:rounded-lg flex items-center justify-center transition"
+                                title="Change driver"
+                              >
+                                <ArrowLeftRight className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+                              </button>
+                              <button
+                                type="button"
                                 onClick={() => handleOpenEditTrip(trip)}
                                 className="min-h-[44px] min-w-[40px] sm:min-h-0 sm:min-w-0 p-2 sm:p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl sm:rounded-lg flex items-center justify-center transition"
                                 title="Edit booking"
@@ -3405,6 +3471,15 @@ Warm regards,
                               >
                                 <CheckCircle2 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                                 <span>{trip.reviewSent ? 'Review Sent ✓ (Resend)' : 'Send Review Link'}</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => handleOpenEditTrip(trip)}
+                                className="min-h-[44px] min-w-[40px] sm:min-h-0 sm:min-w-0 p-2 sm:p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-xl sm:rounded-lg flex items-center justify-center transition"
+                                title="Edit completed trip"
+                              >
+                                <Edit3 className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
                               </button>
 
                               <button
@@ -5196,13 +5271,26 @@ Warm regards,
                 ) : (
                   <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
                     {modalDrivers.map((d) => {
-                      const activeDuty = trips.find(
-                        (t) =>
-                          normalizeManifestStatus(t.manifestStatus) === 'On Trip' &&
-                          t.id !== assigningTrip.id &&
-                          ((t.driverPhone && d.phone && t.driverPhone.slice(-10) === d.phone.slice(-10)) ||
-                            (t.vehicleNumber && d.plate && t.vehicleNumber === d.plate))
-                      );
+                      const dPlateNorm = formatIndianPlateNumber(d.plate || '');
+                      const dPhone10 = String(d.phone || '').replace(/\D/g, '').slice(-10);
+                      const targetStart = toIsoDate(assigningTrip.pickupDate);
+                      const targetEnd = toIsoDate(assigningTrip.returnDate) || targetStart;
+                      const activeDuty = trips.find((t) => {
+                        if (t.id === assigningTrip.id) return false;
+                        const st = normalizeManifestStatus(t.manifestStatus);
+                        if (st !== 'On Trip' && st !== 'Confirmed') return false;
+                        const tPhone10 = String(t.driverPhone || '').replace(/\D/g, '').slice(-10);
+                        const tPlateNorm = formatIndianPlateNumber(t.vehicleNumber || '');
+                        const sameDriver =
+                          (tPhone10 && dPhone10 && tPhone10 === dPhone10) ||
+                          (tPlateNorm && dPlateNorm && tPlateNorm === dPlateNorm);
+                        if (!sameDriver) return false;
+                        if (st === 'On Trip') return true;
+                        const tStart = toIsoDate(t.pickupDate);
+                        const tEnd = toIsoDate(t.returnDate) || tStart;
+                        if (!targetStart || !tStart) return true;
+                        return tStart <= targetEnd && targetStart <= tEnd;
+                      });
                       return (
                         <div
                           key={d.id}
@@ -5223,8 +5311,14 @@ Warm regards,
                                 {d.vehicle}
                               </span>
                               {activeDuty && (
-                                <span className="text-[10px] font-bold bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded">
-                                  On Trip #{activeDuty.id}
+                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                                  normalizeManifestStatus(activeDuty.manifestStatus) === 'On Trip'
+                                    ? 'bg-rose-100 text-rose-700'
+                                    : 'bg-amber-100 text-amber-800'
+                                }`}>
+                                  {normalizeManifestStatus(activeDuty.manifestStatus) === 'On Trip'
+                                    ? `On Trip #${activeDuty.id}`
+                                    : `Confirmed #${activeDuty.id} (${formatShortDate(activeDuty.pickupDate)})`}
                                 </span>
                               )}
                             </div>
@@ -5709,6 +5803,40 @@ Warm regards,
                       onChange={(e) => setEditingTrip({ ...editingTrip, advance: e.target.value })}
                       className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-mono font-medium"
                     />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1">Extra Charges (₹)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={editingTrip.extraCharges ?? 0}
+                    onChange={(e) => setEditingTrip({ ...editingTrip, extraCharges: e.target.value })}
+                    className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-mono font-medium"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Comm %</label>
+                    <input
+                      type="number"
+                      min="0"
+                      max="50"
+                      value={editingTrip.commissionPct ?? 10}
+                      onChange={(e) => setEditingTrip({ ...editingTrip, commissionPct: e.target.value })}
+                      className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 font-mono font-bold"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-600 mb-1">Collected By</label>
+                    <select
+                      value={editingTrip.paymentCollector || 'Driver'}
+                      onChange={(e) => setEditingTrip({ ...editingTrip, paymentCollector: e.target.value })}
+                      className="w-full text-xs bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2.5 font-semibold"
+                    >
+                      <option value="Driver">Driver</option>
+                      <option value="Office">Office</option>
+                    </select>
                   </div>
                 </div>
               </div>

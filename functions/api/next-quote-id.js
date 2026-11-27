@@ -8,6 +8,10 @@ let edgeDateCode = '';
 let edgeSeq = 0;
 
 async function readEdgeCacheSeq(dateCode) {
+  if (edgeDateCode !== dateCode) {
+    edgeDateCode = dateCode;
+    edgeSeq = 0;
+  }
   try {
     if (typeof caches !== 'undefined' && caches.default) {
       const cacheKey = new Request(`https://kt-internal-seq.local/seq/${dateCode}`);
