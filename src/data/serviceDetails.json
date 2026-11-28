@@ -4748,5 +4748,107 @@
     "serviceType": "Outstation Cabs",
     "origin": "Chennai",
     "destination": "Trichy"
+  },
+  {
+    "slug": "chennai-to-thiruverkadu",
+    "category": "Temple Tours",
+    "title": "Chennai to Thiruverkadu Temple & Marriage Anniversary Cab Package",
+    "duration": "1 Day Outstation Round Trip (Min 250 Km/Day Slab)",
+    "overview": "Celebrate your marriage anniversary with a peaceful Chennai to Thiruverkadu Sri Devi Karumariamman Temple round-trip cab. Includes doorstep pickup from anywhere in Chennai, unhurried wait-and-return during anniversary pooja & archana, and optional family lunch or dinner stops. Billed transparently on standard Outstation Round Trip tariffs.",
+    "routePlan": [
+      {
+        "stop": "Chennai Doorstep Pickup",
+        "desc": "On-time pickup from your home in Medavakkam, Tambaram, Velachery, Anna Nagar, OMR, T. Nagar, or anywhere in Chennai at your preferred muhurtham or pooja time."
+      },
+      {
+        "stop": "Sri Devi Karumariamman Temple, Thiruverkadu",
+        "desc": "Unhurried wait-and-return darshan for your marriage anniversary pooja, archana, and family blessings. Polite satvik chauffeur waits comfortably near the temple."
+      },
+      {
+        "stop": "Family Anniversary Lunch / Dinner Stop",
+        "desc": "Optional stop at a family restaurant, banquet hall, or relative's home in Thiruverkadu or Chennai before heading back."
+      },
+      {
+        "stop": "Chennai Return Drop",
+        "desc": "Safe, comfortable return drop at your Chennai doorstep with zero surge pricing."
+      }
+    ],
+    "tariff": {
+      "headers": [
+        "Vehicle Model",
+        "Seating Capacity",
+        "Outstation Round Trip (Min 250 Km/Day)",
+        "Key Highlights"
+      ],
+      "rows": [
+        [
+          "Swift Dzire / Toyota Etios",
+          "4 Passengers",
+          "₹14/km + ₹500 Bata (Min ₹4,000/day)",
+          "Ideal for couples & small families • Clean AC Sedan"
+        ],
+        [
+          "Maruti Ertiga / XL6 (SUV)",
+          "6 Passengers",
+          "₹17/km + ₹500 Bata (Min ₹4,750/day)",
+          "Spacious 6-seater for parents & kids • Dual AC"
+        ],
+        [
+          "Toyota Innova",
+          "7 Passengers",
+          "₹20/km + ₹600 Bata (Min ₹5,600/day)",
+          "Easy senior citizen entry • Comfortable suspension"
+        ],
+        [
+          "Innova Crysta",
+          "7 Passengers",
+          "₹22/km + ₹700 Bata (Min ₹6,200/day)",
+          "Executive captain seats for special anniversary celebrations"
+        ],
+        [
+          "12-Seater Tempo Traveller",
+          "12 Passengers",
+          "₹24/km + ₹800 Bata (Min 300 km = ₹8,000/day)",
+          "Best for joint-family anniversary temple gatherings"
+        ]
+      ]
+    },
+    "includes": [
+      "Clean, well-maintained AC vehicle with fuel & polite satvik chauffeur",
+      "Doorstep pickup & drop anywhere in Chennai",
+      "Driver Bata included in the daily outstation calculation",
+      "Flexible waiting time during temple darshan, archana & anniversary dining"
+    ],
+    "excludes": [
+      "Tolls & temple/restaurant parking fees (billed at actuals)",
+      "Extra km beyond minimum daily slab (billed at standard per-km rate)",
+      "Temple special darshan or archana tickets"
+    ],
+    "travelGuide": "Thiruverkadu Sri Devi Karumariamman Temple is a popular spiritual destination for couples and families celebrating marriage anniversaries in Chennai. Booking a dedicated outstation round-trip cab ensures you never face last-minute cab cancellations, parking hassle, or rush during pooja timings. Our base is in Medavakkam, Chennai, and all Chennai to Thiruverkadu trips follow our transparent Outstation Round Trip tariff (250 km/day minimum for cars, 300 km/day for Tempo Traveller).",
+    "faq": [
+      {
+        "q": "How is the Chennai to Thiruverkadu cab fare calculated?",
+        "a": "Since our operating base is in Medavakkam, Chennai, Thiruverkadu trips are billed under our standard Outstation Round Trip tariff: Sedan ₹14/km + ₹500 bata (min 250 km/day = ₹4,000), Ertiga ₹17/km + ₹500 bata (₹4,750), Innova ₹20/km + ₹600 bata (₹5,600), and Innova Crysta ₹22/km + ₹700 bata (₹6,200). Tolls and parking are extra at actuals."
+      },
+      {
+        "q": "Will the driver wait while we finish our anniversary pooja and family lunch?",
+        "a": "Yes. Your dedicated cab and chauffeur stay with you for the full day, waiting comfortably during Sri Devi Karumariamman Temple darshan, archana, and your anniversary lunch or dinner stop."
+      },
+      {
+        "q": "Can we book an Innova or Tempo Traveller for a joint-family anniversary?",
+        "a": "Yes! We offer 6-seater Ertiga, 7-seater Innova / Innova Crysta, and 12-seater Tempo Traveller so parents, children, and relatives can travel together comfortably."
+      },
+      {
+        "q": "How do I confirm my Chennai to Thiruverkadu anniversary cab?",
+        "a": "Call +91 89395 39211 or message us on WhatsApp with your pickup area, date, and vehicle choice. Bookings are confirmed with a ₹500 advance (adjusted in your final bill)."
+      }
+    ],
+    "whatsappMsg": "Hi Kalidass Travels, I want to book a Chennai to Thiruverkadu Temple & Marriage Anniversary cab (%VEHICLE%). Please share availability and quote.",
+    "metaTitle": "Chennai to Thiruverkadu Temple & Anniversary Cab | Kalidass Travels",
+    "metaDescription": "Book Chennai to Thiruverkadu Sri Devi Karumariamman Temple cab for Marriage Anniversary. Wait & return AC Sedan ₹14/km, Ertiga ₹17/km, Innova ₹20/km. Call +91 89395 39211.",
+    "keywords": "chennai to thiruverkadu cab, chennai to thiruverkadu temple taxi, marriage anniversary temple cab chennai, karumariamman temple cab booking, thiruverkadu round trip taxi",
+    "serviceType": "Temple Tours",
+    "origin": "Chennai",
+    "destination": "Thiruverkadu"
   }
 ]

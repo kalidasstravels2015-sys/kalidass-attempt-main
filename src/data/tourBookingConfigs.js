@@ -974,6 +974,93 @@ export const TOUR_CONFIGS = {
         extraHourRate: 400
       }
     ]
+  },
+
+  'chennai-to-thiruverkadu': {
+    slug: 'chennai-to-thiruverkadu',
+    serviceTitle: 'Chennai to Thiruverkadu Temple & Marriage Anniversary Cab Package',
+    engineTitle: 'Book Chennai to Thiruverkadu',
+    subtitle: 'Sri Devi Karumariamman Temple & Anniversary Wait-and-Return • Standard Outstation Tariff',
+    destination: {
+      name: 'Thiruverkadu Sri Devi Karumariamman Temple',
+      roundTripKm: 250,
+      editable: false
+    },
+    minRealisticHours: 6,
+    recommendedHours: 10,
+    advisoryText: 'Billed under standard Outstation Round Trip tariff from our Medavakkam, Chennai base (min 250 km/day for cars, min 300 km/day for Tempo Traveller). Ideal for Marriage Anniversary temple darshan, pooja & family dining.',
+    inclusions: {
+      standard: 'Covers Min 250 Km/Day Outstation Slab (300 Km Tempo) + Driver Bata • Tolls & Parking Extra',
+      multiDay: 'Covers Cab, Min Daily Km Slab & Wait-and-Return • Tolls, Parking & Extra Km Extra'
+    },
+    itemizedInclusions: [
+      { label: 'Wait & Return for Anniversary Pooja & Dining:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'Driver Bata Included in Day Total:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'FASTag Tolls & Temple Parking:', value: 'Actuals', multiDayValue: 'Actuals' }
+    ],
+    eventPrefix: 'thiruverkadu_temple_engine',
+    vehicles: [
+      {
+        id: 'dzire',
+        name: 'Swift Dzire / Toyota Etios',
+        shortName: 'AC Sedan',
+        capacity: 4,
+        luggage: '2 Bags',
+        tag: 'Best Value',
+        rates: { 1: 4000, 2: 8000, 3: 12000 },
+        vehicleHire: { 1: 3500, 2: 7000, 3: 10500 },
+        driverBata: { 1: 500, 2: 1000, 3: 1500 },
+        extraHourRate: 150
+      },
+      {
+        id: 'ertiga',
+        name: 'Maruti Ertiga / XL6',
+        shortName: 'Comfort SUV',
+        capacity: 6,
+        luggage: '3 Bags',
+        tag: 'Family Favorite',
+        rates: { 1: 4750, 2: 9500, 3: 14250 },
+        vehicleHire: { 1: 4250, 2: 8500, 3: 12750 },
+        driverBata: { 1: 500, 2: 1000, 3: 1500 },
+        extraHourRate: 200
+      },
+      {
+        id: 'innova',
+        name: 'Toyota Innova',
+        shortName: 'Spacious MUV',
+        capacity: 7,
+        luggage: '4 Bags',
+        tag: 'Senior Friendly',
+        rates: { 1: 5600, 2: 11200, 3: 16800 },
+        vehicleHire: { 1: 5000, 2: 10000, 3: 15000 },
+        driverBata: { 1: 600, 2: 1200, 3: 1800 },
+        extraHourRate: 250
+      },
+      {
+        id: 'crysta',
+        name: 'Innova Crysta',
+        shortName: 'Luxury MPV',
+        capacity: 7,
+        luggage: '4 Bags',
+        tag: 'Anniversary VIP',
+        rates: { 1: 6200, 2: 12400, 3: 18600 },
+        vehicleHire: { 1: 5500, 2: 11000, 3: 16500 },
+        driverBata: { 1: 700, 2: 1400, 3: 2100 },
+        extraHourRate: 350
+      },
+      {
+        id: 'tempo12',
+        name: '12-Seater Tempo Traveller',
+        shortName: 'Mini Coach',
+        capacity: 12,
+        luggage: '8 Bags',
+        tag: 'Joint Family',
+        rates: { 1: 8000, 2: 16000, 3: 24000 },
+        vehicleHire: { 1: 7200, 2: 14400, 3: 21600 },
+        driverBata: { 1: 800, 2: 1600, 3: 2400 },
+        extraHourRate: 400
+      }
+    ]
   }
 };
 
