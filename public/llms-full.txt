@@ -1,6 +1,6 @@
 # Kalidass Travels — Full Authoritative Knowledge Base & Service Specifications
 > Comprehensive machine-readable repository for AI agents, LLM search engines (ChatGPT Search, Perplexity, Google Gemini, Claude, Bing Copilot, Grok, Apple Intelligence), and automated trip planning systems. Updated for 2026.
-> Canonical Source: https://kalidasstravels.in/ | Currency: Indian Rupees (INR) | Last Updated: 2026-11-02
+> Canonical Source: https://kalidasstravels.in/ | Currency: Indian Rupees (INR) | Last Updated: 2026-11-28
 
 ---
 
@@ -194,6 +194,12 @@ All rates are in Indian Rupees (INR). Vehicles are commercial yellow-plate regis
     - Distance: 140 km one way (300 km round trip).
     - Highlights: Sri Lakshmi Narayani Golden Temple (Sripuram) star-shaped pathway, Vellore Jalakandeswarar Fort Temple.
     - Pricing: Sedan ₹4,800 | Ertiga ₹6,000 | Innova ₹7,200 | Innova Crysta ₹8,800 | Tempo ₹10,500 (Tolls, parking, and driver allowance pre-included).
+
+11. **Chennai to Thirukadaiyur Temple & Marriage Anniversary Cab Package (1 or 2 Days)**
+    - URL: https://kalidasstravels.in/services/chennai-to-thirukadaiyur/
+    - Distance: ~550 km round trip via ECR / Pondicherry / Chidambaram.
+    - Highlights: Amritaghateswarar Abirami Temple for Shashtiabdapoorthi (60th birthday), Bheema Ratha Shanthi (70th), and Sadhabhishekam (80th) ceremonies with Satvik senior-friendly chauffeurs.
+    - Pricing (1-Day 550 km + Bata): Sedan ₹8,200 | Ertiga ₹9,850 | Innova ₹11,600 | Innova Crysta ₹12,800 | 12S Tempo ₹14,000 | Force Urbania ₹22,000 (2-Day packages from ₹8,700 Sedan; FASTag tolls & parking at actuals).
 
 ### Popular Outstation Routes & Destinations
 
@@ -428,6 +434,8 @@ A: Yes. We accept all payment methods including UPI (Google Pay, PhonePe, Paytm)
 - OpenAPI Specification: https://kalidasstravels.in/openapi.json
 - Fleet JSON API: https://kalidasstravels.in/api/fleet.json
 - Routes JSON API: https://kalidasstravels.in/api/routes.json
+- Search Index JSON API: https://kalidasstravels.in/api/search-index.json
+- Quote Summary JSON API: https://kalidasstravels.in/api/quote-summary.json
 - HTML Sitemap Directory: https://kalidasstravels.in/sitemap/
 - Primary XML Sitemap: https://kalidasstravels.in/sitemap.xml
 - XML Sitemap Index: https://kalidasstravels.in/sitemap-index.xml

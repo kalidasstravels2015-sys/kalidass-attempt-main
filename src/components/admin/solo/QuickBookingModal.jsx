@@ -146,9 +146,9 @@ export default function QuickBookingModal({
       }
     };
     const startStr = fmtDate(startDate) || 'Tomorrow';
+    const startWithTime = pickupTime ? `${startStr} @ ${pickupTime}` : startStr;
     const endStr = returnDate && tripType === 'Round Trip' ? fmtDate(returnDate) : '';
-    const dateRange = endStr && endStr !== startStr ? `${startStr} to ${endStr}` : startStr;
-    return pickupTime ? `${dateRange} @ ${pickupTime}` : dateRange;
+    return endStr && endStr !== startStr ? `${startWithTime} to ${endStr}` : startWithTime;
   };
 
   // Calculate number of days from startDate & returnDate

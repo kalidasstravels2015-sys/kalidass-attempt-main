@@ -921,7 +921,7 @@ export function buildTripScheduleLine(trip) {
   const time = trip?.pickupTime ? ` @ ${trip.pickupTime}` : '';
 
   if (hasReturn) {
-    return `${formatShortDate(pickup, true)} to ${formatShortDate(ret, true)} (${days} Days)${time}`;
+    return `${formatShortDate(pickup, true)}${time} to ${formatShortDate(ret, true)} (${days} Days)`;
   }
   return `${formatShortDate(pickup, true)}${time}`;
 }

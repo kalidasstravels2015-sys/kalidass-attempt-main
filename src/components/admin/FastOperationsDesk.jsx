@@ -3058,9 +3058,8 @@ Warm regards,
                                 <span className="material-symbols-outlined text-xs text-slate-400">schedule</span>
                                 <span>
                                   {isMultiDay
-                                    ? `${formatShortDate(trip.pickupDate)} → ${formatShortDate(trip.returnDate)}`
-                                    : formatShortDate(trip.pickupDate, true) || trip.pickupDate}
-                                  {trip.pickupTime ? ` @ ${trip.pickupTime}` : ''}
+                                    ? `${formatShortDate(trip.pickupDate)}${trip.pickupTime ? ` @ ${trip.pickupTime}` : ''} → ${formatShortDate(trip.returnDate)}`
+                                    : `${formatShortDate(trip.pickupDate, true) || trip.pickupDate}${trip.pickupTime ? ` @ ${trip.pickupTime}` : ''}`}
                                 </span>
                               </div>
                               <div className="flex items-start gap-1">
@@ -3262,9 +3261,8 @@ Warm regards,
                                 <span className="material-symbols-outlined text-xs text-slate-400">schedule</span>
                                 <span className="truncate">
                                   {trip.returnDate && trip.returnDate !== trip.pickupDate
-                                    ? `${formatShortDate(trip.pickupDate)} → ${formatShortDate(trip.returnDate)} (${trip.days || computeTripDays(trip.pickupDate, trip.returnDate)}D)`
-                                    : formatShortDate(trip.pickupDate, true) || trip.pickupDate}
-                                  {trip.pickupTime ? ` @ ${trip.pickupTime}` : ''}
+                                    ? `${formatShortDate(trip.pickupDate)}${trip.pickupTime ? ` @ ${trip.pickupTime}` : ''} → ${formatShortDate(trip.returnDate)} (${trip.days || computeTripDays(trip.pickupDate, trip.returnDate)}D)`
+                                    : `${formatShortDate(trip.pickupDate, true) || trip.pickupDate}${trip.pickupTime ? ` @ ${trip.pickupTime}` : ''}`}
                                 </span>
                               </div>
                               <div className="text-slate-600 flex items-start gap-1">
@@ -5375,9 +5373,26 @@ Warm regards,
 
               {/* Manual Override / Custom Driver Fields */}
               <div className="space-y-2.5 pt-2 border-t border-slate-100">
-                <span className="text-[11px] font-bold uppercase text-slate-400 block">
-                  Or Type / Edit Driver Details Manually Before Confirming:
-                </span>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-[11px] font-bold uppercase text-slate-400">
+                    Or Type / Edit Driver Details Manually Before Confirming:
+                  </span>
+                  <ContactPickerControl
+                    contacts={savedContacts}
+                    onImportedContactsChange={setImportedContacts}
+                    showToast={showToast}
+                    defaultFilter="Driver"
+                    buttonLabel="Phonebook"
+                    compact
+                    onSelect={({ name, phone: pickedPhone }) => {
+                      if (name) setCustomDriverName(name);
+                      if (pickedPhone) {
+                        const digits = String(pickedPhone).replace(/\D/g, '');
+                        setCustomDriverPhone(digits.length >= 10 ? digits.slice(-10) : digits);
+                      }
+                    }}
+                  />
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                   <div>
                     <label className="block text-[11px] font-bold text-slate-700 mb-1">Driver Full Name</label>

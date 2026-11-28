@@ -618,7 +618,7 @@ export async function onRequestPost({ request, env }) {
     };
 
     let candidateText = '';
-    for (const model of ['gemini-2.5-flash', 'gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest']) {
+    for (const model of ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-flash-latest']) {
       try {
         const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
         const geminiRes = await fetch(geminiUrl, {

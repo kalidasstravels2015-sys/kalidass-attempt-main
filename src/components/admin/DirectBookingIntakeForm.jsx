@@ -623,12 +623,13 @@ export default function DirectBookingIntakeForm({
   }, [customerName, phone, pickupLocation]);
 
   const scheduleSummary = useMemo(() => {
+    const timeSuffix = pickupTime ? ` @ ${pickupTime}` : '';
     const startStr = formatShortDate(pickupDate, true);
     if (returnDate && returnDate !== pickupDate) {
-      return `${formatShortDate(pickupDate)} – ${formatShortDate(returnDate, true)} (${computedDays}D)`;
+      return `${formatShortDate(pickupDate)}${timeSuffix} – ${formatShortDate(returnDate, true)} (${computedDays}D)`;
     }
-    return startStr || pickupDate;
-  }, [pickupDate, returnDate, computedDays]);
+    return `${startStr || pickupDate}${timeSuffix}`;
+  }, [pickupDate, returnDate, computedDays, pickupTime]);
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 animate-fadeIn max-w-4xl mx-auto space-y-5">
@@ -802,7 +803,6 @@ export default function DirectBookingIntakeForm({
                 <span className="flex items-center gap-1">
                   <span className="material-symbols-outlined text-sm text-emerald-400">calendar_month</span>
                   <strong>{scheduleSummary}</strong>
-                  {pickupTime ? ` @ ${pickupTime}` : ''}
                 </span>
                 <span className="flex items-center gap-1">
                   <span className="material-symbols-outlined text-sm text-blue-400">directions_car</span>
@@ -1209,7 +1209,7 @@ export default function DirectBookingIntakeForm({
                   Trip Type, Dates, Vehicle &amp; Billing Terms
                 </span>
                 <span className="block text-[11px] text-slate-500">
-                  {vehicle} • {scheduleSummary}{pickupTime ? ` @ ${pickupTime}` : ''}
+                  {vehicle} • {scheduleSummary}
                   {Number(includedKm) > 0 ? ` • ${includedKm} km` : ''}
                   {Number(driverBata) > 0 ? ` • Bata ₹${driverBata}` : ''}
                 </span>
@@ -1650,15 +1650,6 @@ export default function DirectBookingIntakeForm({
             className="py-2.5 px-5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition"
           >
             Cancel
-          </button>
-
-          <button
-            type="button"
-            onClick={(e) => submitBooking(e, { sendWhatsApp: true })}
-            className="py-2.5 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-md shadow-emerald-600/20 flex items-center gap-1.5"
-          >
-            <span className="material-symbols-outlined text-base">send</span>
-            <span>Save &amp; Send WA Summary</span>
           </button>
 
           <button

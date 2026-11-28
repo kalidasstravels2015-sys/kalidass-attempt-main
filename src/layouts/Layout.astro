@@ -2854,4 +2854,120 @@ const unifiedSchemaGraph = {
       });
     })();
   </script>
+
+  <!-- WebMCP (Model Context Protocol) Tools for Chrome & Android Gemini Assistant -->
+  <script is:inline>
+    (function () {
+      function registerKalidassWebMcp() {
+        if (window.__kalidassWebMcpRegistered) return;
+        var mc = document.modelContext || navigator.modelContext;
+        if (!mc || typeof mc.registerTool !== 'function') return;
+        window.__kalidassWebMcpRegistered = true;
+
+        try {
+          mc.registerTool({
+            name: 'ask_kalidass_ai_assistant',
+            description: 'Ask Kalidass Travels verified AI Fare & Tour Assistant (Gemini 3.8) about Chennai outstation cab fares, multi-day temple tours (Tirupati, Kumbakonam Navagraha, Pondicherry, Rameswaram), Tempo Traveller/Urbania rates, or local hourly packages.',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                query: {
+                  type: 'string',
+                  description: 'The customer travel question, route, vehicle preference, or itinerary request.'
+                }
+              },
+              required: ['query']
+            },
+            execute: async function (input) {
+              var query = (input && input.query ? String(input.query) : '').trim();
+              if (!query) {
+                return { content: [{ type: 'text', text: 'Please provide a travel question or route.' }] };
+              }
+              if (typeof window.openAiFareModal === 'function') {
+                window.openAiFareModal(query);
+              }
+              try {
+                var res = await fetch('/api/ai-chat', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ messages: [{ role: 'user', content: query }] })
+                });
+                if (res.ok) {
+                  var data = await res.json();
+                  if (data && data.reply) {
+                    return { content: [{ type: 'text', text: data.reply }] };
+                  }
+                }
+              } catch (_) {}
+              return {
+                content: [{
+                  type: 'text',
+                  text: 'Opened Kalidass Travels AI Fare Assistant with query: "' + query + '". For immediate booking assistance, call +91 89395 39211.'
+                }]
+              };
+            }
+          });
+
+          mc.registerTool({
+            name: 'get_outstation_or_local_quote',
+            description: 'Open the Kalidass Travels booking calculator pre-filled with pickup, destination, service type, vehicle, and trip days to show an instant verified fare estimate.',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                service: { type: 'string', enum: ['outstation', 'local', 'airport'], description: 'Trip category' },
+                pickup: { type: 'string', description: 'Pickup location in Chennai (e.g., Chennai, Chennai Airport, Adyar)' },
+                destination: { type: 'string', description: 'Destination city or temple town (e.g., Tirupati, Pondicherry, Bangalore)' },
+                vehicle: { type: 'string', description: 'Preferred vehicle (sedan, ertiga, innova, crysta, tempo, urbania)' },
+                days: { type: 'number', description: 'Number of trip days for outstation' },
+                tripType: { type: 'string', enum: ['round', 'oneway'], description: 'Round trip or one-way drop' }
+              }
+            },
+            execute: async function (input) {
+              var params = new URLSearchParams();
+              if (input && input.service) params.set('tab', String(input.service));
+              if (input && input.pickup) params.set('pickup', String(input.pickup));
+              if (input && input.destination) params.set('dest', String(input.destination));
+              if (input && input.vehicle) params.set('vehicle', String(input.vehicle));
+              if (input && input.days) params.set('days', String(input.days));
+              if (input && input.tripType) params.set('type', String(input.tripType));
+              params.set('view', 'results');
+
+              var targetUrl = '/calculator?' + params.toString();
+              window.location.href = targetUrl;
+              return {
+                content: [{
+                  type: 'text',
+                  text: 'Navigated to Kalidass Travels instant fare calculator: ' + targetUrl
+                }]
+              };
+            }
+          });
+
+          mc.registerTool({
+            name: 'get_verified_rate_card',
+            description: 'Get Kalidass Travels official Chennai outstation per-km rate card, booking policies, and 24/7 helpline details.',
+            inputSchema: {
+              type: 'object',
+              properties: {}
+            },
+            execute: async function () {
+              return {
+                content: [{
+                  type: 'text',
+                  text: 'Kalidass Travels (Chennai) Verified Outstation Round-Trip Rates: Sedan (Dzire/Etios) Rs.14/km | Ertiga Rs.17/km | Innova Rs.20/km | Innova Crysta Rs.22/km. Fuel & AC included, FASTag tolls at actuals, zero surge pricing, garage-to-garage odometer metering, Rs.500 advance to reserve cab & driver (balance post-trip via UPI/Cash/Card). 24/7 Helpline: +91 89395 39211.'
+                }]
+              };
+            }
+          });
+        } catch (_) {}
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', registerKalidassWebMcp, { once: true });
+      } else {
+        registerKalidassWebMcp();
+      }
+      document.addEventListener('astro:page-load', registerKalidassWebMcp);
+    })();
+  </script>
 </html>
