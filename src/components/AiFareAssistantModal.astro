@@ -1180,6 +1180,11 @@ const callUrl = `tel:${phone}`;
     });
 
     document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        toggleAiModal();
+        return;
+      }
       if (e.key === 'Escape') {
         if (langModal && !langModal.classList.contains('hidden')) {
           closeLangModal();
@@ -1191,6 +1196,14 @@ const callUrl = `tel:${phone}`;
         }
       }
     });
+
+    // Support Schema.org SearchAction (?q={search_term_string}) by opening AI Fare Assistant with the query
+    try {
+      const urlQuery = new URLSearchParams(window.location.search).get('q');
+      if (urlQuery && urlQuery.trim()) {
+        openAiModal(urlQuery.trim());
+      }
+    } catch (_) {}
 
     // Welcome Prompt Card Click Handlers
     welcomePromptCards.forEach(card => {

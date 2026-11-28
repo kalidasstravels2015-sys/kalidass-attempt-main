@@ -1,19 +1,9 @@
 ---
-import { Calculator, ArrowRight, Phone } from "lucide-react";
-import WhatsAppIcon from "./WhatsAppIcon.astro";
-import { WHATSAPP_CONFIG, getPageWhatsAppMessage } from "../utils/whatsapp";
+import { Calculator, ArrowUp } from "lucide-react";
 
 interface Props {
   whatsappMsg?: string;
 }
-
-const { whatsappMsg } = Astro.props;
-const currentPath = Astro.url.pathname;
-const resolvedWhatsAppMsg = whatsappMsg || getPageWhatsAppMessage(currentPath);
-
-const phone = `+${WHATSAPP_CONFIG.phone}`;
-const displayPhone = WHATSAPP_CONFIG.formattedPhone;
-const whatsappUrl = `https://wa.me/${WHATSAPP_CONFIG.phone}?text=${encodeURIComponent(resolvedWhatsAppMsg)}`;
 ---
 
 <section class="offscreen-defer py-12 md:py-18 bg-gradient-to-br from-[#0B57D0] via-[#0842A0] to-[#041E49] text-white relative overflow-hidden border-t border-[#0B57D0]/20">
@@ -24,40 +14,18 @@ const whatsappUrl = `https://wa.me/${WHATSAPP_CONFIG.phone}?text=${encodeURIComp
     </h2>
 
     <p class="text-xs sm:text-sm md:text-base text-white/90 max-w-2xl mx-auto font-normal leading-relaxed mb-8 font-sans">
-      Sanitized AC commercial cabs, police-verified chauffeurs, and 100% transparent flat &amp; per-km pricing across South India. Dedicated round-the-clock dispatch &amp; instant booking support.
+      Head back up to our instant booking engine to check live fares, compare AC vehicles, and confirm your ride with 100% transparent pricing.
     </p>
 
     <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
       <a
-        href={`tel:${phone}`}
-        class="min-h-[48px] inline-flex items-center justify-center gap-2 px-6 sm:px-8 rounded-m3-full bg-white hover:bg-slate-100 text-[#041E49] text-sm sm:text-base font-extrabold shadow-m3-2 hover:shadow-m3-3 transition-all cursor-pointer border border-white/40 active:scale-[0.98]"
-        aria-label={`Call ${displayPhone} for Instant Booking`}
-      >
-        <span class="relative flex h-2.5 w-2.5">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-        </span>
-        <Phone className="w-4 h-4 text-[#0B57D0] shrink-0" />
-        <span>Call: {displayPhone}</span>
-      </a>
-
-      <a
-        href={whatsappUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="min-h-[48px] inline-flex items-center justify-center gap-2 px-6 sm:px-8 rounded-m3-full bg-emerald-700 hover:bg-emerald-800 text-white text-sm sm:text-base font-bold shadow-m3-2 hover:shadow-m3-3 transition-all cursor-pointer border border-emerald-600/40 active:scale-[0.98]"
-        aria-label="WhatsApp Quick Booking - Chat with Kalidass Travels"
-      >
-        <WhatsAppIcon className="w-4 h-4 text-white shrink-0 fill-current" />
-        <span>WhatsApp Quick Booking</span>
-      </a>
-
-      <a
         href="#booking-panel"
-        class="min-h-[48px] inline-flex items-center justify-center gap-2 px-5 sm:px-6 rounded-m3-full bg-white/15 hover:bg-white/25 text-white text-sm font-semibold border border-white/30 transition-all cursor-pointer active:scale-[0.98]"
+        class="min-h-[48px] inline-flex items-center justify-center gap-2 px-7 sm:px-9 rounded-m3-full bg-white hover:bg-[#F0F4F9] active:bg-[#E8F0FE] !text-[#0B57D0] hover:!text-[#0842A0] text-sm sm:text-base font-extrabold shadow-m3-2 hover:shadow-m3-3 transition-all cursor-pointer border border-white/40 group active:scale-[0.98]"
+        aria-label="Calculate Fare and Book at the Top Booking Engine"
       >
-        <Calculator className="w-4 h-4 text-white shrink-0" />
-        <span>Calculate Fare</span>
+        <Calculator className="w-4 h-4 text-[#0B57D0] shrink-0" />
+        <span>Calculate Fare &amp; Book</span>
+        <ArrowUp className="w-4 h-4 text-[#0B57D0] group-hover:-translate-y-0.5 transition-transform shrink-0" />
       </a>
     </div>
   </div>

@@ -72,6 +72,36 @@
           "12 Passengers",
           "₹12,500",
           "Pushback reclining seats • High roof coach for joint families & groups"
+        ],
+        [
+          "14-Seater Tempo Traveller",
+          "14 Passengers",
+          "₹12,800",
+          "Pushback seats • Ideal for extended family pilgrimage"
+        ],
+        [
+          "17-Seater Tempo Traveller",
+          "17 Passengers",
+          "₹13,150",
+          "Spacious group coach • High roof & luggage rack"
+        ],
+        [
+          "Force Urbania (16+1 VIP)",
+          "16 Passengers",
+          "₹17,300",
+          "Luxury VIP suspension • Maximum comfort for elders"
+        ],
+        [
+          "20-Seater Grand Tempo",
+          "20 Passengers",
+          "₹14,500",
+          "Large family & community yatra coach"
+        ],
+        [
+          "26-Seater Mini Bus",
+          "26 Passengers",
+          "₹17,600",
+          "Complete joint-family & group pilgrimage bus"
         ]
       ],
       "note": "We provide dedicated AC cab service only. Flat 1-day package includes vehicle hire, fuel, FASTag tolls, AP border permit, Tirumala ghat road, parking & driver bata (for multi-day tours, tolls & AP permit are paid directly at toll plazas). TTD Darshan tickets, passenger accommodation, and food are NOT included and must be arranged directly by devotees."
@@ -96,7 +126,11 @@
         "Free SSD Tokens: Devotees without online tickets can get free Slotted Sarva Darshan tokens at Tirupati counters with original Aadhaar.",
         "Mobile Phones & Electronics: Strictly banned inside the temple sanctum; deposit in TTD cloakrooms before joining the queue.",
         "Senior Citizens (65+): Dedicated Supadham entry counter available with original Aadhaar."
-      ]
+      ],
+      "officialPortal": {
+        "label": "Official TTD Darshan Portal",
+        "url": "https://ttdevasthanams.ap.gov.in/"
+      }
     },
     "faq": [
       {
@@ -257,6 +291,36 @@
           "12 Passengers",
           "₹24,500",
           "Pushback reclining seats • High roof • Ideal for joint families & groups"
+        ],
+        [
+          "14-Seater Tempo Traveller",
+          "14 Passengers",
+          "₹25,200",
+          "Pushback seats • Ideal for extended family pilgrimage"
+        ],
+        [
+          "17-Seater Tempo Traveller",
+          "17 Passengers",
+          "₹25,850",
+          "Spacious group coach • High roof & luggage rack"
+        ],
+        [
+          "Force Urbania (16+1 VIP)",
+          "16 Passengers",
+          "₹34,600",
+          "Luxury VIP suspension • Maximum comfort for elders"
+        ],
+        [
+          "20-Seater Grand Tempo",
+          "20 Passengers",
+          "₹28,800",
+          "Large family & community yatra coach"
+        ],
+        [
+          "26-Seater Mini Bus",
+          "26 Passengers",
+          "₹33,800",
+          "Complete joint-family & group pilgrimage bus"
         ]
       ],
       "note": "Package covers complete 2-day vehicle usage for all 9 Navagraha temples, 750 km coverage, and driver daily allowances (Bata). Highway FASTag tolls and parking are payable at actuals. Extra km charged at standard rate."
@@ -279,7 +343,11 @@
         "Two-Day Plan: Attempting all 9 temples in a single day is rushed; our 2-day itinerary guarantees relaxed darshan.",
         "Thirunallar: Carry a spare change of clothes if you plan to take the holy dip in Nala Theertham.",
         "Thirunageswaram (Rahu): Pal Abhishekam during Rahu Kalam is highly popular; plan timing in advance."
-      ]
+      ],
+      "officialPortal": {
+        "label": "Official TN HR&CE Portal",
+        "url": "https://hrce.tn.gov.in/"
+      }
     },
     "faq": [
       {
@@ -390,6 +458,36 @@
           "12 Passengers",
           "₹13,500",
           "12-seater pushback coach • Ideal for group bhajan and Pournami yatra"
+        ],
+        [
+          "14-Seater Tempo Traveller",
+          "14 Passengers",
+          "₹13,900",
+          "Pushback seats • Ideal for extended family pilgrimage"
+        ],
+        [
+          "17-Seater Tempo Traveller",
+          "17 Passengers",
+          "₹14,300",
+          "Spacious group coach • High roof & luggage rack"
+        ],
+        [
+          "Force Urbania (16+1 VIP)",
+          "16 Passengers",
+          "₹19,250",
+          "Luxury VIP suspension • Maximum comfort for elders"
+        ],
+        [
+          "20-Seater Grand Tempo",
+          "20 Passengers",
+          "₹15,950",
+          "Large family & community yatra coach"
+        ],
+        [
+          "26-Seater Mini Bus",
+          "26 Passengers",
+          "₹18,400",
+          "Complete joint-family & group pilgrimage bus"
         ]
       ],
       "note": "Flat 1-day round-trip fare includes car, fuel, highway tolls, and driver allowance (Bata). Zero night surge charges on Pournami days (for multi-day stay, tolls are payable at actuals)."
@@ -412,7 +510,11 @@
         "Pournami Peak: On full-moon nights, traffic near the temple is diverted; our drivers park at authorized stands closest to the route.",
         "Senior Citizens: If elderly family members cannot walk the full 14 km, the car remains on standby to pick them up at intermediate road junctions.",
         "Footwear: Shoes must be left at vehicle or temple counters before joining Girivalam; carry socks if walking during daytime heat."
-      ]
+      ],
+      "officialPortal": {
+        "label": "Official TN HR&CE Portal (TM020343)",
+        "url": "https://annamalaiyar.hrce.tn.gov.in/"
+      }
     },
     "faq": [
       {
@@ -527,6 +629,36 @@
           "17 Passengers",
           "₹50,000",
           "High roof coach • Perfect for large Ayyappa seva mandalis"
+        ],
+        [
+          "14-Seater Tempo Traveller",
+          "14 Passengers",
+          "₹43,350",
+          "Pushback seats • Ideal for extended family pilgrimage"
+        ],
+        [
+          "17-Seater Tempo Traveller",
+          "17 Passengers",
+          "₹44,700",
+          "Spacious group coach • High roof & luggage rack"
+        ],
+        [
+          "Force Urbania (16+1 VIP)",
+          "16 Passengers",
+          "₹61,800",
+          "Luxury VIP suspension • Maximum comfort for elders"
+        ],
+        [
+          "20-Seater Grand Tempo",
+          "20 Passengers",
+          "₹50,400",
+          "Large family & community yatra coach"
+        ],
+        [
+          "26-Seater Mini Bus",
+          "26 Passengers",
+          "₹58,800",
+          "Complete joint-family & group pilgrimage bus"
         ]
       ],
       "note": "3-day package covers 1,350 km round trip, car, fuel, Kerala interstate road permit, and 3 days of driver allowance. Tolls and Nilakkal parking paid at actuals."
@@ -550,7 +682,11 @@
         "Virtual Q Booking: Book Sabarimala Virtual Q darshan slots on sabarimalaonline.org prior to trip.",
         "Physical ID: Carry original Aadhaar or Passport matching your Virtual Q booking.",
         "Nilakkal Parking: Keep FASTag active on vehicle for automated Nilakkal parking clearance."
-      ]
+      ],
+      "officialPortal": {
+        "label": "Official Sabarimala Virtual-Q",
+        "url": "https://sabarimalaonline.org/"
+      }
     },
     "faq": [
       {
@@ -685,6 +821,36 @@
           "12 Passengers",
           "₹35,000",
           "12-seater coach • Reclining seats for extended family Rameswaram yatra"
+        ],
+        [
+          "14-Seater Tempo Traveller",
+          "14 Passengers",
+          "₹36,150",
+          "Pushback seats • Ideal for extended family pilgrimage"
+        ],
+        [
+          "17-Seater Tempo Traveller",
+          "17 Passengers",
+          "₹37,300",
+          "Spacious group coach • High roof & luggage rack"
+        ],
+        [
+          "Force Urbania (16+1 VIP)",
+          "16 Passengers",
+          "₹51,700",
+          "Luxury VIP suspension • Maximum comfort for elders"
+        ],
+        [
+          "20-Seater Grand Tempo",
+          "20 Passengers",
+          "₹42,100",
+          "Large family & community yatra coach"
+        ],
+        [
+          "26-Seater Mini Bus",
+          "26 Passengers",
+          "₹49,200",
+          "Complete joint-family & group pilgrimage bus"
         ]
       ],
       "note": "Complete 2-day round trip covering 1,200 km, car, fuel, and driver daily allowance (bata). Highway FASTag tolls and parking are payable at actuals."
@@ -707,7 +873,11 @@
         "22 Theerthams: Bathing at the 22 wells inside the temple requires wet clothes; bring a fresh dry set to change into before entering the sanctum.",
         "Dhanushkodi: Private cars can drive up to Arichal Munai (Land's End); visit early in the morning for best ocean views.",
         "Pamban Bridge: Brief stop allowed on road bridge for ocean photos."
-      ]
+      ],
+      "officialPortal": {
+        "label": "Official TN HR&CE Portal (TID 35671)",
+        "url": "https://rameswaramramanathar.hrce.tn.gov.in/hrcehome/index_temple.php?tid=35671"
+      }
     },
     "faq": [
       {
@@ -822,6 +992,36 @@
           "12 Passengers",
           "₹8,500",
           "12-seater coach • Perfect for family temple parikrama and shopping"
+        ],
+        [
+          "14-Seater Tempo Traveller",
+          "14 Passengers",
+          "₹8,800",
+          "Pushback seats • Ideal for extended family pilgrimage"
+        ],
+        [
+          "17-Seater Tempo Traveller",
+          "17 Passengers",
+          "₹9,100",
+          "Spacious group coach • High roof & luggage rack"
+        ],
+        [
+          "Force Urbania (16+1 VIP)",
+          "16 Passengers",
+          "₹13,000",
+          "Luxury VIP suspension • Maximum comfort for elders"
+        ],
+        [
+          "20-Seater Grand Tempo",
+          "20 Passengers",
+          "₹10,400",
+          "Large family & community yatra coach"
+        ],
+        [
+          "26-Seater Mini Bus",
+          "26 Passengers",
+          "₹14,100",
+          "Complete joint-family & group pilgrimage bus"
         ]
       ],
       "note": "Flat day-trip fare covers 150 km round trip, fuel, driver bata, highway tolls, and shopping waiting time."
@@ -843,7 +1043,11 @@
       "tips": [
         "Afternoon Closures: Most Kanchipuram temples close from 12:30 PM to 04:00 PM; this time is utilized for lunch and silk saree shopping.",
         "Authentic Silk: Drivers take you to certified weaver societies (Kancheepuram Co-optex / Weavers Society) to avoid retail middlemen."
-      ]
+      ],
+      "officialPortal": {
+        "label": "Official Kanchi Kamakshi Portal",
+        "url": "https://www.kanchikamakshi.org/"
+      }
     },
     "faq": [
       {
@@ -954,6 +1158,36 @@
           "12 Passengers",
           "₹16,500",
           "12-seater coach • Reclining seats for joint family day outing"
+        ],
+        [
+          "14-Seater Tempo Traveller",
+          "14 Passengers",
+          "₹16,250",
+          "Pushback seats • Ideal for extended family pilgrimage"
+        ],
+        [
+          "17-Seater Tempo Traveller",
+          "17 Passengers",
+          "₹16,700",
+          "Spacious group coach • High roof & luggage rack"
+        ],
+        [
+          "Force Urbania (16+1 VIP)",
+          "16 Passengers",
+          "₹22,400",
+          "Luxury VIP suspension • Maximum comfort for elders"
+        ],
+        [
+          "20-Seater Grand Tempo",
+          "20 Passengers",
+          "₹18,600",
+          "Large family & community yatra coach"
+        ],
+        [
+          "26-Seater Mini Bus",
+          "26 Passengers",
+          "₹21,400",
+          "Complete joint-family & group pilgrimage bus"
         ]
       ],
       "note": "Flat day-trip fare covers 450 km round trip, car, fuel, driver bata, and all highway tolls."
@@ -975,7 +1209,11 @@
       "tips": [
         "Temple Timings: Natarajar temple closes between 12:00 PM and 04:30 PM; reach by 10:30 AM for morning darshan.",
         "Pichavaram Boating: Forest department boat service operates until 05:00 PM; afternoon boating is peaceful and breezy."
-      ]
+      ],
+      "officialPortal": {
+        "label": "Official Natarajar Temple Info",
+        "url": "https://www.chidambaramnataraja.org/"
+      }
     },
     "faq": [
       {
@@ -1086,6 +1324,36 @@
           "12 Passengers",
           "₹10,500",
           "12-seater coach • Reclining seats for group Sripuram Mahalakshmi visit"
+        ],
+        [
+          "14-Seater Tempo Traveller",
+          "14 Passengers",
+          "₹11,800",
+          "Pushback seats • Ideal for extended family pilgrimage"
+        ],
+        [
+          "17-Seater Tempo Traveller",
+          "17 Passengers",
+          "₹12,100",
+          "Spacious group coach • High roof & luggage rack"
+        ],
+        [
+          "Force Urbania (16+1 VIP)",
+          "16 Passengers",
+          "₹16,000",
+          "Luxury VIP suspension • Maximum comfort for elders"
+        ],
+        [
+          "20-Seater Grand Tempo",
+          "20 Passengers",
+          "₹13,400",
+          "Large family & community yatra coach"
+        ],
+        [
+          "26-Seater Mini Bus",
+          "26 Passengers",
+          "₹17,100",
+          "Complete joint-family & group pilgrimage bus"
         ]
       ],
       "note": "Flat day-trip fare covers 300 km round trip, car, fuel, driver bata, and Bangalore expressway tolls."
@@ -1107,7 +1375,11 @@
       "tips": [
         "Electronic Devices: Mobile phones, smart watches, and cameras are strictly prohibited inside Sripuram; lockers are available at the entrance.",
         "Star Path: The walkway into the temple is 1.8 km long; electric carts and wheelchairs are available for senior citizens and persons with disability."
-      ]
+      ],
+      "officialPortal": {
+        "label": "Official Sripuram Temple Portal",
+        "url": "https://sripuram.org/"
+      }
     },
     "faq": [
       {
@@ -2085,153 +2357,6 @@
     "serviceType": "TaxiService",
     "origin": "Chennai",
     "destination": "Mahabalipuram (Mamallapuram)"
-  },
-  {
-    "slug": "yelagiri-hills-weekend",
-    "category": "Outstation Cabs",
-    "title": "Chennai to Yelagiri Hills Outstation Cab – 2-Day Hill Station Trip",
-    "duration": "2 Days / 1 Night – Approx. 500 KM Round Trip",
-    "overview": "2-Day Chennai to Yelagiri Hills round-trip cab package. Covers 14 hairpin bends, Punganur Lake boating, and Jalagamparai Waterfalls. Flat fare includes vehicle, fuel, highway tolls, and 2-day driver allowance.",
-    "routePlan": [
-      {
-        "stop": "Day 1 – Chennai Departure",
-        "desc": "06:00 AM doorstep pickup. Drive via NH 48 (Bengaluru Highway) through Vellore and Vaniyambadi."
-      },
-      {
-        "stop": "Vellore / Krishnagiri Breakfast Halt",
-        "desc": "08:30 AM – highway dhaba or restaurant for South Indian breakfast (idli, dosai, filter coffee)."
-      },
-      {
-        "stop": "Yelagiri Ghat Road Ascent",
-        "desc": "10:30 AM – begin the dramatic 14-hairpin-bend climb to Yelagiri Hills (970m elevation). Scenic valley views on every curve."
-      },
-      {
-        "stop": "Punganur Lake",
-        "desc": "11:30 AM – paddle boating on the serene hilltop lake surrounded by eucalyptus groves. Ideal for family photos."
-      },
-      {
-        "stop": "Yelagiri Nature Park",
-        "desc": "01:00 PM – Tamil Nadu Forest Department park with rose gardens, orchid house, and hilltop viewpoint."
-      },
-      {
-        "stop": "Swamimalai Hill Trek View",
-        "desc": "02:30 PM – optional short trek to the hilltop (30 min) for panoramic views of the Salem plains below."
-      },
-      {
-        "stop": "Overnight Stay in Yelagiri",
-        "desc": "07:00 PM – check into hotel/resort (booked separately). Driver rests overnight; vehicle on standby from next morning."
-      },
-      {
-        "stop": "Day 2 – Jalagamparai Waterfalls",
-        "desc": "08:00 AM – visit the scenic 1 km trek to Jalagamparai Falls (best during post-monsoon, Sep–Jan). Refreshing natural pool."
-      },
-      {
-        "stop": "Yelagiri Town & Local Exploration",
-        "desc": "10:00 AM – explore the fruit orchards, honey stalls, and local market. Try Yelagiri's famous plums and oranges (seasonal)."
-      },
-      {
-        "stop": "Return to Chennai",
-        "desc": "11:00 AM – begin return journey. Reach Chennai by approx. 03:00–04:00 PM."
-      }
-    ],
-    "tariff": {
-      "headers": [
-        "Vehicle",
-        "Rate/km",
-        "Driver Bata (2 Days)",
-        "Toll/Parking",
-        "Total Cost"
-      ],
-      "rows": [
-        [
-          "Sedan (Dzire/Etios)",
-          "₹13",
-          "₹1,000",
-          "₹500",
-          "₹7,500"
-        ],
-        [
-          "SUV (Ertiga – 6 Seats)",
-          "₹15",
-          "₹1,200",
-          "₹600",
-          "₹9,200"
-        ],
-        [
-          "Innova (7 Seats)",
-          "₹17",
-          "₹1,400",
-          "₹700",
-          "₹10,800"
-        ],
-        [
-          "Innova Crysta (Luxury)",
-          "₹20",
-          "₹1,600",
-          "₹800",
-          "₹12,800"
-        ],
-        [
-          "Tempo Traveller (12 Seats)",
-          "₹24",
-          "₹2,000",
-          "₹1,000",
-          "₹15,500"
-        ]
-      ],
-      "note": "Total Cost covers 500 km round trip (Chennai–Yelagiri–Chennai) + 2-Day Driver Bata. Highway FASTag tolls (~₹500) and ghat parking are payable at actuals. Extra km beyond 500 km charged at the same per-km rate."
-    },
-    "includes": [
-      "Doorstep pickup & drop anywhere in Chennai",
-      "Clean AC vehicle with fuel for entire 2-day trip",
-      "2-Day driver allowance (bata) included",
-      "Experienced ghat-road driver for safe hairpin-bend driving",
-      "Flexible sightseeing schedule for both days"
-    ],
-    "excludes": [
-      "Hotel/resort accommodation at Yelagiri (booked separately)",
-      "Meals, entry tickets, and boating charges",
-      "Driver overnight accommodation (driver arranges own stay or sleeps in vehicle)"
-    ],
-    "travelGuide": {
-      "history": "• Punganoor Lake: Peaceful Boating & Park\n• Swamimalai Peak: Highest Trekking Viewpoint\n• Jalagamparai Falls: Scenic Forest Waterfall\n• Fresh Orchards: Hill Flower & Honey Farms",
-      "timings": "Punganur Lake Boating: 9:00 AM – 5:30 PM (closed Mondays)\nNature Park: 8:00 AM – 6:00 PM\nJalagamparai Falls: Best September–January (post-monsoon season)\nBest Visit Time: October to February (clear skies, pleasant temperatures of 15–22°C)",
-      "dressCode": "Carry a light jacket or sweater — hill temperature can drop to 12°C at night and early morning. Trekking sandals recommended for the Jalagamparai Falls trail.",
-      "tips": [
-        "Book your Yelagiri hotel at least a week ahead for weekends — rooms fill up fast.",
-        "The 14-hairpin-bend ghat road can cause mild motion sickness — carry motion-sickness tablets.",
-        "Jalagamparai Falls is at its best September to January; it may be dry in summer.",
-        "The local fruit market sells seasonal oranges, plums, and honey — excellent souvenirs.",
-        "Sunrise from Swamimalai hilltop is spectacular — plan an early morning trek on Day 2."
-      ]
-    },
-    "faq": [
-      {
-        "q": "Is Yelagiri suitable for senior citizens and young children?",
-        "a": "Yes — the ghat road is manageable and not as steep as Ooty. Our experienced drivers navigate hairpin bends safely. Punganur Lake is accessible and Nature Park is flat-terrain friendly.",
-        "question": "Is Yelagiri suitable for senior citizens and young children?",
-        "answer": "Yes — the ghat road is manageable and not as steep as Ooty. Our experienced drivers navigate hairpin bends safely. Punganur Lake is accessible and Nature Park is flat-terrain friendly."
-      },
-      {
-        "q": "What is the best season to visit Yelagiri from Chennai?",
-        "a": "October to February is ideal — pleasant 15–22°C temperatures, green hills, and Jalagamparai Falls flowing at its best. Avoid May–June when hills are dry and hot.",
-        "question": "What is the best season to visit Yelagiri from Chennai?",
-        "answer": "October to February is ideal — pleasant 15–22°C temperatures, green hills, and Jalagamparai Falls flowing at its best. Avoid May–June when hills are dry and hot."
-      },
-      {
-        "q": "Are hotel bookings included in the cab package?",
-        "a": "No — accommodation at Yelagiri is arranged and paid separately. Popular options include Hotel Vignesh Comforts, Yelagiri Nature Resort, and TTDC Hotel. We can recommend options upon request.",
-        "question": "Are hotel bookings included in the cab package?",
-        "answer": "No — accommodation at Yelagiri is arranged and paid separately. Popular options include Hotel Vignesh Comforts, Yelagiri Nature Resort, and TTDC Hotel. We can recommend options upon request."
-      }
-    ],
-    "whatsappMsg": "Hi Kalidass Travels, I want to book an outstation cab from Chennai to Yelagiri Hills. Please share fare quotation and vehicle options.",
-    "metaTitle": "Chennai to Yelagiri Hills Outstation Cab & Taxi | Kalidass Travels",
-    "metaDescription": "Book clean AC outstation cabs from Chennai to Yelagiri Hills. Flat per-km rates from ₹14/km. Experienced ghat road drivers for 14 hairpin bends with zero surge.",
-    "keywords": "chennai to yelagiri cab, chennai to yelagiri taxi, outstation cab chennai to yelagiri hills, yelagiri cab hire chennai, yelagiri hills taxi",
-    "serviceType": "TaxiService",
-    "origin": "Chennai",
-    "destination": "Yelagiri Hills, Vellore District"
   },
   {
     "slug": "yercaud-hills-weekend",
@@ -3768,6 +3893,36 @@
           "12 Passengers",
           "₹37,000",
           "12-seater coach • Pushback reclining seats for joint family Tiruchendur & Nava Tirupathi yatra"
+        ],
+        [
+          "14-Seater Tempo Traveller",
+          "14 Passengers",
+          "₹38,300",
+          "Pushback seats • Ideal for extended family pilgrimage"
+        ],
+        [
+          "17-Seater Tempo Traveller",
+          "17 Passengers",
+          "₹39,550",
+          "Spacious group coach • High roof & luggage rack"
+        ],
+        [
+          "Force Urbania (16+1 VIP)",
+          "16 Passengers",
+          "₹55,500",
+          "Luxury VIP suspension • Maximum comfort for elders"
+        ],
+        [
+          "20-Seater Grand Tempo",
+          "20 Passengers",
+          "₹44,900",
+          "Large family & community yatra coach"
+        ],
+        [
+          "26-Seater Mini Bus",
+          "26 Passengers",
+          "₹52,750",
+          "Complete joint-family & group pilgrimage bus"
         ]
       ],
       "note": "Complete 2-day round trip covering ~1,280 km, vehicle hire, fuel, Kulasekarapattinam & Vanathirupathi visits, and driver daily halting allowance (bata). 3-Day Senior Pace & 4-Day Nava Tirupathi / Madurai Circuit selectable above. Highway FASTag tolls and parking payable at actuals."
@@ -3794,7 +3949,11 @@
         "Nazhikinaru Safe Bath Tip for Seniors: The sacred well has 24 narrow wet steps. Seniors with knee pain can avoid climbing down—family members can bring the holy water up for sacred Prokshanam (sprinkling on the head).",
         "Wheelchair & Battery Car Point: Our chauffeur drops elders directly near Shanmuga Vilasa Mandapam where Devasthanam wheelchairs and battery cars operate.",
         "Choose 3 Days for Elders: Because Chennai to Tiruchendur is ~640 km each way, we strongly recommend the 3-Day package for 65+ seniors to include Nava Tirupathi or a Madurai break without rushing."
-      ]
+      ],
+      "officialPortal": {
+        "label": "Official TN HR&CE Temple Portal",
+        "url": "https://tiruchendurmurugan.hrce.tn.gov.in/"
+      }
     },
     "faq": [
       {
@@ -4041,6 +4200,36 @@
           "12 Passengers",
           "₹26,500 Flat",
           "₹33,000 Flat"
+        ],
+        [
+          "14-Seater Tempo Traveller",
+          "14 Passengers",
+          "₹27,400",
+          "Pushback seats • Ideal for extended family pilgrimage"
+        ],
+        [
+          "17-Seater Tempo Traveller",
+          "17 Passengers",
+          "₹28,350",
+          "Spacious group coach • High roof & luggage rack"
+        ],
+        [
+          "Force Urbania (16+1 VIP)",
+          "16 Passengers",
+          "₹40,050",
+          "Luxury VIP suspension • Maximum comfort for elders"
+        ],
+        [
+          "20-Seater Grand Tempo",
+          "20 Passengers",
+          "₹32,250",
+          "Large family & community yatra coach"
+        ],
+        [
+          "26-Seater Mini Bus",
+          "26 Passengers",
+          "₹38,000",
+          "Complete joint-family & group pilgrimage bus"
         ]
       ],
       "note": "Package rates include sanitized AC vehicle, fuel, driver outstation bata, and full temple circuit coverage (924 km + local temple runs). Highway FASTag tolls and parking slips at actuals."
@@ -4068,7 +4257,11 @@
         "Senior Citizen Special Queue: Senior citizens can access prioritized queue lines at South Tower entrance.",
         "Point-to-Point Rental: If you only need direct travel without the temple circuit, book our Chennai to Madurai Outstation Taxi.",
         "Lock with ₹500 Advance: Book in advance to secure confirmed vehicle with zero cancellation penalty up to 6 hours prior."
-      ]
+      ],
+      "officialPortal": {
+        "label": "Official TN HR&CE Temple Portal",
+        "url": "https://maduraimeenakshi.hrce.tn.gov.in/"
+      }
     },
     "faq": [
       {
@@ -4750,105 +4943,154 @@
     "destination": "Trichy"
   },
   {
-    "slug": "chennai-to-thiruverkadu",
+    "slug": "chennai-to-thirukadaiyur",
     "category": "Temple Tours",
-    "title": "Chennai to Thiruverkadu Temple & Marriage Anniversary Cab Package",
-    "duration": "1 Day Outstation Round Trip (Min 250 Km/Day Slab)",
-    "overview": "Celebrate your marriage anniversary with a peaceful Chennai to Thiruverkadu Sri Devi Karumariamman Temple round-trip cab. Includes doorstep pickup from anywhere in Chennai, unhurried wait-and-return during anniversary pooja & archana, and optional family lunch or dinner stops. Billed transparently on standard Outstation Round Trip tariffs.",
+    "title": "Chennai to Thirukadaiyur Temple & Marriage Anniversary Cab Package",
+    "duration": "1 or 2 Days (550 km Round Trip)",
+    "overview": "Book a dedicated Chennai to Thirukadaiyur Sri Amirthakadeswarar & Abhirami Amman Temple round-trip cab for Marriage Anniversaries, Shashtiabdapoorthi (60th), Bheemaratha Shanthi (70th), and Sadhabishekam (80th) celebrations. Comfortable highway travel via ECR / Chidambaram with polite satvik chauffeurs.",
     "routePlan": [
       {
         "stop": "Chennai Doorstep Pickup",
-        "desc": "On-time pickup from your home in Medavakkam, Tambaram, Velachery, Anna Nagar, OMR, T. Nagar, or anywhere in Chennai at your preferred muhurtham or pooja time."
+        "desc": "Early morning or previous-evening pickup from anywhere in Chennai (Medavakkam, Tambaram, Velachery, Anna Nagar, OMR, T. Nagar) with ample boot space for pooja items, kalasams & silk sarees."
       },
       {
-        "stop": "Sri Devi Karumariamman Temple, Thiruverkadu",
-        "desc": "Unhurried wait-and-return darshan for your marriage anniversary pooja, archana, and family blessings. Polite satvik chauffeur waits comfortably near the temple."
+        "stop": "ECR / NH 32 Coastal Highway Drive",
+        "desc": "Smooth ~270 km drive (4.5–5.5 hrs) via Mahabalipuram, Pondicherry, Cuddalore, Chidambaram & Sirkazhi (or GST Road via Tindivanam) with clean highway breakfast & restroom breaks."
       },
       {
-        "stop": "Family Anniversary Lunch / Dinner Stop",
-        "desc": "Optional stop at a family restaurant, banquet hall, or relative's home in Thiruverkadu or Chennai before heading back."
+        "stop": "Thirukadaiyur Amirthakadeswarar & Abhirami Amman Temple",
+        "desc": "Darshan (6:00 AM–1:00 PM & 4:00 PM–9:00 PM) and morning homam / Kalasa Abhishekam (6:00 AM–12:30 PM) for Marriage Anniversary, Shashtiabdapoorthi (60th), Bheema Ratha Shanthi (70th), or Sadhabishekam (80th). Traditional dress code applies."
       },
       {
         "stop": "Chennai Return Drop",
-        "desc": "Safe, comfortable return drop at your Chennai doorstep with zero surge pricing."
+        "desc": "Same-day evening or next-day return journey back to your doorstep in Chennai."
       }
     ],
     "tariff": {
       "headers": [
         "Vehicle Model",
         "Seating Capacity",
-        "Outstation Round Trip (Min 250 Km/Day)",
+        "Outstation Package Cost",
         "Key Highlights"
       ],
       "rows": [
         [
           "Swift Dzire / Toyota Etios",
           "4 Passengers",
-          "₹14/km + ₹500 Bata (Min ₹4,000/day)",
-          "Ideal for couples & small families • Clean AC Sedan"
+          "₹8,200",
+          "1-Day 550 km @ ₹14/km + ₹500 Bata (2-Day: ₹8,700) • Ideal for couples & small families"
         ],
         [
           "Maruti Ertiga / XL6 (SUV)",
           "6 Passengers",
-          "₹17/km + ₹500 Bata (Min ₹4,750/day)",
-          "Spacious 6-seater for parents & kids • Dual AC"
+          "₹9,850",
+          "1-Day 550 km @ ₹17/km + ₹500 Bata (2-Day: ₹10,350) • Spacious 6-seater for elders & kids"
         ],
         [
           "Toyota Innova",
           "7 Passengers",
-          "₹20/km + ₹600 Bata (Min ₹5,600/day)",
-          "Easy senior citizen entry • Comfortable suspension"
+          "₹11,600",
+          "1-Day 550 km @ ₹20/km + ₹600 Bata (2-Day: ₹12,200) • Senior-friendly suspension & comfort"
         ],
         [
           "Innova Crysta",
           "7 Passengers",
-          "₹22/km + ₹700 Bata (Min ₹6,200/day)",
-          "Executive captain seats for special anniversary celebrations"
+          "₹12,800",
+          "1-Day 550 km @ ₹22/km + ₹700 Bata (2-Day: ₹13,500) • Executive captain seats for anniversary"
         ],
         [
           "12-Seater Tempo Traveller",
           "12 Passengers",
-          "₹24/km + ₹800 Bata (Min 300 km = ₹8,000/day)",
-          "Best for joint-family anniversary temple gatherings"
+          "₹14,000",
+          "1-Day 550 km @ ₹24/km + ₹800 Bata (2-Day 600 km min: ₹16,000) • Best for joint-family celebrations"
+        ],
+        [
+          "14-Seater Tempo Traveller",
+          "14 Passengers",
+          "₹14,550",
+          "1-Day 550 km @ ₹25/km + ₹800 Bata (2-Day 600 km min: ₹16,600) • Pushback seats for extended family"
+        ],
+        [
+          "17-Seater Tempo Traveller",
+          "17 Passengers",
+          "₹15,100",
+          "1-Day 550 km @ ₹26/km + ₹800 Bata (2-Day 600 km min: ₹17,200) • Group family Shashtiabdapoorthi"
+        ],
+        [
+          "Force Urbania (16+1 VIP)",
+          "16 Passengers",
+          "₹22,000",
+          "1-Day 550 km @ ₹38/km + ₹1,100 Bata (2-Day 600 km min: ₹25,000) • Luxury VIP coach for elders"
+        ],
+        [
+          "20-Seater Grand Tempo",
+          "20 Passengers",
+          "₹17,400",
+          "1-Day 550 km @ ₹30/km + ₹900 Bata (2-Day 600 km min: ₹19,800) • Large wedding & anniversary groups"
+        ],
+        [
+          "26-Seater Mini Bus",
+          "26 Passengers",
+          "₹20,800",
+          "1-Day 550 km @ ₹36/km + ₹1,000 Bata (2-Day 700 km min: ₹27,200) • Complete family & relatives bus"
         ]
-      ]
+      ],
+      "note": "We provide dedicated AC cab service only. Fares are calculated on 550 km Chennai ⇄ Thirukadaiyur round-trip distance using our standard Outstation tariff + driver bata (for 2-day Tempo Traveller, 300 km/day minimum applies = 600 km). FASTag tolls, parking & night stay allowance (₹450/night if applicable) are extra at actuals."
     },
     "includes": [
-      "Clean, well-maintained AC vehicle with fuel & polite satvik chauffeur",
+      "Clean, sanitized AC vehicle with fuel & polite satvik chauffeur",
       "Doorstep pickup & drop anywhere in Chennai",
-      "Driver Bata included in the daily outstation calculation",
-      "Flexible waiting time during temple darshan, archana & anniversary dining"
+      "550 km round-trip distance allowance + Driver Bata included in package estimate",
+      "Local temple, mandapam & hotel transfers in Thirukadaiyur"
     ],
     "excludes": [
-      "Tolls & temple/restaurant parking fees (billed at actuals)",
-      "Extra km beyond minimum daily slab (billed at standard per-km rate)",
-      "Temple special darshan or archana tickets"
+      "FASTag tolls & temple/mandapam parking fees (billed at actuals)",
+      "Extra km beyond 550 km (billed at standard per-km rate) & driver night stay ₹450/night if applicable",
+      "Temple homam, archana tickets, accommodation & food"
     ],
-    "travelGuide": "Thiruverkadu Sri Devi Karumariamman Temple is a popular spiritual destination for couples and families celebrating marriage anniversaries in Chennai. Booking a dedicated outstation round-trip cab ensures you never face last-minute cab cancellations, parking hassle, or rush during pooja timings. Our base is in Medavakkam, Chennai, and all Chennai to Thiruverkadu trips follow our transparent Outstation Round Trip tariff (250 km/day minimum for cars, 300 km/day for Tempo Traveller).",
+    "travelGuide": {
+      "history": "• Markandeya Legend: Amirthakadeswarar saved devotee from Yama\n• Abhirami Pattar: Site of sacred Abhirami Anthathi hymns\n• 60th & 80th Milestones: Shashtiabdapoorthi & Sadhabishekam shrine\n• Ashtaveerattanam: One of Lord Shiva's 8 heroic temples",
+      "timings": "• Morning Darshan: 06:00 AM – 01:00 PM\n• Ushakkala & Kalasandhi: 06:30 AM & 08:30 AM\n• Uchikala Pooja: 12:30 PM (Before Break)\n• Evening Darshan: 04:00 PM – 09:00 PM\n• Sayarakshai & Arthajama: 05:30 PM & 08:45 PM",
+      "dressCode": "Traditional South Indian Attire Mandatory inside sanctum:\n• Men: Dhoti / Veshti with Angavastram or Kurta Pyjama (Jeans, T-shirts, shorts not allowed).\n• Women: Saree, Half-saree, or Salwar Kameez with Dupatta (Western casuals not allowed).",
+      "tips": [
+        "Morning Homam Window (6:00 AM – 12:30 PM): Auspicious hours for Shashtiabdapoorthi (60th), Bheema Ratha Shanthi (70th), Sadhabishekam (80th), and Kanakabhishekam (90th+).",
+        "Advance Priest & Mandapam Booking: Auspicious Tamil calendar / Nakshatram dates book out 1–2 months ahead.",
+        "2-Day / 1-Night Recommended: Arrive the previous evening so elders can rest before early morning muhurtham rituals.",
+        "Official TN HR&CE Portal: Check verified temple info, festivals, and e-seva updates at hrce.tn.gov.in (Temple ID: 18029)."
+      ],
+      "officialPortal": {
+        "label": "Official TN HR&CE Temple Page (TID 18029)",
+        "url": "https://hrce.tn.gov.in/hrcehome/index_temple.php?tid=18029"
+      }
+    },
     "faq": [
       {
-        "q": "How is the Chennai to Thiruverkadu cab fare calculated?",
-        "a": "Since our operating base is in Medavakkam, Chennai, Thiruverkadu trips are billed under our standard Outstation Round Trip tariff: Sedan ₹14/km + ₹500 bata (min 250 km/day = ₹4,000), Ertiga ₹17/km + ₹500 bata (₹4,750), Innova ₹20/km + ₹600 bata (₹5,600), and Innova Crysta ₹22/km + ₹700 bata (₹6,200). Tolls and parking are extra at actuals."
+        "q": "What is the distance, route, and travel time from Chennai to Thirukadaiyur?",
+        "a": "Chennai to Thirukadaiyur is ~260–275 km one way (~550 km round trip) via ECR / NH 32 (Mahabalipuram, Pondicherry, Cuddalore, Chidambaram, Sirkazhi) or GST Road (NH 45), taking 4.5 to 5.5 hours each way. One-way FASTag tolls are roughly ₹150–₹200."
       },
       {
-        "q": "Will the driver wait while we finish our anniversary pooja and family lunch?",
-        "a": "Yes. Your dedicated cab and chauffeur stay with you for the full day, waiting comfortably during Sri Devi Karumariamman Temple darshan, archana, and your anniversary lunch or dinner stop."
+        "q": "What are the Thirukadaiyur Temple darshan and anniversary homam timings?",
+        "a": "The temple is open 6:00 AM–1:00 PM (Ushakkala 6:30 AM, Kalasandhi 8:30 AM, Uchikala 12:30 PM) and 4:00 PM–9:00 PM (Sayarakshai 5:30 PM, Arthajama 8:45 PM). Marriage anniversary homams, Shashtiabdapoorthi, and Sadhabishekam rituals are performed in the morning between 6:00 AM and 12:30 PM. Traditional dress code is mandatory."
       },
       {
-        "q": "Can we book an Innova or Tempo Traveller for a joint-family anniversary?",
-        "a": "Yes! We offer 6-seater Ertiga, 7-seater Innova / Innova Crysta, and 12-seater Tempo Traveller so parents, children, and relatives can travel together comfortably."
+        "q": "How is the Chennai to Thirukadaiyur round-trip cab fare calculated?",
+        "a": "Fares follow our standard Outstation Round Trip tariff for 550 km + Driver Bata: Sedan ₹14/km + ₹500 bata (₹8,200 1-Day / ₹8,700 2-Day), Ertiga ₹17/km + ₹500 bata (₹9,850 / ₹10,350), Innova ₹20/km + ₹600 bata (₹11,600 / ₹12,200), Innova Crysta ₹22/km + ₹700 bata (₹12,800 / ₹13,500). Tolls and parking are extra at actuals."
       },
       {
-        "q": "How do I confirm my Chennai to Thiruverkadu anniversary cab?",
-        "a": "Call +91 89395 39211 or message us on WhatsApp with your pickup area, date, and vehicle choice. Bookings are confirmed with a ₹500 advance (adjusted in your final bill)."
+        "q": "Should we book 1 Day or 2 Days for a Thirukadaiyur Marriage Anniversary / Shashtiabdapoorthi?",
+        "a": "For quick darshan and archana, a 1-Day early morning trip works well. For morning homam, Shashtiabdapoorthi, or Sadhabishekam rituals with elders, a 2-Day / 1-Night trip is recommended so your family arrives the previous evening and rests before the 6:00 AM–12:30 PM muhurtham."
+      },
+      {
+        "q": "How do I confirm my Chennai to Thirukadaiyur cab?",
+        "a": "Call +91 89395 39211 or message us on WhatsApp with your pickup area, travel dates, and vehicle preference. Bookings are confirmed with a ₹500 advance (adjusted in your final bill)."
       }
     ],
-    "whatsappMsg": "Hi Kalidass Travels, I want to book a Chennai to Thiruverkadu Temple & Marriage Anniversary cab (%VEHICLE%). Please share availability and quote.",
-    "metaTitle": "Chennai to Thiruverkadu Temple & Anniversary Cab | Kalidass Travels",
-    "metaDescription": "Book Chennai to Thiruverkadu Sri Devi Karumariamman Temple cab for Marriage Anniversary. Wait & return AC Sedan ₹14/km, Ertiga ₹17/km, Innova ₹20/km. Call +91 89395 39211.",
-    "keywords": "chennai to thiruverkadu cab, chennai to thiruverkadu temple taxi, marriage anniversary temple cab chennai, karumariamman temple cab booking, thiruverkadu round trip taxi",
+    "whatsappMsg": "Hi Kalidass Travels, I want to book a Chennai to Thirukadaiyur Temple & Marriage Anniversary round-trip cab (%VEHICLE%). Please share availability and quote.",
+    "metaTitle": "Chennai to Thirukadaiyur Cab for Marriage Anniversary | Kalidass Travels",
+    "metaDescription": "Book Chennai to Thirukadaiyur Sri Amirthakadeswarar & Abhirami Amman Temple round-trip cab (550 km) for Marriage Anniversary & Shashtiabdapoorthi. Sedan ₹8,200, Ertiga ₹9,850, Innova ₹11,600. Call +91 89395 39211.",
+    "keywords": "chennai to thirukadaiyur cab, chennai to thirukadaiyur taxi, thirukadaiyur marriage anniversary cab, shashtiabdapoorthi temple taxi chennai, abhirami amman temple cab, chennai to thirukadaiyur round trip",
     "serviceType": "Temple Tours",
     "origin": "Chennai",
-    "destination": "Thiruverkadu"
+    "destination": "Thirukadaiyur"
   }
 ]

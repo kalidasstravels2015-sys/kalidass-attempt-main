@@ -27,6 +27,7 @@ export default function TourBookingEngine({
     slug.includes('chidambaram') ||
     slug.includes('vellore') ||
     slug.includes('tiruchendur') ||
+    slug.includes('thirukadaiyur') ||
     slug.includes('madurai') ||
     slug.includes('pondicherry') ||
     slug.includes('yelagiri') ||

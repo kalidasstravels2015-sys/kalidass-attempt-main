@@ -485,10 +485,16 @@
   ],
   "reviews": [
     {
-      "name": "Saravanan",
+      "name": "Kishore Cunningham",
       "role": "Google Maps Review",
       "rating": 5,
-      "quote": "Best package for Chennai to tirupati"
+      "quote": "Manikumar drove us from Chennai Airport to Puducherry, Tiruvannamalai and back to Chennai on a 6-day tour. He is the best driver, his skills are amazing and we highly recommend him. He was on call at all hours and never let us down. Kishore and Prabuddha, Australia"
+    },
+    {
+      "name": "John Kennedy",
+      "role": "Google Maps Review",
+      "rating": 5,
+      "quote": "Good service"
     },
     {
       "name": "Elumalai Anandan",
@@ -497,40 +503,16 @@
       "quote": "Manikumar super driver long travel good Kundrathur to Orissa travel good experience safe and secure my family trip"
     },
     {
-      "name": "Suresh Mani",
-      "role": "Senior Citizen Tour",
+      "name": "Santosh Balagopalan",
+      "role": "Google Maps Review",
       "rating": 5,
-      "quote": "Very safe driving for my elderly parents' trip to Kumbakonam temples. Driver Murugan was exceptionally caring and patient."
+      "quote": "Excellent customer service. On trip to Velankanni the car was clean and with a professional driver. Will do business again."
     },
     {
-      "name": "Karthik Subramanian",
-      "role": "Outstation Trip",
+      "name": "Saravanan",
+      "role": "Google Maps Review",
       "rating": 5,
-      "quote": "Took a 2-day Pondicherry trip from Velachery with family. Etios was spotless, AC was crisp, and the driver recommended great authentic dining spots."
-    },
-    {
-      "name": "Divya Nambiar",
-      "role": "Navagraha Circuit",
-      "rating": 5,
-      "quote": "Completed the 9 Navagraha temples in 3 days. Driver Senthamil knew exact temple opening schedules and avoided all major road diversions."
-    },
-    {
-      "name": "Dr. Arvind Swaminathan",
-      "role": "Airport Transfer",
-      "rating": 5,
-      "quote": "Midnight pickup from Chennai International Terminal. Flight was delayed by 40 minutes, but driver tracked the flight and waited patiently without complaint."
-    },
-    {
-      "name": "Praveen Venkatesh",
-      "role": "Outstation Roundtrip",
-      "rating": 5,
-      "quote": "Chennai to Bangalore round trip for a family wedding. Smooth highway cruising, disciplined driving, and very reasonable per-km rates."
-    },
-    {
-      "name": "Meera Krishnan",
-      "role": "Madurai - Rameshwaram Tour",
-      "rating": 5,
-      "quote": "Comfortable 4-day temple tour across Madurai and Rameshwaram. Vehicle was cleaned every morning and driver Natraj was fantastic throughout."
+      "quote": "Best package for Chennai to tirupati"
     }
   ],
   "awareness": [

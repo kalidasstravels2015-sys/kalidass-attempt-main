@@ -25,3 +25,16 @@ When optimizing, refactoring, or adding tour package pages (`src/pages/services/
 2. **Travel Guide Section**: Implement a 2-tab mobile switcher (`⏰ Timings & Dress Code` vs `🛕 Sthala Puranam & Tips`), reducing mobile vertical scrolling by ~600px.
 3. **Conversion Banner Elimination**: Remove redundant full-width dark conversion banners at the bottom if sticky quick-nav and hero booking engines already provide clear conversion paths.
 4. **Compare Table Placement**: Position the "Why Us vs Aggregators" comparison table below the itinerary and guide, directly preceding FAQs.
+
+## Invariant 5: Full Group Fleet Coverage (Beyond 12-Seater)
+- **Never stop fleet listings or tariff tables at 12-Seater Tempo Traveller.**
+- For temple tours, family celebrations, and group outstation packages, include the full Master Tariff fleet when applicable:
+  - Cars & MPVs: `Swift Dzire / Toyota Etios` (4+1), `Maruti Ertiga / XL6` (6+1), `Toyota Innova` (7+1), `Innova Crysta` (7+1)
+  - Group Coaches: `12-Seater Tempo Traveller` (12+1), `14-Seater Tempo Traveller` (14+1), `17-Seater Tempo Traveller` (17+1), `Force Urbania (16+1 VIP)`, `20-Seater Grand Tempo` (20+1), `26-Seater Mini Bus` (26+1)
+
+## Invariant 6: Carousel Price Formatting, Subtext & Live Content Verification
+- **Enable Carousel Mode:** Add every new tour slug in `src/pages/services/[slug].astro` to `hasDedicatedEngine` (and `isTempleTour` when applicable) so it renders the horizontal `#fleet-carousel-track` instead of the fallback 2-column grid.
+- **Clean Single-Line Card Prices:** In `serviceDetails.json`, name the tariff price column header to match `totalCostIdx` (e.g., `Outstation Package Cost` or `Round-Trip Flat Cost`), place only the short fare (e.g., `₹8,200`) in that cell, and never start `Key Highlights` with `₹`.
+- **Accurate Subtext:** Set `cardPriceSubtext` in `[slug].astro` to state whether tolls are included or extra (e.g., `550 Km Round Trip (Bata Inc., Tolls Extra)`).
+- **Web-Verified Temple & Route Info:** Verify current temple darshan/pooja timings, dress codes, and highway/toll details via web search before finalizing `routePlan`, `travelGuide`, and `faq`.
+- **Structured `travelGuide` & Official HR&CE Portals:** Always format `travelGuide` as a structured object (`history`, `timings`, `dressCode`, `tips`)—never a plain string—so the 4-card Darshan Guide populates cleanly. For Tamil Nadu temples, include `travelGuide.officialPortal` pointing to its dedicated **TN HR&CE (`hrce.tn.gov.in`)** page (`index_temple.php?tid=...`).

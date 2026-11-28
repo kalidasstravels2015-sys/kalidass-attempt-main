@@ -16,7 +16,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Receipt,
-  Navigation
+  Navigation,
+  Wallet
 } from 'lucide-react';
 import WhatsAppIcon from './react/WhatsAppIcon.jsx';
 import { buildWhatsAppUrl, WHATSAPP_CONFIG } from '../utils/whatsapp';
@@ -440,6 +441,7 @@ function resolveInitialDestination(drop, prefillDest, slug, sTitle) {
   if (text.includes('rameswaram') || text.includes('rameshwaram')) return 'Rameswaram';
   if (text.includes('sabarimala')) return 'Sabarimala';
   if (text.includes('tiruchendur')) return 'Tiruchendur';
+  if (text.includes('thirukadaiyur')) return 'Thirukadaiyur Temple';
   if (text.includes('yelagiri')) return 'Yelagiri Hills';
   if (text.includes('yercaud')) return 'Yercaud';
   if (text.includes('chennai city') || text.includes('one-day-chennai')) return 'Chennai Sightseeing';
@@ -561,6 +563,7 @@ export default function BookingEngine({
       slug.includes('chidambaram') ||
       slug.includes('vellore') ||
       slug.includes('tiruchendur') ||
+      slug.includes('thirukadaiyur') ||
       slug.includes('madurai') ||
       slug.includes('pondicherry') ||
       slug.includes('yelagiri') ||
@@ -578,6 +581,48 @@ export default function BookingEngine({
 
   // Strictly either 'form' or 'results' — In-place swap!
   const [viewMode, setViewMode] = useState('form');
+  const summaryCardRef = useRef(null);
+
+  // Hide global floating Call/WhatsApp buttons only while the rate summary card is visible in viewport
+  useEffect(() => {
+    const root = document.documentElement;
+    if (viewMode !== 'results' || !summaryCardRef.current) {
+      root.removeAttribute('data-rate-summary-visible');
+      return;
+    }
+
+    const el = summaryCardRef.current;
+    const rect = el.getBoundingClientRect();
+    const initiallyVisible = rect.bottom > 0 && rect.top < window.innerHeight;
+    if (initiallyVisible) {
+      root.setAttribute('data-rate-summary-visible', 'true');
+    } else {
+      root.removeAttribute('data-rate-summary-visible');
+    }
+
+    if (typeof IntersectionObserver === 'undefined') {
+      return () => root.removeAttribute('data-rate-summary-visible');
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry) return;
+        if (entry.isIntersecting) {
+          root.setAttribute('data-rate-summary-visible', 'true');
+        } else {
+          root.removeAttribute('data-rate-summary-visible');
+        }
+      },
+      { threshold: 0.05 }
+    );
+
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      root.removeAttribute('data-rate-summary-visible');
+    };
+  }, [viewMode]);
 
   // 3. Form State: Outstation & General
   // 3. Form State: Outstation & General (Strictly Round Trip)
@@ -1100,7 +1145,7 @@ export default function BookingEngine({
       'mysore', 'mysuru', 'coimbatore', 'madurai', 'trichy', 'tiruchirappalli', 
       'salem', 'ooty', 'kodaikanal', 'munnar', 'vellore', 'kanchipuram', 
       'mahabalipuram', 'mamallapuram', 'thiruvannamalai', 'tiruvannamalai', 
-      'chidambaram', 'kumbakonam', 'rameswaram', 'sabarimala', 'tiruchendur',
+      'chidambaram', 'kumbakonam', 'rameswaram', 'sabarimala', 'tiruchendur', 'thirukadaiyur',
       'kanyakumari', 'thanjavur', 'tanjore', 'yelagiri', 'yercaud', 'hyderabad',
       'kochi', 'cochin', 'wayanad', 'alleppey', 'alappuzha', 'thekkady',
       'dindigul', 'tirunelveli', 'thoothukudi', 'tuticorin', 'nagercoil',
@@ -1833,6 +1878,16 @@ Ref: ${cleanRef}`;
 
   const waHref = buildWhatsAppUrl(getWhatsAppMessage());
 
+  const paymentMethodsStrip = (
+    <p
+      aria-label="We accept: UPI, Cards, Pay Later, EMI, Cash"
+      className="flex items-center justify-center gap-1.5 pt-0.5 text-[11px] font-medium text-slate-700 dark:text-slate-300 text-center flex-wrap"
+    >
+      <Wallet className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" aria-hidden="true" />
+      <span>We accept UPI • Cards • Pay Later • EMI • Cash</span>
+    </p>
+  );
+
   return (
     <div ref={containerRef} id={engineId} data-hydrated={mounted ? "true" : undefined} className={`w-full max-w-2xl mx-auto transition-all duration-200 ${variant === 'card' ? 'bg-white dark:bg-m3-surface rounded-2xl shadow-xl border border-slate-200/90 dark:border-m3-outline-variant/60 ring-1 ring-black/5 overflow-hidden' : ''}`}>
       
@@ -1941,7 +1996,7 @@ Ref: ${cleanRef}`;
                 <div>
                   <label htmlFor="drop-input" className="flex items-center gap-1.5 text-xs font-semibold text-m3-on-surface-variant dark:text-slate-300 mb-1">
                     <Navigation className="w-3.5 h-3.5 text-slate-500 rotate-45" />
-                    <span>Drop Location / City</span>
+                    <span>Destination</span>
                   </label>
                   <div className="relative flex items-center">
                     <input
@@ -2414,6 +2469,7 @@ Ref: ${cleanRef}`;
           ───────────────────────────────────────────────────────────── */}
       {viewMode === 'results' && (
         <div 
+          ref={summaryCardRef}
           id="fare-result-summary-card" 
           className="bg-white dark:bg-m3-surface p-4 sm:p-6 space-y-3.5 animate-fadeIn transition-opacity duration-200 ease-out"
         >
@@ -2734,6 +2790,8 @@ Ref: ${cleanRef}`;
                   <span>Book Now</span>
                 </a>
 
+                {paymentMethodsStrip}
+
                 <div className="text-center pt-0.5">
                   <a
                     href={`tel:${WHATSAPP_CONFIG.phone}`}
@@ -2976,32 +3034,19 @@ Ref: ${cleanRef}`;
 
               {/* STEP 4: Action CTAs */}
               <div className="pt-0.5 space-y-1.5">
-                <div className="flex gap-2">
-                  <a
-                    href={waHref}
-                    target="_blank"
-                    rel="noopener noreferrer nofollow"
-                    data-direct-whatsapp="true"
-                    onClick={(e) => handleWhatsAppBookClick(e, selectedVehicle.fullName, currentBreakdown.totalFare)}
-                    className="flex-1 min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#20bd5a]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]"
-                  >
-                    <WhatsAppIcon variant="white" className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
-                    <span>Book Now</span>
-                  </a>
+                <a
+                  href={waHref}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  data-direct-whatsapp="true"
+                  onClick={(e) => handleWhatsAppBookClick(e, selectedVehicle.fullName, currentBreakdown.totalFare)}
+                  className="w-full min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-m3-full bg-[#25D366] hover:bg-[#20bd5a] active:bg-[#1da851] text-white font-bold text-xs sm:text-sm shadow-m3-1 hover:shadow-m3-2 hover:-translate-y-0.5 transition-all active:scale-[0.98] cursor-pointer border border-[#20bd5a]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]"
+                >
+                  <WhatsAppIcon variant="white" className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                  <span>Book Now</span>
+                </a>
 
-                  <a
-                    href={`tel:${WHATSAPP_CONFIG.phone}`}
-                    onClick={() => logCalculationEvent(selectedVehicle.fullName, currentBreakdown.totalFare)}
-                    className="min-h-[48px] sm:min-h-[50px] inline-flex items-center justify-center gap-1 px-4 py-2.5 rounded-m3-full border border-m3-outline hover:bg-m3-primary/10 active:bg-m3-primary/20 text-m3-primary font-bold text-xs transition-colors cursor-pointer shrink-0 active:scale-95"
-                  >
-                    <Phone className="w-3.5 h-3.5 text-m3-primary" />
-                    <span>Call Us</span>
-                  </a>
-                </div>
-
-                <p className="text-[10px] text-slate-600 dark:text-slate-400 text-center font-medium">
-                  24/7 Helpline: +91 89395 39211
-                </p>
+                {paymentMethodsStrip}
               </div>
             </>
           )}

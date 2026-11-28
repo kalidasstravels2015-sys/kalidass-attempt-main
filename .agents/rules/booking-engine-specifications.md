@@ -24,6 +24,8 @@ All booking engines, quotation calculators, and trip booking components across t
   | **Kumbakonam Navagraha** | `NavagrahaBookingEngine.jsx` | ~680 km | **36 Hours (Min 2 Days)** | 2–3 Days (9 Temples Circuit) |
   | **Rameswaram & Dhanushkodi**| `RameswaramBookingEngine.jsx` | ~1,150 km | **48 Hours (Min 2 Days)**| 3 Days / 2 Nights |
   | **Sabarimala Pilgrimage** | `SabarimalaBookingEngine.jsx` | ~1,350 km | **48 Hours (Min 3 Days)**| 3–4 Days / 2–3 Nights |
+  | **Thirukadaiyur Temple** | `TourBookingEngine.jsx` (`chennai-to-thirukadaiyur`) | ~550 km | **14 Hours** | 36 Hours (2 Days / 1 Night) |
+- **Outstation Round Trip vs. Local Package Boundary**: Never suggest or price local hourly packages (`4h/40km`, `5h/50km`, `8h/80km`) for intercity/outstation temple round trips. Always use Master Tariff outstation per-km rates + driver bata across the full fleet (Sedan up to 26-Seater Mini Bus & Force Urbania).
 - **Same-Day Return**: If `dropDate === pickupDate`, duration is 1 Day (Same Day Return). If `dropDate === pickupDate + 1`, duration is 2 Days (1 Night Stay), etc.
 
 ## 2. Layout & Pairing Invariants

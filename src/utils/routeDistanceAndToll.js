@@ -47,6 +47,7 @@ export const KNOWN_DESTINATIONS = {
 
   // Delta / Trichy / South TN
   chidambaram: { name: 'Chidambaram Natarajar', oneWayKm: 230, roundTripKm: 460, stateCode: 'TN', defaultDays: 1, corridor: 'ecr_coastal' },
+  thirukadaiyur: { name: 'Thirukadaiyur Temple', oneWayKm: 275, roundTripKm: 550, stateCode: 'TN', defaultDays: 1, corridor: 'ecr_coastal' },
   kumbakonam: { name: 'Kumbakonam Navagraha', oneWayKm: 310, roundTripKm: 620, stateCode: 'TN', defaultDays: 2, corridor: 'nh32_trichy' },
   navagraha: { name: 'Kumbakonam Navagraha', oneWayKm: 310, roundTripKm: 620, stateCode: 'TN', defaultDays: 2, corridor: 'nh32_trichy' },
   thanjavur: { name: 'Thanjavur Brihadeeswarar', oneWayKm: 345, roundTripKm: 690, stateCode: 'TN', defaultDays: 2, corridor: 'nh32_trichy' },
@@ -123,6 +124,7 @@ export const ROUTE_REALISTIC_HOURS = {
   mahabalipuram: 8,
   mamallapuram: 8,
   chidambaram: 14,
+  thirukadaiyur: 14,
   yelagiri: 14,
   hogenakkal: 24,
   dharmapuri: 24,

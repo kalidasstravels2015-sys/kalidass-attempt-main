@@ -44,7 +44,9 @@ import {
   ChevronDown,
   ChevronRight,
   ArrowUp,
-  Image as LucideImage
+  Image as LucideImage,
+  ExternalLink,
+  Landmark
 } from 'lucide-react';
 
 export async function getStaticPaths() {
@@ -67,16 +69,16 @@ const isChidambaram = service.slug === 'chidambaram-temple-trip';
 const isVellore = service.slug === 'vellore-golden-temple';
 const isPondicherry = service.slug === 'pondicherry-one-day-trip';
 const isTiruchendur = service.slug === 'tiruchendur-temple-tour';
-const isYelagiri = service.slug === 'yelagiri-hills-weekend';
 const isYercaud = service.slug === 'yercaud-hills-weekend';
 const isMahabalipuram = service.slug === 'mahabalipuram-ecr-temple-route';
 const isChennaiCity = service.slug === 'one-day-chennai-city-tour';
 const isBangalore = service.slug === 'chennai-to-bangalore-taxi';
+const isThirukadaiyur = service.slug === 'chennai-to-thirukadaiyur';
 
-const isWeekendTrip = isPondicherry || isYelagiri || isYercaud || isMahabalipuram || isChennaiCity || isBangalore;
-const isTempleTour = service.category === 'Temple Tours' || isTirupati || isThiruvannamalai || isKanchipuram || isNavagraha || isRameswaram || isSabarimala || isChidambaram || isVellore || isTiruchendur;
+const isWeekendTrip = isPondicherry || isYercaud || isMahabalipuram || isChennaiCity || isBangalore;
+const isTempleTour = service.category === 'Temple Tours' || isTirupati || isThiruvannamalai || isKanchipuram || isNavagraha || isRameswaram || isSabarimala || isChidambaram || isVellore || isTiruchendur || isThirukadaiyur;
 
-const hasDedicatedEngine = isTirupati || isThiruvannamalai || isKanchipuram || isNavagraha || isRameswaram || isSabarimala || isChidambaram || isVellore || isPondicherry || isTiruchendur || isYelagiri || isYercaud || isMahabalipuram || isChennaiCity || isBangalore;
+const hasDedicatedEngine = isTirupati || isThiruvannamalai || isKanchipuram || isNavagraha || isRameswaram || isSabarimala || isChidambaram || isVellore || isPondicherry || isTiruchendur || isYercaud || isMahabalipuram || isChennaiCity || isBangalore || isThirukadaiyur;
 const isTour = isTempleTour || isWeekendTrip || ['Temple Tours', 'Popular Destinations'].includes(service.category) || hasDedicatedEngine;
 
 const guideLabels = isTempleTour ? {
@@ -115,7 +117,6 @@ const tourImages: Record<string, string> = {
   "vellore-golden-temple": "/images/temple/vellore-golden.webp",
   "mahabalipuram-ecr-temple-route": "/images/temple/mahabalipuram-ecr-temples.webp",
   "one-day-chennai-city-tour": "/images/temple/chennai-city.webp",
-  "yelagiri-hills-weekend": "/images/hero/coimbatore.webp",
   "yercaud-hills-weekend": "/images/hero/airavatesvara.webp",
   "chennai-to-pondicherry-taxi": "/images/temple/pondicherry.webp",
   "chennai-to-tirupati-one-day-package": "/images/temple/tirupati-balaji.webp",
@@ -141,6 +142,7 @@ const serviceShortNames: Record<string, string> = {
   "kanchipuram-temple-trip": "Kanchipuram Temple",
   "chidambaram-temple-trip": "Chidambaram & Pichavaram",
   "vellore-golden-temple": "Vellore Golden Temple",
+  "chennai-to-thirukadaiyur": "Thirukadaiyur Temple",
   "acting-driver-within-chennai": "Local Chennai Acting Driver",
   "acting-driver-outstation-round-trip": "Outstation Round-Trip Driver",
   "acting-driver-outstation-one-way": "Outstation One-Way Driver Drop",
@@ -150,7 +152,6 @@ const serviceShortNames: Record<string, string> = {
   "one-day-chennai-city-tour": "Chennai City Sightseeing",
   "driver-car-for-weddings": "Wedding Car & Chauffeur",
   "mahabalipuram-ecr-temple-route": "Mahabalipuram & ECR Tour",
-  "yelagiri-hills-weekend": "Yelagiri Hills Weekend",
   "yercaud-hills-weekend": "Yercaud Weekend Package",
   "chennai-airport-taxi-transfers": "Chennai Airport Cab Transfer",
   "chennai-to-pondicherry-taxi": "Chennai to Pondicherry Taxi",
@@ -524,22 +525,6 @@ const getPackageStayRates = (slug: string, vehicleName: string, basePriceNum: nu
       return { 1: 4000, 2: 4800, 3: 5600 };
     }
     return { 1: basePriceNum || 3000, 2: 3600, 3: 4200 };
-  }
-
-  if (slug === 'yelagiri-hills-weekend') {
-    if (v.includes('tempo') || v.includes('traveller')) {
-      return { 1: 15500, 2: 18800, 3: 22100 };
-    }
-    if (v.includes('crysta')) {
-      return { 1: 12800, 2: 15600, 3: 18400 };
-    }
-    if (v.includes('innova')) {
-      return { 1: 10800, 2: 13200, 3: 15600 };
-    }
-    if (v.includes('ertiga') || v.includes('xl6')) {
-      return { 1: 9200, 2: 11300, 3: 13400 };
-    }
-    return { 1: basePriceNum || 7500, 2: 9200, 3: 10900 };
   }
 
   if (slug === 'yercaud-hills-weekend') {
@@ -1110,39 +1095,6 @@ const PILGRIM_ROUTES: Record<string, {
     ],
     ctaHeading: 'Ready to Book Your Chennai City Sightseeing Cab (8, 10 or 12 Hours)?'
   },
-  'yelagiri-hills-weekend': {
-    summaryTitle: 'Chennai to Yelagiri Hills Cab: Key Trip Facts & Fares',
-    summaryDesc: 'Planning a serene hill retreat to Yelagiri Hills? Kalidass Travels provides dedicated round-trip outstation cabs with skilled ghat road drivers, verified hill clearance, and 100% all-inclusive pricing.',
-    distance: '~230 km (~500 km RT)',
-    distanceSub: 'Via NH 48 (Bengaluru Highway)',
-    travelTime: '4.5 – 5 Hours',
-    travelTimeSub: 'Scenic Highway & Hill Climb',
-    startingFare: '₹7,500 Flat',
-    startingFareSub: 'AC Sedan 2 Days / 1 Night',
-    tollsLabel: 'FASTag Tolls & Parking',
-    tollsValue: 'Payable at Actuals',
-    tollsSub: 'Driver Night Bata Included',
-    calloutTitle: 'Doorstep Pickup Anywhere in Chennai • ₹500 Advance to Confirm Booking',
-    calloutDesc: 'Includes Punganoor Lake, Jalagamparai Falls, Swamimalai Trek point, and 14 hairpin bend ascent.',
-    stayLabelSub: 'Driver Night Bata Included',
-    getDropdownOptions: (r) => [
-      { value: "1", price: `₹${r[1].toLocaleString('en-IN')}`, duration: "2 Days / 1 Night Stay", inclusions: "Fuel, Ghat Road Clearance & Driver Night Bata Included • Tolls at Actuals", label: "2 Days / 1 Night (Driver Night Bata Included)", selected: true },
-      { value: "2", price: `₹${r[2].toLocaleString('en-IN')}`, duration: "3 Days / 2 Nights Stay", inclusions: "Fuel, Sightseeing & 2 Nights Driver Bata Included • Tolls at Actuals", label: "3 Days / 2 Nights (2 Nights Driver Bata Included)" },
-      { value: "3", price: `₹${r[3].toLocaleString('en-IN')}`, duration: "4 Days / 3 Nights Stay", inclusions: "Fuel, Sightseeing & 3 Nights Driver Bata Included • Tolls at Actuals", label: "4 Days / 3 Nights (3 Nights Driver Bata Included)" }
-    ],
-    baseInclusionsText: 'Fuel, Ghat Road Clearance & Driver Night Bata Included (Tolls at Actuals)',
-    comparisonTitle: 'Why Travelers Choose Kalidass Travels for Yelagiri Hills vs App Cabs',
-    comparisonDesc: 'Climbing 14 hairpin bends requires experienced mountain drivers; online app drivers frequently cancel. Here is how we compare:',
-    comparisonRows: [
-      { feature: 'Round-Trip Pricing', kalidass: '₹7,500 Flat 2-Day Package (Sedan)', aggregators: 'Base fare only; return tolls & return driver night charges billed extra' },
-      { feature: '14 Hairpin Bend Ascent', kalidass: 'Guaranteed hill climb with skilled highway chauffeurs', aggregators: 'High cancellation; city drivers refuse steep hill hairpin turns' },
-      { feature: 'NH 48 Highway Tolls', kalidass: 'Billed Transparently at Actual FASTag Receipts', aggregators: 'Arbitrary passenger cash demands at toll plazas' },
-      { feature: 'Driver Night Bata / Allowance', kalidass: '100% Included in the package fare', aggregators: 'Passenger must pay ₹500–₹800/night cash directly to driver' },
-      { feature: 'Advance Payment', kalidass: '₹500 Advance (Balance after trip completion)', aggregators: '100% upfront card/wallet prepayment with cancellation fees' },
-      { feature: 'Local Sightseeing', kalidass: 'Full standby for Punganoor Lake, Nature Park & Falls', aggregators: 'Hotel drop only; demands extra cash for local viewpoints' }
-    ],
-    ctaHeading: 'Ready to Book Your Chennai to Yelagiri Hills Cab (2, 3 or 4 Days)?'
-  },
   'yercaud-hills-weekend': {
     summaryTitle: 'Chennai to Yercaud Weekend Cab: Key Trip Facts & Fares',
     summaryDesc: 'Escape to the "Jewel of the South" atop the Shevaroy Hills. Kalidass Travels offers private round-trip cabs from Chennai to Yercaud with verified mountain chauffeurs, Salem ghat road expertise, and transparent flat fares.',
@@ -1268,11 +1220,13 @@ if (service.slug === 'tirupati-package') {
     { "@type": "City", "name": "Chennai" },
     { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
   );
-} else if (service.slug === 'yelagiri-hills-weekend') {
+} else if (isThirukadaiyur) {
   areas.push(
     { "@type": "City", "name": "Chennai" },
-    { "@type": "City", "name": "Yelagiri Hills" },
-    { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+    { "@type": "City", "name": "Thirukadaiyur" },
+    { "@type": "City", "name": "Mayiladuthurai" },
+    { "@type": "AdministrativeArea", "name": "Tamil Nadu" },
+    { "@type": "AdministrativeArea", "name": "Puducherry" }
   );
 } else if (service.slug === 'yercaud-hills-weekend') {
   areas.push(
@@ -1438,7 +1392,7 @@ if (!offersData && startingPrice) {
 
 const dynamicPriceRange = offersData
   ? `₹${Number(offersData.lowPrice || startingPrice || 3500).toLocaleString('en-IN')} - ₹${Number(offersData.highPrice || startingPrice || 40000).toLocaleString('en-IN')}`
-  : (isTirupati ? "₹6,000 - ₹27,000" : (isThiruvannamalai ? "₹6,500 - ₹18,500" : (isKanchipuram ? "₹3,500 - ₹18,000" : (isNavagraha ? "₹12,000 - ₹36,000" : (isRameswaram ? "₹18,500 - ₹48,000" : (isTiruchendur ? "₹19,500 - ₹49,000" : (isSabarimala ? "₹26,500 - ₹62,000" : (isChidambaram ? "₹7,400 - ₹26,500" : (isVellore ? "₹4,800 - ₹22,500" : (isPondicherry ? "₹4,500 - ₹19,000" : "₹₹"))))))))));
+  : (isTirupati ? "₹6,000 - ₹27,000" : (isThiruvannamalai ? "₹6,500 - ₹18,500" : (isKanchipuram ? "₹3,500 - ₹18,000" : (isNavagraha ? "₹12,000 - ₹36,000" : (isRameswaram ? "₹18,500 - ₹48,000" : (isTiruchendur ? "₹19,500 - ₹49,000" : (isSabarimala ? "₹26,500 - ₹62,000" : (isChidambaram ? "₹7,400 - ₹26,500" : (isVellore ? "₹4,800 - ₹22,500" : (isThirukadaiyur ? "₹8,200 - ₹27,200" : (isPondicherry ? "₹4,500 - ₹19,000" : "₹₹")))))))))));
 
 // Construct Schema.org structured data
 const pageSchemas: any[] = [];
@@ -1530,8 +1484,8 @@ if (isTour) {
       },
       "aggregateRating": {
         "@type": "AggregateRating",
-        "ratingValue": "4.7",
-        "reviewCount": "15",
+        "ratingValue": "4.8",
+        "reviewCount": "16",
         "bestRating": "5",
         "worstRating": "1"
       }
@@ -1813,8 +1767,6 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                     ? "Doorstep Chennai to Vellore Sripuram Golden Temple round-trip cab rental with verified chauffeur. Flat rates from ₹4,800 (Sedan) covering ~300 km, NH 48 tolls, Fort & Jalakandeswarar stop."
                     : isPondicherry
                     ? "Doorstep Chennai to Pondicherry round-trip private cab rental via scenic ECR. Flat rates from ₹4,500 (Sedan) covering 320 km, Auroville, French White Town, Promenade Beach & ECR tolls."
-                    : isYelagiri
-                    ? "Doorstep Chennai to Yelagiri Hills round-trip weekend cab rental with hill-certified chauffeur. Flat rates from ₹7,500 (Sedan) covering 460 km, 14 hairpin bends, Punganoor Lake & Swamimalai."
                     : isYercaud
                     ? "Doorstep Chennai to Yercaud Hill Station round-trip weekend getaway with ghat-road chauffeur. Flat rates from ₹11,500 (Sedan) covering 720 km, Emerald Lake & coffee plantation viewpoints."
                     : isMahabalipuram
@@ -1958,8 +1910,6 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                   ? "Doorstep Chennai to Vellore Sripuram Golden Temple round-trip cab rental with verified chauffeur. Flat rates from ₹4,800 (Sedan) covering ~300 km, NH 48 tolls, Fort & Jalakandeswarar stop."
                   : isPondicherry
                   ? "Doorstep Chennai to Pondicherry round-trip private cab rental via scenic ECR. Flat rates from ₹4,500 (Sedan) covering 320 km, Auroville, French White Town, Promenade Beach & ECR tolls."
-                  : isYelagiri
-                  ? "Doorstep Chennai to Yelagiri Hills round-trip weekend cab rental with hill-certified chauffeur. Flat rates from ₹7,500 (Sedan) covering 460 km, 14 hairpin bends, Punganoor Lake & Swamimalai."
                   : isYercaud
                   ? "Doorstep Chennai to Yercaud Hill Station round-trip weekend getaway with ghat-road chauffeur. Flat rates from ₹11,500 (Sedan) covering 720 km, Emerald Lake & coffee plantation viewpoints."
                   : isMahabalipuram
@@ -2404,12 +2354,14 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
               <p class="text-xs sm:text-sm text-m3-on-surface-variant font-sans mt-1">
                 {hasDedicatedEngine 
                   ? (isWeekendTrip
-                      ? (isYelagiri || isYercaud
+                      ? (isYercaud
                           ? "Swipe through our verified fleet below. Multi-day hill station packages cover vehicle hire & fuel; FASTag tolls and driver night bata payable at actuals."
                           : "Swipe through our verified fleet below. 1-day getaway rates include tolls & driver bata; calculate custom return dates in booking above.")
-                      : (isNavagraha || isRameswaram || isSabarimala || isTiruchendur
-                          ? "Swipe through our verified fleet below. 1-day packages include tolls & driver bata; multi-day circuits cover vehicle hire & fuel with tolls and driver bata at actuals."
-                          : "Swipe through our verified fleet below. 1-day package rates include tolls & driver bata; calculate custom return dates in booking above."))
+                      : (isThirukadaiyur
+                          ? "Swipe through our verified fleet below. 550 km Chennai ⇄ Thirukadaiyur round-trip outstation tariff + driver bata; FASTag tolls and parking extra at actuals."
+                          : (isNavagraha || isRameswaram || isSabarimala || isTiruchendur
+                              ? "Swipe through our verified fleet below. 1-day packages include tolls & driver bata; multi-day circuits cover vehicle hire & fuel with tolls and driver bata at actuals."
+                              : "Swipe through our verified fleet below. 1-day package rates include tolls & driver bata; calculate custom return dates in booking above.")))
                   : "Fixed round-trip rates with doorstep pickup, sanitized dual AC cars, FASTag tolls, and driver allowance."}
               </p>
             </div>
@@ -2487,16 +2439,18 @@ const parsedTips = service.travelGuide?.tips?.map((tip: string) => {
                     ? 6
                     : 4;
 
-                  const isMultiDay = isNavagraha || isRameswaram || isSabarimala || isTiruchendur || isYelagiri || isYercaud;
+                  const isMultiDay = isNavagraha || isRameswaram || isSabarimala || isTiruchendur || isYercaud;
                   const cardPriceLabel = "Starting From";
                   const cardPriceSubtext = isMultiDay
-                    ? (isYelagiri || isYercaud
+                    ? (isYercaud
                         ? "2-Day Trip (Tolls & Bata at Actuals)"
                         : isNavagraha 
                         ? "2-Day Circuit (Tolls & Bata Extra)" 
                         : (isRameswaram || isTiruchendur) 
                         ? "2-Day Circuit (Tolls & Bata Extra)" 
                         : "3-Day Base Fare (Tolls & Bata Extra)")
+                    : isThirukadaiyur
+                    ? "550 Km Round Trip (Bata Inc., Tolls Extra)"
                     : "1-Day (Tolls & Bata Inc.)";
 
                   return (
@@ -3260,6 +3214,24 @@ Please share availability and confirmed quote.`;
             </div>
 
           </div>
+
+          {service.travelGuide?.officialPortal?.url && (
+            <div class="pt-3 border-t border-m3-outline-variant/60 flex flex-wrap items-center justify-between gap-2 text-xs">
+              <span class="inline-flex items-center gap-1.5 text-m3-on-surface-variant font-medium">
+                <Landmark className="w-4 h-4 text-m3-primary shrink-0" aria-hidden="true" />
+                <span>Official Temple Reference (timings, festivals &amp; e-seva):</span>
+              </span>
+              <a
+                href={service.travelGuide.officialPortal.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 font-semibold text-[#0B57D0] hover:text-[#0842A0] dark:text-[#A8C7FA] dark:hover:text-[#D3E3FD] underline underline-offset-4 decoration-[1.5px] transition-colors"
+              >
+                <span>{service.travelGuide.officialPortal.label || "Official Temple Portal"}</span>
+                <ExternalLink className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+              </a>
+            </div>
+          )}
         </section>
 
         <style>
@@ -3533,22 +3505,14 @@ Please share availability and confirmed quote.`;
               : "Review our transparent fixed package fares above or chat with our 24/7 Chennai travel desk on WhatsApp to confirm your vehicle."}
           </p>
 
-          <div class="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-3.5">
+          <div class="pt-2 flex items-center justify-center">
             <a
               href={hasDedicatedEngine ? "#booking" : "#tariff"}
               id="back-to-booking-btn"
               class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white hover:bg-[#F0F4F9] active:bg-[#E8F0FE] !text-[#0B57D0] hover:!text-[#0842A0] font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer group border border-white/40"
             >
-              <span>{hasDedicatedEngine ? "Back to Booking" : "View Tariff & Book Now"}</span>
+              <span>{hasDedicatedEngine ? "Calculate Fare & Book" : "View Tariff & Book Now"}</span>
               <ArrowUp className="w-4 h-4 text-[#0B57D0] group-hover:-translate-y-0.5 transition-transform shrink-0" />
-            </a>
-
-            <a
-              href="tel:+918939539211"
-              class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white/15 hover:bg-white/25 active:bg-white/30 text-white font-bold text-xs sm:text-sm border border-white/30 backdrop-blur-xs transition-all cursor-pointer shadow-sm"
-            >
-              <Phone className="w-4 h-4 text-emerald-300 shrink-0" />
-              <span>Call Us</span>
             </a>
           </div>
 

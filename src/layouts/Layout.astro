@@ -23,6 +23,7 @@ import AiFareAssistantModal from "../components/AiFareAssistantModal.astro";
 import ExitIntentModal from "../components/ExitIntentModal.astro";
 import GeminiIcon from "../components/GeminiIcon.astro";
 import AndroidPhoneIcon from "../components/AndroidPhoneIcon.astro";
+import GoogleRatingBadge from "../components/GoogleRatingBadge.astro";
 import { Phone, Menu, CheckCircle2, ShieldCheck, MapPin, Mail } from "lucide-react";
 
 const defaultTitle = "Kalidass Travels - Premium Travel Experience";
@@ -174,11 +175,19 @@ const localBusinessSchema = {
   sameAs: externalSameAs,
   priceRange: "₹₹",
   currenciesAccepted: "INR",
-  paymentAccepted: "Cash, UPI, Credit Card, Net Banking",
+  paymentAccepted: [
+    "UPI",
+    "Credit Card",
+    "Debit Card",
+    "Pay Later (Simpl, LazyPay)",
+    "EMI",
+    "Net Banking",
+    "Cash"
+  ],
   aggregateRating: {
     "@type": "AggregateRating",
-    ratingValue: "4.7",
-    reviewCount: "15",
+    ratingValue: "4.8",
+    reviewCount: "16",
     bestRating: "5",
     worstRating: "1",
   },
@@ -787,6 +796,14 @@ const unifiedSchemaGraph = {
     <!-- Open Graph / Twitter Meta Tags Complete -->
 
     <style is:global>
+      dialog:modal {
+        overscroll-behavior: contain;
+      }
+      dialog::backdrop {
+        overflow: hidden;
+        overscroll-behavior: contain;
+      }
+
       /* Self-Hosted Ultra-Fast Variable Fonts */
       @font-face {
         font-family: 'Plus Jakarta Sans';
@@ -1231,7 +1248,8 @@ const unifiedSchemaGraph = {
          • Custom overlays → add data-hide-contact-dock to the overlay root
          NOTE: never match [aria-modal] — the nav drawer keeps it permanently. */
       html:has(dialog:modal, [data-hide-contact-dock]) #floating-actions-container,
-      html:has(dialog:modal, [data-hide-contact-dock]) nav[data-quick-nav] {
+      html:has(dialog:modal, [data-hide-contact-dock]) nav[data-quick-nav],
+      html[data-rate-summary-visible="true"] #floating-actions-container {
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
@@ -1939,7 +1957,7 @@ const unifiedSchemaGraph = {
                       <div class="text-[11px] text-m3-on-surface-variant">Shore Temple, Five Rathas &amp; beachside halts</div>
                     </div>
                   </a>
-                  <a href="/services/yelagiri-hills-weekend/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-emerald-500/10 transition-colors group/item" role="menuitem">
+                  <a href="/services/chennai-to-yelagiri-hills/" class="flex items-start gap-2.5 p-2 rounded-m3-xl hover:bg-emerald-500/10 transition-colors group/item" role="menuitem">
                     <svg class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="m8 3 4 8 5-5 5 15H2L8 3z"/>
                     </svg>
@@ -2049,7 +2067,31 @@ const unifiedSchemaGraph = {
           </div>
 
           <!-- M3 Desktop Action Button & Mobile Hamburger -->
-          <div class="flex items-center gap-2 xl:gap-3 shrink-0">
+          <div class="flex items-center gap-1.5 sm:gap-2 xl:gap-3 shrink-0">
+            <!-- M3 Desktop AI Fare Assistant Pill (Chat & Voice) -->
+            <button
+              type="button"
+              onclick="window.openAiFareModal?.()"
+              class="hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-m3-full bg-m3-surface-container hover:bg-m3-surface-container-high text-m3-on-surface-variant hover:text-m3-on-surface border border-m3-outline-variant/60 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary cursor-pointer whitespace-nowrap shrink-0"
+              aria-label="Open AI Fare Assistant — Chat or Speak (Ctrl+K)"
+              title="Ask AI Fare Assistant — Chat or Speak for fares, routes & tours"
+            >
+              <GeminiIcon className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+              <span>Ask AI</span>
+              <kbd class="hidden xl:inline-block px-1.5 py-0.5 text-[10px] font-semibold bg-m3-surface-container-lowest text-m3-on-surface-variant rounded border border-m3-outline-variant/50">Ctrl K</kbd>
+            </button>
+
+            <!-- M3 Mobile AI Fare Assistant Icon Button -->
+            <button
+              type="button"
+              onclick="window.openAiFareModal?.()"
+              class="md:hidden text-m3-on-surface hover:bg-m3-surface-container p-2.5 rounded-m3-full min-h-[48px] min-w-[48px] flex items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary cursor-pointer"
+              aria-label="Open AI Fare Assistant — Chat or Speak"
+              title="Ask AI Fare Assistant — Chat or Speak"
+            >
+              <GeminiIcon className="w-5 h-5" aria-hidden="true" />
+            </button>
+
             <!-- Desktop Executive Call CTA with Multi-Number Quick Popover -->
             <div class="relative group hidden sm:block shrink-0">
               <a
@@ -2276,7 +2318,7 @@ const unifiedSchemaGraph = {
           <div id="weekend-submenu" class="hidden mt-0.5 space-y-0.5 pl-5 pr-1 pb-1">
             <a href="/services/pondicherry-one-day-trip/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Pondicherry &amp; Auroville (1–2 Days)</a>
             <a href="/services/mahabalipuram-ecr-temple-route/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Mahabalipuram &amp; ECR Coast (1 Day)</a>
-            <a href="/services/yelagiri-hills-weekend/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Yelagiri Hills Weekend (2 Days)</a>
+            <a href="/services/chennai-to-yelagiri-hills/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Yelagiri Hills Weekend (2 Days)</a>
             <a href="/services/yercaud-hills-weekend/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Yercaud Hill Station (2–3 Days)</a>
             <a href="/services/one-day-chennai-city-tour/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Chennai City Sightseeing (1 Day)</a>
             <a href="/services/chennai-to-bangalore-taxi/" class="block px-2 py-2 min-h-[40px] flex items-center rounded-m3-xs text-[12px] font-medium text-m3-on-surface-variant hover:text-m3-primary hover:bg-m3-surface-container-lowest transition-colors">Chennai to Bangalore Taxi</a>
@@ -2351,204 +2393,159 @@ const unifiedSchemaGraph = {
     <slot />
   </main>
 
-  <!-- Google Material 3 Footer (Dark Surface) -->
-  <footer class="bg-m3-inverse-surface text-m3-inverse-on-surface pt-10 sm:pt-16 pb-24 sm:pb-12 border-t border-m3-outline-variant/20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <p class="sr-only">Footer Navigation and Company Information</p>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 sm:gap-8 pb-8 sm:pb-12 border-b border-m3-outline-variant/20">
-        <!-- Col 1: Brand & Verified Government Credentials -->
-        <div class="lg:col-span-4 space-y-3 sm:space-y-4">
-          <div class="bg-white p-2 sm:p-2.5 rounded-m3-lg w-fit shadow-m3-1">
-            <img
-              src="/images/logo.webp?v=2"
-              srcset="/images/logo-180.webp?v=2 1x, /images/logo.webp?v=2 2x"
-              alt="Kalidass Travels"
-              class="h-8 sm:h-9 md:h-10 w-auto object-contain"
-              width="227"
-              height="40"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-          <p class="text-xs text-m3-inverse-on-surface/80 leading-relaxed">
-            Chennai’s trusted travel and mobility partner since 2019. Specializing in reliable 24/7 airport transfers, outstation cabs, customized South India temple tours, corporate mobility, and professional acting drivers with 100% transparent pricing and verified chauffeurs.
-          </p>
+  <!-- Google Material 3 Footer (Minimalist, Industry-Standard, Schema/AEO/GEO-Ready) -->
+  <footer
+    role="contentinfo"
+    itemscope
+    itemtype="https://schema.org/TravelAgency"
+    itemid="https://kalidasstravels.in/#localbusiness"
+    class="bg-m3-inverse-surface text-slate-200 pt-10 sm:pt-12 pb-24 sm:pb-8 border-t border-white/10"
+  >
+    <meta itemprop="name" content="Kalidass Travels" />
+    <meta itemprop="url" content="https://kalidasstravels.in/" />
+    <meta itemprop="priceRange" content="₹₹" />
+    <meta itemprop="openingHours" content="Mo-Su 00:00-23:59" />
+    <meta itemprop="areaServed" content="Chennai, Tamil Nadu, Andhra Pradesh, Puducherry" />
 
-          <!-- Government Registration Credentials Strip -->
-          <div class="rounded-m3-lg bg-white/[0.05] border border-white/10 px-2.5 sm:px-3 py-2 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <p class="sr-only">Kalidass Travels — 24/7 Chennai Taxi, Airport Transfers &amp; South India Temple Tours</p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 pb-8 border-b border-white/10">
+        <!-- Brand (Logo + Google 4.8★ Top Row) & Clean Single-Purpose NAP Lines -->
+        <div class="lg:col-span-5 space-y-3.5">
+          <div class="flex items-center justify-between gap-3">
+            <a
+              href="/"
+              aria-label="Kalidass Travels Home"
+              class="inline-flex items-center bg-white px-2.5 py-1.5 rounded-m3-md shadow-m3-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed"
+            >
+              <img
+                itemprop="logo"
+                src="/images/logo.webp?v=2"
+                srcset="/images/logo-180.webp?v=2 1x, /images/logo.webp?v=2 2x"
+                alt="Kalidass Travels"
+                class="h-6 sm:h-7 w-auto object-contain"
+                width="227"
+                height="40"
+                loading="lazy"
+                decoding="async"
+              />
+            </a>
+
+            <GoogleRatingBadge variant="dark" compact />
+          </div>
+
+          <meta itemprop="description" content="Reliable 24/7 airport transfers, outstation cabs and South India temple tours from Chennai since 2019." />
+          <link itemprop="hasMap" href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8" />
+
+          <address
+            itemprop="address"
+            itemscope
+            itemtype="https://schema.org/PostalAddress"
+            class="not-italic text-xs text-slate-300 leading-relaxed"
+          >
+            <span itemprop="streetAddress">United Colony, BHEL Nagar, Medavakkam</span>,<br class="sm:hidden" />
+            <span itemprop="addressLocality">Chennai</span> - <span itemprop="postalCode">600100</span>,
+            <span itemprop="addressRegion">Tamil Nadu</span>
+            <meta itemprop="addressCountry" content="IN" />
+          </address>
+
+          <div class="text-xs text-slate-300">
+            <!--email_off-->
+            <a
+              itemprop="email"
+              href="mailto:kalidasstravels2015@gmail.com"
+              class="hover:text-white transition-colors break-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs"
+            >
+              kalidasstravels2015@gmail.com
+            </a>
+            <!--/email_off-->
+          </div>
+
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400">
             <a
               href="https://services.gst.gov.in/services/searchtp?gstin=33COVPM0531D1Z4"
               target="_blank"
               rel="noopener noreferrer nofollow"
-              class="inline-flex items-center gap-1 text-white/90 hover:text-white transition-colors group min-w-0"
+              class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs"
               title="Verify GSTIN 33COVPM0531D1Z4 on Official Govt Portal"
             >
-              <CheckCircle2 className="w-3.5 h-3.5 text-m3-success group-hover:text-m3-success shrink-0" />
-              <span class="font-bold text-white shrink-0">GST:</span>
-              <span class="font-mono text-white/90 group-hover:underline truncate">33COVPM0531D1Z4</span>
+              GST <span itemprop="taxID" class="font-mono text-slate-200">33COVPM0531D1Z4</span>
             </a>
-
-            <div class="h-3 w-px bg-white/20 hidden min-[360px]:block"></div>
-
+            <span class="text-slate-600">·</span>
             <a
               href="https://udyamregistration.gov.in/Udyam_Verify.aspx"
               target="_blank"
               rel="noopener noreferrer nofollow"
-              class="inline-flex items-center gap-1 text-white/90 hover:text-white transition-colors group min-w-0"
+              class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs"
               title="Verify MSME / Udyam Reg. UDYAM-TN-08-0018345 on Official Govt Portal"
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-m3-tertiary group-hover:text-m3-tertiary shrink-0" />
-              <span class="font-bold text-white shrink-0">MSME:</span>
-              <span class="font-mono text-white/90 group-hover:underline truncate">UDYAM-TN-08-0018345</span>
+              MSME <span class="font-mono text-slate-200">UDYAM-TN-08-0018345</span>
             </a>
-          </div>
-
-          <!-- Registered Address & Location Link -->
-          <div class="text-xs text-m3-inverse-on-surface/80 leading-relaxed">
-            <p class="font-bold text-white mb-0.5">Office Address:</p>
-            <p>United Colony, BHEL Nagar, Medavakkam, Chennai - 600 100.</p>
-          </div>
-
-          <div class="flex flex-wrap items-center gap-3 text-xs pt-0.5">
-            <a
-              href="https://maps.app.goo.gl/i2LdJhWMi2ZgAiCa8"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-1.5 font-semibold text-white/90 hover:text-white transition-colors group"
-            >
-              <MapPin className="w-3.5 h-3.5 text-m3-primary group-hover:scale-110 transition-transform" />
-              <span>View on Google Maps (4.7 ★)</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Col 2: Quick Links -->
-        <div class="lg:col-span-2">
-          <h3 class="text-white font-bold text-xs tracking-wider uppercase mb-3 font-sans">Quick Navigation</h3>
-          <ul class="space-y-2 text-xs text-m3-inverse-on-surface/80">
-            <li><a href="/fleet/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Our Fleet &amp; Vehicles</a></li>
-            <li><a href="/drivers/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Verified Chauffeurs</a></li>
-            <li><a href="/tariff/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Transparent Tariff</a></li>
-            <li><a href="/calculator/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Online Fare Calculator</a></li>
-            <li>
-              <a href="/attach-cab/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs inline-flex items-center gap-1.5 font-medium">
-                <span>Attach Cab / Fleet Partner</span>
-                <span class="px-2 py-0.5 rounded-m3-xs bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-600">Desk</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Col 3: Popular Services -->
-        <div class="lg:col-span-3">
-          <h3 class="text-white font-bold text-xs tracking-wider uppercase mb-3 font-sans">Our Services</h3>
-          <ul class="space-y-2 text-xs text-m3-inverse-on-surface/80">
-            <li><a href="/services/chennai-airport-taxi/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Airport Transfers (MAA)</a></li>
-            <li><a href="/services/outstation-cabs/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Outstation Cabs</a></li>
-            <li><a href="/services/local-hourly-cabs/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Local Hourly Cabs (4h &amp; 8h)</a></li>
-            <li><a href="/services/tempo-traveller-rental-chennai/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Tempo Traveller Rental</a></li>
-            <li><a href="/services/corporate/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Corporate Mobility</a></li>
-            <li><a href="/services/acting-drivers/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Acting Drivers</a></li>
-            <li><a href="/services/tirupati-package/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Chennai to Tirupati Cab</a></li>
-            <li><a href="/services/navagraha-tour/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Kumbakonam Navagraha Tour</a></li>
-            <li><a href="/services/tours/temple-tours/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Temple Tours</a></li>
-            <li><a href="/services/pondicherry-one-day-trip/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Pondicherry 1-Day Trip</a></li>
-          </ul>
-        </div>
-
-        <!-- Col 4: 24/7 Booking Contacts -->
-        <div class="lg:col-span-3">
-          <h3 class="text-white font-bold text-xs tracking-wider uppercase mb-3 font-sans">24/7 Booking Desk</h3>
-          <p class="text-xs text-m3-inverse-on-surface/80 leading-relaxed mb-3">
-            Pre-book your ride or get an instant WhatsApp quotation at any time.
-          </p>
-          <div class="space-y-2">
-            <a href="tel:+918939539211" class="flex items-center gap-2 text-xs tabular-nums text-m3-inverse-on-surface/80 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs" aria-label="Call +91 89395 39211">
-              <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              <span>+91 89395 39211</span>
-            </a>
-            <a href="tel:+916381939769" class="flex items-center gap-2 text-xs tabular-nums text-m3-inverse-on-surface/80 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs" aria-label="Call +91 63819 39769">
-              <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              <span>+91 63819 39769</span>
-            </a>
-            <a href="tel:+919092303060" class="flex items-center gap-2 text-xs tabular-nums text-m3-inverse-on-surface/80 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs" aria-label="Call +91 90923 03060">
-              <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              <span>+91 90923 03060</span>
-            </a>
-            <!--email_off-->
-            <a href="mailto:kalidasstravels2015@gmail.com" class="flex items-center gap-2 text-xs text-m3-inverse-on-surface/80 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">
-              <Mail className="w-3.5 h-3.5 text-white/80 shrink-0" />
-              <span>kalidasstravels2015@gmail.com</span>
-            </a>
-            <!--/email_off-->
             {tripadvisorBusinessUrl && (
-              <a
-                href={tripadvisorBusinessUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="flex items-center gap-2 text-xs text-m3-inverse-on-surface/80 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs"
-              >
-                <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span>Reviews on Tripadvisor</span>
-              </a>
+              <>
+                <span class="text-slate-600">·</span>
+                <a
+                  href={tripadvisorBusinessUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs"
+                >
+                  Tripadvisor
+                </a>
+              </>
             )}
           </div>
         </div>
-      </div>
 
-      <!-- Popular Outstation Routes (Direct Crawl Links) -->
-      <div class="py-5 border-b border-m3-outline-variant/20">
-        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-m3-inverse-on-surface/80">
-          <span class="text-white font-bold uppercase tracking-wider mr-1">Popular Routes:</span>
-          <a href="/services/chennai-to-madurai-taxi/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Chennai to Madurai Taxi</a>
-          <span class="text-m3-outline-variant/40">•</span>
-          <a href="/services/chennai-to-bangalore-taxi/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Chennai to Bangalore Taxi</a>
-          <span class="text-m3-outline-variant/40">•</span>
-          <a href="/services/chennai-to-ooty-taxi/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Chennai to Ooty Taxi</a>
-          <span class="text-m3-outline-variant/40">•</span>
-          <a href="/services/chennai-to-kodaikanal-taxi/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Chennai to Kodaikanal Taxi</a>
-          <span class="text-m3-outline-variant/40">•</span>
-          <a href="/services/chennai-to-mysore-taxi/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Chennai to Mysore Taxi</a>
-          <span class="text-m3-outline-variant/40">•</span>
-          <a href="/services/chennai-to-trichy-taxi/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Chennai to Trichy Taxi</a>
-          <span class="text-m3-outline-variant/40">•</span>
-          <a href="/services/acting-driver-outstation-one-way/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">One-Way Acting Driver</a>
+        <!-- 2 Clean Side-by-Side Useful Link Columns (Competitor-Benchmarked) -->
+        <div class="lg:col-span-7 grid grid-cols-2 gap-6 sm:gap-8">
+          <!-- Quick Links -->
+          <nav aria-label="Footer Quick Links">
+            <h3 class="text-white/50 font-semibold text-[11px] tracking-widest uppercase mb-3 font-sans">Quick Links</h3>
+            <ul class="space-y-2.5 text-xs text-m3-inverse-on-surface/80">
+              <li><a href="/calculator/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Fare Calculator</a></li>
+              <li><a href="/tariff/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Tariff (Rates)</a></li>
+              <li><a href="/fleet/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Our Fleet</a></li>
+              <li><a href="/drivers/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Verified Drivers</a></li>
+              <li><a href="/services/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">All Services</a></li>
+              <li><a href="/attach-cab/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Attach Cab</a></li>
+            </ul>
+          </nav>
+
+          <!-- Popular Routes & Services -->
+          <nav aria-label="Popular Routes and Cab Services">
+            <h3 class="text-white/50 font-semibold text-[11px] tracking-widest uppercase mb-3 font-sans">Popular Routes</h3>
+            <ul class="space-y-2.5 text-xs text-m3-inverse-on-surface/80">
+              <li><a href="/services/chennai-airport-taxi/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Chennai Airport Taxi</a></li>
+              <li><a href="/services/outstation-cabs/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Outstation Cabs</a></li>
+              <li><a href="/services/local-hourly-cabs/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Local Hourly Cabs</a></li>
+              <li><a href="/services/tirupati-package/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Chennai to Tirupati Cab</a></li>
+              <li><a href="/services/chennai-to-bangalore-taxi/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Chennai to Bangalore Taxi</a></li>
+              <li><a href="/services/pondicherry-one-day-trip/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Chennai to Pondicherry</a></li>
+              <li><a href="/services/tours/temple-tours/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Temple Tours</a></li>
+            </ul>
+          </nav>
         </div>
       </div>
 
-      <!-- Legal & Copyright -->
-      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-m3-inverse-on-surface/60 gap-4">
-        <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <p>&copy; {new Date().getFullYear()} Kalidass Travels | All rights reserved.</p>
-          <a href="/privacy/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Privacy Policy</a>
-          <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
-          <a href="/terms/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Terms &amp; Conditions</a>
-        </div>
+      <!-- Bottom Legal & Crawler Resources Bar (3 clean rows) -->
+      <div class="pt-5 pr-14 sm:pr-0 flex flex-col gap-2 text-[11px] text-m3-inverse-on-surface/55">
+        <p>&copy; {new Date().getFullYear()} Kalidass Travels. All rights reserved.</p>
         <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
-          <p>
-            Built by
-            <a
-              href="https://wa.me/919952749408?text=Hi%20Saravn,%20I%20saw%20your%20work%20on%20Kalidass%20Travels%20website."
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-              class="text-slate-300 hover:text-white hover:underline transition-colors font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs"
-            >
-              Saravn
-            </a>
-          </p>
-          <a href="/sitemap/" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">HTML Sitemap</a>
-          <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
-          <a href="/sitemap.xml" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">XML Sitemap</a>
-          <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
-          <a href="/robots.txt" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">Robot Text</a>
-          <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
-          <a href="/llms.txt" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">LLMs Text</a>
-          <span class="text-m3-outline-variant/40 hidden sm:inline">•</span>
-          <a href="/ai.txt" class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-m3-primary-fixed rounded-xs">AI Text</a>
+          <a href="/privacy/" class="hover:text-white transition-colors">Privacy Policy</a>
+          <a href="/terms/" class="hover:text-white transition-colors">Terms &amp; Conditions</a>
         </div>
+        <nav aria-label="Site Index &amp; AI Resources" class="flex flex-wrap items-center gap-x-3.5 gap-y-1">
+          <a href="/sitemap/" class="hover:text-white transition-colors">HTML Sitemap</a>
+          <a href="/sitemap.xml" class="hover:text-white transition-colors">XML Sitemap</a>
+          <a href="/robots.txt" class="hover:text-white transition-colors">robots.txt</a>
+          <a href="/llms.txt" class="hover:text-white transition-colors">llms.txt</a>
+          <a href="/ai.txt" class="hover:text-white transition-colors">ai.txt</a>
+          <a href="/openapi.json" class="hover:text-white transition-colors">OpenAPI</a>
+        </nav>
       </div>
     </div>
-
   </footer>
 
   <!-- Universal Booking & Enquiry Modal -->

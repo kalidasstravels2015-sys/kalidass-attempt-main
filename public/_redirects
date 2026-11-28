@@ -114,6 +114,12 @@
 /smart-travel-solution/*                      /                                 301
 /smart-travel-solution                        /                                 301
 
+# ─── Migrated Service Routes -> Canonical Static / Renamed Pages ──────────────
+/services/yelagiri-hills-weekend/*              /services/chennai-to-yelagiri-hills/ 301
+/services/yelagiri-hills-weekend                /services/chennai-to-yelagiri-hills/ 301
+/services/chennai-to-thiruverkadu/*             /services/chennai-to-thirukadaiyur/  301
+/services/chennai-to-thiruverkadu               /services/chennai-to-thirukadaiyur/  301
+
 # ─── AI & LLM Standards & APIs (200 Internal Rewrites) ───────────────────────
 /.well-known/llms.txt                         /llms.txt                         200
 /api/fleet                                    /api/fleet.json                   200

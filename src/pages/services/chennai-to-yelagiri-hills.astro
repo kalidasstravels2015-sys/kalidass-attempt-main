@@ -1,0 +1,869 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/SEO/Breadcrumbs.astro';
+import FAQAccordion from '../../components/FAQAccordion.astro';
+import TourBookingEngine from '../../components/TourBookingEngine.jsx';
+import GoogleRatingBadge from '../../components/GoogleRatingBadge.astro';
+import WhatsAppButton from '../../components/WhatsAppButton.astro';
+import WhatsAppIcon from '../../components/WhatsAppIcon.astro';
+import VehicleCard from '../../components/VehicleCard.astro';
+import HeroVisualCard from '../../components/HeroVisualCard.astro';
+import { buildWhatsAppUrl, WHATSAPP_CONFIG } from '../../utils/whatsapp';
+import {
+  ShieldCheck,
+  Clock,
+  MapPin,
+  Phone,
+  CheckCircle2,
+  XCircle,
+  Compass,
+  Mountain,
+  Trees,
+  Sparkles,
+  Info,
+  Car,
+  AlertCircle,
+  Lightbulb,
+  ArrowRight
+} from 'lucide-react';
+
+const title = "Chennai to Yelagiri Hills Cab & Tour Package (From ₹7,500)";
+const description = "Book Chennai to Yelagiri Hills AC cabs & 2-day weekend packages from ₹7,500. Experienced ghat-road chauffeurs for 14 hairpin bends, Punganoor Lake, Jalagamparai Falls & Swamimalai. Zero surge pricing.";
+const keywords = "chennai to yelagiri hills cab, chennai to yelagiri taxi, chennai to yelagiri car rental, chennai to yelagiri cab fare, yelagiri weekend package from chennai, chennai to yelagiri tempo traveller, yelagiri ghat road taxi, outstation cab chennai to yelagiri";
+const canonicalURL = "https://kalidasstravels.in/services/chennai-to-yelagiri-hills/";
+
+const breadcrumbItems = [
+  { name: "Home", item: "/" },
+  { name: "Services", item: "/services/" },
+  { name: "Tour Packages", item: "/services/tours/" },
+  { name: "Chennai to Yelagiri Hills", item: "/services/chennai-to-yelagiri-hills/" },
+];
+
+const tripFacts = [
+  {
+    label: "Distance & Route",
+    value: "~230 km One-Way",
+    sub: "~460–500 km RT via NH 48 (Vellore – Vaniyambadi)",
+    icon: "map"
+  },
+  {
+    label: "Travel Duration",
+    value: "4.5 – 5 Hours",
+    sub: "Expressway cruise + 14 hairpin bends ascent",
+    icon: "clock"
+  },
+  {
+    label: "2-Day Package Fare",
+    value: "From ₹7,500",
+    sub: "AC Sedan (2 Days / 1 Night) • Bata Included",
+    icon: "car"
+  },
+  {
+    label: "Hill Safety Standard",
+    value: "14 Hairpin Bends",
+    sub: "Hill-certified chauffeurs & brake-checked fleet",
+    icon: "shield"
+  }
+];
+
+const fleetPackages = [
+  {
+    id: "sedan",
+    name: "Swift Dzire / Toyota Etios",
+    shortName: "AC Sedan",
+    badge: "Best Value",
+    image: "/images/fleet/swift-dzire.webp",
+    seats: "4 Passengers",
+    baggage: "2 Suitcases + 2 Bags",
+    ratePerKm: "₹14/km",
+    bataPerDay: "Included",
+    day2Price: "₹7,500",
+    day3Price: "₹9,200",
+    day4Price: "₹10,900",
+    bestFor: "Couples & small families (up to 4) seeking a comfortable, budget-friendly hill escape.",
+    whatsappMsg: `*Kalidass Travels - Chennai to Yelagiri Hills Cab Enquiry*
+• Vehicle: AC Sedan (Swift Dzire / Etios)
+• Package: 2 Days / 1 Night (₹7,500 + actual tolls)
+• Travel Date: 
+• Pickup Area (Chennai): 
+• Passengers: 
+
+Please confirm availability and share booking details.`
+  },
+  {
+    id: "ertiga",
+    name: "Maruti Ertiga / XL6",
+    shortName: "Family SUV",
+    badge: "Most Booked",
+    image: "/images/fleet/maruti-ertiga.webp",
+    seats: "6 Passengers",
+    baggage: "3 Suitcases + 2 Bags",
+    ratePerKm: "₹17/km",
+    bataPerDay: "Included",
+    day2Price: "₹9,200",
+    day3Price: "₹11,300",
+    day4Price: "₹13,400",
+    bestFor: "Families with kids & friends needing dual-row AC and extra legroom on ghat bends.",
+    whatsappMsg: `*Kalidass Travels - Chennai to Yelagiri Hills Cab Enquiry*
+• Vehicle: Maruti Ertiga / XL6 (6-Seater SUV)
+• Package: 2 Days / 1 Night (₹9,200 + actual tolls)
+• Travel Date: 
+• Pickup Area (Chennai): 
+• Passengers: 
+
+Please confirm availability and share booking details.`
+  },
+  {
+    id: "innova",
+    name: "Toyota Innova",
+    shortName: "Comfort MUV",
+    badge: "Hill Favorite",
+    image: "/images/fleet/toyota-innova.webp",
+    seats: "7 Passengers",
+    baggage: "4 Suitcases + 3 Bags",
+    ratePerKm: "₹20/km",
+    bataPerDay: "Included",
+    day2Price: "₹10,800",
+    day3Price: "₹13,200",
+    day4Price: "₹15,600",
+    bestFor: "Senior citizens & families wanting superior suspension on the 14 hairpin bends.",
+    whatsappMsg: `*Kalidass Travels - Chennai to Yelagiri Hills Cab Enquiry*
+• Vehicle: Toyota Innova (7-Seater MUV)
+• Package: 2 Days / 1 Night (₹10,800 + actual tolls)
+• Travel Date: 
+• Pickup Area (Chennai): 
+• Passengers: 
+
+Please confirm availability and share booking details.`
+  },
+  {
+    id: "crysta",
+    name: "Toyota Innova Crysta",
+    shortName: "Luxury MPV",
+    badge: "VIP Comfort",
+    image: "/images/fleet/innova-crysta.webp",
+    seats: "7 Passengers",
+    baggage: "4 Suitcases + 4 Bags",
+    ratePerKm: "₹22/km",
+    bataPerDay: "Included",
+    day2Price: "₹12,800",
+    day3Price: "₹15,600",
+    day4Price: "₹18,400",
+    bestFor: "Executive & premium family getaways with plush captain seats and powerful hill torque.",
+    whatsappMsg: `*Kalidass Travels - Chennai to Yelagiri Hills Cab Enquiry*
+• Vehicle: Toyota Innova Crysta (Luxury MPV)
+• Package: 2 Days / 1 Night (₹12,800 + actual tolls)
+• Travel Date: 
+• Pickup Area (Chennai): 
+• Passengers: 
+
+Please confirm availability and share booking details.`
+  },
+  {
+    id: "tempo12",
+    name: "12-Seater Tempo Traveller",
+    shortName: "Group Coach",
+    badge: "Group Outing",
+    image: "/images/fleet/tempo-12.webp",
+    seats: "12 Passengers",
+    baggage: "8+ Large Suitcases",
+    ratePerKm: "₹26/km",
+    bataPerDay: "Included",
+    day2Price: "₹15,500",
+    day3Price: "₹18,800",
+    day4Price: "₹22,100",
+    bestFor: "Corporate team outings, college reunions, and large joint families travelling together.",
+    whatsappMsg: `*Kalidass Travels - Chennai to Yelagiri Hills Cab Enquiry*
+• Vehicle: 12-Seater Tempo Traveller
+• Package: 2 Days / 1 Night (₹15,500 + actual tolls)
+• Travel Date: 
+• Pickup Area (Chennai): 
+• Passengers: 
+
+Please confirm availability and share booking details.`
+  }
+];
+
+const itineraryDays = [
+  {
+    day: "Day 1",
+    title: "Chennai Pickup, 14 Hairpin Bends & Lakeside Sightseeing",
+    stops: [
+      {
+        time: "06:00 AM",
+        place: "Doorstep Pickup Anywhere in Chennai",
+        desc: "Early start from your home, hotel, or Chennai Airport to beat city traffic and cruise smoothly onto NH 48 (Chennai–Bengaluru Highway)."
+      },
+      {
+        time: "08:30 AM",
+        place: "Vellore / Ambur Highway Breakfast Halt",
+        desc: "Stop at clean highway restaurants near Vellore or Ambur for fresh South Indian breakfast and filter coffee."
+      },
+      {
+        time: "10:30 AM",
+        place: "Ponneri Ghat Road (14 Hairpin Bends Ascent)",
+        desc: "Begin the scenic climb from Ponneri base up the 14 numbered hairpin bends to 1,100m elevation with panoramic valley viewpoints."
+      },
+      {
+        time: "11:30 AM",
+        place: "Punganoor Lake & Yelagiri Nature Park",
+        desc: "Enjoy paddle/row boating on the serene artificial lake surrounded by eucalyptus trees, followed by a stroll through the rose gardens and aquarium."
+      },
+      {
+        time: "03:00 PM",
+        place: "Swamimalai Hill Trek or Fundera Bird Park",
+        desc: "Take a gentle 30–45 min trek up Swamimalai Peak for sweeping valley views, or visit Fundera Park with kids."
+      },
+      {
+        time: "06:30 PM",
+        place: "Resort Check-in & Evening Campfire Leisure",
+        desc: "Drop at your Yelagiri hotel/resort. Chauffeur stays on standby locally; enjoy cool 15–20°C hill evenings."
+      }
+    ]
+  },
+  {
+    day: "Day 2",
+    title: "Jalagamparai Waterfalls, Nilavoor Lake & Return to Chennai",
+    stops: [
+      {
+        time: "08:00 AM",
+        place: "Jalagamparai Waterfalls (Seasonal)",
+        desc: "Scenic drive down to the base trail for a refreshing 1 km forest walk to Jalagamparai Falls (best flowing September to January)."
+      },
+      {
+        time: "10:30 AM",
+        place: "Nilavoor Lake, Telescope Viewpoint & Orchards",
+        desc: "Visit quiet Nilavoor Lake, stop at the Telescope Viewpoint, and pick up fresh hill honey, jackfruit, and seasonal plums/oranges."
+      },
+      {
+        time: "12:30 PM",
+        place: "Lunch & Checkout from Yelagiri Hills",
+        desc: "Relaxed hill-top lunch before descending the 14 hairpin bends back toward Vaniyambadi."
+      },
+      {
+        time: "05:00 PM",
+        place: "Safe Doorstep Drop in Chennai",
+        desc: "Smooth afternoon cruise via NH 48 back to Chennai with optional tea halt near Kanchipuram or Sriperumbudur."
+      }
+    ]
+  }
+];
+
+const attractions = [
+  {
+    title: "Punganoor Lake & Boating",
+    tag: "Family Must-Visit",
+    timing: "9:00 AM – 5:30 PM (Closed Mondays)",
+    desc: "Yelagiri's centerpiece 57-acre artificial lake with pedal boats, row boats, and a lakeside walking park ideal for kids and seniors."
+  },
+  {
+    title: "14 Hairpin Bends Ghat Drive",
+    tag: "Scenic Highlight",
+    timing: "Open 24 Hours (Daylight Recommended)",
+    desc: "A smooth, well-paved 14-bend mountain ascent from Ponneri base featuring valley photo laybys named after Tamil poets."
+  },
+  {
+    title: "Swamimalai Hill Viewpoint",
+    tag: "Highest Peak (4,338 ft)",
+    timing: "6:00 AM – 6:00 PM",
+    desc: "A beginner-friendly 3 km trek from Mangalam village rewarding visitors with 360-degree sunrise and valley views."
+  },
+  {
+    title: "Jalagamparai Waterfalls",
+    tag: "Post-Monsoon Gem",
+    timing: "7:00 AM – 5:00 PM (Best Sep–Jan)",
+    desc: "Located on the eastern foothills of Yelagiri, accessible via a shaded forest trail alongside the Attaru River."
+  },
+  {
+    title: "Yelagiri Nature Park & Fundera Park",
+    tag: "Kids & Leisure",
+    timing: "8:30 AM – 6:00 PM",
+    desc: "Musical fountain, rose garden, bamboo walkways, and exotic bird aviary attractions located close to Punganoor Lake."
+  },
+  {
+    title: "Nilavoor Lake & Fruit Orchards",
+    tag: "Quiet Escape",
+    timing: "8:00 AM – 5:30 PM",
+    desc: "A peaceful, less-crowded lake surrounded by village orchards selling wild forest honey, spices, and seasonal hill fruits."
+  }
+];
+
+const comparisonRows = [
+  {
+    feature: "Round-Trip Package Clarity",
+    kalidass: "₹7,500 Flat 2-Day Package (Sedan, 500 km)",
+    aggregators: "Base fare only; return empty-km & night charges added later"
+  },
+  {
+    feature: "14 Hairpin Bend Ascent",
+    kalidass: "Guaranteed climb with hill-certified chauffeurs",
+    aggregators: "Frequent last-minute driver refusals at Vaniyambadi base"
+  },
+  {
+    feature: "Driver Night Bata",
+    kalidass: "100% included in your package fare",
+    aggregators: "₹500–₹800/night demanded in cash by driver"
+  },
+  {
+    feature: "Local Sightseeing Standby",
+    kalidass: "Full standby for Punganoor Lake, Falls & Resorts",
+    aggregators: "Point-to-point drop only; extra charges for local viewpoints"
+  },
+  {
+    feature: "Advance & Payment",
+    kalidass: "Only ₹500 advance • Pay balance on trip completion",
+    aggregators: "100% upfront wallet lock with steep cancellation penalties"
+  }
+];
+
+const faqs = [
+  {
+    q: "How much does a Chennai to Yelagiri Hills cab cost?",
+    a: "Our 2-Day / 1-Night round-trip cab package from Chennai to Yelagiri Hills starts at ₹7,500 for an AC Sedan (Swift Dzire / Etios), ₹9,200 for a 6-seater Maruti Ertiga, ₹10,800 for a Toyota Innova, ₹12,800 for an Innova Crysta, and ₹15,500 for a 12-seater Tempo Traveller. This covers up to 500 km round trip and 2-day driver bata. Highway FASTag tolls (~₹500–₹600) and parking are payable at actuals."
+  },
+  {
+    q: "Can we do a 1-day same-day trip from Chennai to Yelagiri Hills?",
+    a: "Yes, a 1-day same-day trip is possible if you start at 5:00 AM from Chennai (reaching Yelagiri by 9:45 AM, sightseeing until 4:00 PM, and returning by 9:00 PM). However, we strongly recommend the 2-Day / 1-Night package so your family can enjoy the cool hill evenings, sunrise at Swamimalai, and Jalagamparai Waterfalls without rushing."
+  },
+  {
+    q: "Are your drivers experienced with Yelagiri's 14 hairpin bends?",
+    a: "Yes. Every Yelagiri dispatch is assigned a senior chauffeur experienced with mountain ghat roads and 14-hairpin-bend climbs. Our vehicles undergo brake, clutch, and tire inspections before hill trips, and drivers maintain safe cruising speeds on curves."
+  },
+  {
+    q: "Which resorts and hotels in Yelagiri do you drop off at?",
+    a: "We provide doorstep pickup in Chennai and direct drop-off/pickup at all Yelagiri hotels, resorts, and homestays including Sterling Yelagiri, Hotel Hills, Zeenath Taj Gardens, Yelagiri Residency, O'Nila Resort, Touchstone Resort, and TTDC Hotel Tamil Nadu."
+  },
+  {
+    q: "What is excluded from the cab package?",
+    a: "Highway FASTag tolls (~₹500–₹600 round trip), hill entry/parking fees, resort accommodation, meals, and sightseeing entry/boating tickets are not included in the base cab package and are paid directly at actuals."
+  },
+  {
+    q: "What is the best time to visit Yelagiri Hills from Chennai?",
+    a: "October to February offers the best weather (14°C–22°C), misty mornings, and full water flow at Jalagamparai Falls. March to May is also popular as a quick summer weekend escape from Chennai heat, as Yelagiri stays 6–8°C cooler than the city."
+  }
+];
+
+const tripSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TaxiService",
+      "@id": `${canonicalURL}#service`,
+      "name": "Chennai to Yelagiri Hills Cab Package",
+      "description": description,
+      "image": "https://kalidasstravels.in/images/hero/outstation-highway.webp",
+      "provider": {
+        "@id": "https://kalidasstravels.in/#localbusiness"
+      },
+      "providerMobility": "dynamic",
+      "serviceType": "Weekend & Holiday Tour Cab Package",
+      "areaServed": [
+        { "@type": "City", "name": "Chennai" },
+        { "@type": "City", "name": "Yelagiri Hills" },
+        { "@type": "AdministrativeArea", "name": "Tamil Nadu" }
+      ],
+      "url": canonicalURL,
+      "priceRange": "₹7,500 - ₹15,500",
+      "termsOfService": "https://kalidasstravels.in/terms/",
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "INR",
+        "lowPrice": "7500",
+        "highPrice": "15500",
+        "offerCount": String(fleetPackages.length),
+        "offers": fleetPackages.map((v) => ({
+          "@type": "Offer",
+          "name": `${v.name} (${v.shortName}) – 2-Day Yelagiri Package`,
+          "price": v.day2Price.replace(/[^\d]/g, ''),
+          "priceCurrency": "INR",
+          "priceValidUntil": "2027-12-31",
+          "availability": "https://schema.org/InStock",
+          "url": canonicalURL
+        }))
+      }
+    },
+    {
+      "@type": "TouristTrip",
+      "@id": `${canonicalURL}#trip`,
+      "name": "Chennai to Yelagiri Hills Cab & 2-Day Weekend Tour Package",
+      "description": description,
+      "image": "https://kalidasstravels.in/images/hero/outstation-highway.webp",
+      "url": canonicalURL,
+      "touristType": ["Families", "Couples", "Corporate Groups", "Weekend Travelers"],
+      "itinerary": {
+        "@type": "ItemList",
+        "name": "Chennai to Yelagiri Hills Route Itinerary",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Chennai Doorstep Pickup via NH 48" },
+          { "@type": "ListItem", "position": 2, "name": "14 Hairpin Bends Ghat Road Ascent" },
+          { "@type": "ListItem", "position": 3, "name": "Punganoor Lake & Yelagiri Nature Park" },
+          { "@type": "ListItem", "position": 4, "name": "Swamimalai Hill Viewpoint & Jalagamparai Falls" }
+        ]
+      },
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "INR",
+        "lowPrice": "7500",
+        "highPrice": "15500",
+        "offerCount": String(fleetPackages.length)
+      },
+      "provider": {
+        "@id": "https://kalidasstravels.in/#localbusiness"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${canonicalURL}#faq`,
+      "name": "Chennai to Yelagiri Hills Cab FAQs",
+      "mainEntity": faqs.map((item) => ({
+        "@type": "Question",
+        "name": item.q,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": item.a
+        }
+      }))
+    }
+  ]
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  keywords={keywords}
+  canonicalURL={canonicalURL}
+  schema={tripSchema}
+>
+  <!-- 1. HERO SECTION + EMBEDDED YELAGIRI BOOKING ENGINE -->
+  <section class="relative bg-[#041E49] text-white pt-4 pb-10 sm:pt-6 sm:pb-14 overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.16),transparent_48%),radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.18),transparent_50%)] pointer-events-none"></div>
+
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10">
+      <div class="mb-3 sm:mb-4">
+        <Breadcrumbs items={breadcrumbItems} variant="dark" />
+      </div>
+
+      <!-- Mobile Hero Header -->
+      <div class="lg:hidden mb-4">
+        <div class="mb-2">
+          <GoogleRatingBadge variant="dark" />
+        </div>
+        <h1 data-speakable="true" class="text-2xl min-[380px]:text-3xl font-extrabold text-white tracking-tight leading-[1.18] font-heading mb-2">
+          Chennai to Yelagiri Hills Cab Package
+        </h1>
+        <p class="text-xs sm:text-sm text-white/90 leading-relaxed">
+          2-Day Hill Station Escape from <strong>₹7,500</strong> • 14 Hairpin Bends Hill-Certified Chauffeurs • Punganoor Lake &amp; Jalagamparai Falls.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start">
+        <!-- Left Column: Desktop Title, Rating & Hero Visual Card -->
+        <div class="hidden lg:flex lg:col-span-5 flex-col justify-between text-white pt-1">
+          <div>
+            <div class="mb-2.5">
+              <GoogleRatingBadge variant="dark" />
+            </div>
+
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-xs font-bold uppercase tracking-wider mb-3">
+              <Mountain className="w-3.5 h-3.5" />
+              <span>Most Booked Hill Getaway</span>
+            </span>
+
+            <h1 data-speakable="true" class="text-3xl lg:text-[34px] font-extrabold text-white tracking-tight leading-[1.15] font-heading mb-3 drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+              Chennai to Yelagiri Hills Cab &amp; Weekend Package
+            </h1>
+
+            <p data-speakable="true" class="text-sm text-white/90 leading-relaxed font-normal max-w-xl mb-4">
+              Doorstep Chennai pickup to Yelagiri Hills (~230 km / 4.5–5 hrs via NH 48). Flat 2-day round-trip packages from <strong>₹7,500 (Sedan)</strong> with fuel, AC &amp; driver night bata included.
+            </p>
+          </div>
+
+          <HeroVisualCard
+            src="/images/hero/outstation-highway.webp"
+            alt="Chennai to Yelagiri Hills Outstation Cab - Kalidass Travels"
+            objectPosition="center center"
+            badge="100% Commercial Yellow-Board Fleet"
+            headline="Yelagiri Hills • 14 Hairpin Bends Certified Chauffeurs"
+            points={["From ₹7,500 (2 Days)", "Driver Bata Included", "₹500 Advance Only"]}
+          />
+        </div>
+
+        <!-- Right Column: Dedicated Yelagiri Tour Booking Engine -->
+        <div class="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none flex flex-col relative z-30">
+          <div id="booking-section" class="scroll-mt-28 w-full flex-1 flex flex-col">
+            <TourBookingEngine
+              client:idle
+              serviceSlug="yelagiri-hills-weekend"
+              serviceTitle="Chennai to Yelagiri Hills Cab Package"
+              pickupPlaceholder="Enter doorstep pickup area in Chennai (e.g. T. Nagar, Velachery, Airport)"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <div class="bg-m3-surface text-m3-on-surface font-sans pb-16">
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-2 sm:pt-4">
+
+      <!-- STICKY QUICK-NAV BAR -->
+      <nav data-quick-nav aria-label="Yelagiri Trip Quick Navigation" class="sticky top-16 z-30 bg-m3-surface/95 backdrop-blur-md border-b border-m3-outline-variant/60 shadow-xs py-2.5 mb-8 px-2 sm:px-4">
+        <div class="flex items-center gap-2 text-xs font-semibold text-m3-on-surface whitespace-nowrap overflow-x-auto no-scrollbar py-0.5">
+          <a href="#booking-section" class="px-3.5 py-1.5 rounded-m3-full bg-m3-primary text-white font-bold shadow-xs shrink-0 hover:opacity-95 transition-opacity">
+            Book Yelagiri Cab
+          </a>
+          <a href="#highlights" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            Trip Facts
+          </a>
+          <a href="#tariff" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            Package Fares
+          </a>
+          <a href="#itinerary" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            2-Day Itinerary
+          </a>
+          <a href="#sightseeing" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            Places to Visit
+          </a>
+          <a href="#faqs" class="px-3.5 py-1.5 rounded-m3-full bg-m3-surface-container text-m3-on-surface hover:bg-m3-surface-container-high transition-colors shrink-0 font-medium">
+            FAQs
+          </a>
+        </div>
+      </nav>
+
+      <!-- 2. KEY TRIP FACTS & WHY KALIDASS -->
+      <section id="highlights" class="scroll-mt-28 mb-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {tripFacts.map((fact) => (
+            <article class="bg-m3-surface-container-lowest rounded-m3-xl border border-m3-outline-variant p-4 sm:p-5 shadow-xs flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <span class="text-[11px] font-bold uppercase tracking-wider text-m3-primary">{fact.label}</span>
+                  {fact.icon === 'map' && <MapPin className="w-4 h-4 text-m3-primary shrink-0" />}
+                  {fact.icon === 'clock' && <Clock className="w-4 h-4 text-m3-primary shrink-0" />}
+                  {fact.icon === 'car' && <Car className="w-4 h-4 text-m3-primary shrink-0" />}
+                  {fact.icon === 'shield' && <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />}
+                </div>
+                <p class="text-lg sm:text-xl font-extrabold text-m3-on-surface font-heading">{fact.value}</p>
+              </div>
+              <p class="text-xs text-m3-on-surface-variant mt-1.5 leading-relaxed">{fact.sub}</p>
+            </article>
+          ))}
+        </div>
+
+        <!-- Comparison Card: Kalidass vs App Cabs -->
+        <div class="rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant shadow-sm p-4 sm:p-6 overflow-hidden">
+          <div class="mb-4">
+            <h2 class="text-lg sm:text-xl font-extrabold text-m3-on-surface font-heading">
+              Why Travelers Book Kalidass Travels for Yelagiri vs. App Cabs
+            </h2>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">
+              Climbing Yelagiri's 14 hairpin bends requires experienced hill drivers. City app drivers frequently cancel at Vaniyambadi base or demand extra cash for mountain climbs.
+            </p>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs sm:text-sm">
+              <thead>
+                <tr class="border-b border-m3-outline-variant bg-m3-surface-container-low">
+                  <th class="py-3 px-3 sm:px-4 font-bold text-m3-on-surface">Trip Factor</th>
+                  <th class="py-3 px-3 sm:px-4 font-bold text-emerald-700 dark:text-emerald-400">Kalidass Travels (Dedicated)</th>
+                  <th class="py-3 px-3 sm:px-4 font-bold text-m3-on-surface-variant">Regular App Cabs</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-m3-outline-variant/60">
+                {comparisonRows.map((row) => (
+                  <tr class="hover:bg-m3-surface-container-low/50 transition-colors">
+                    <td class="py-3 px-3 sm:px-4 font-semibold text-m3-on-surface">{row.feature}</td>
+                    <td class="py-3 px-3 sm:px-4 text-m3-on-surface">
+                      <span class="inline-flex items-start gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                        <span>{row.kalidass}</span>
+                      </span>
+                    </td>
+                    <td class="py-3 px-3 sm:px-4 text-m3-on-surface-variant">
+                      <span class="inline-flex items-start gap-1.5">
+                        <XCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                        <span>{row.aggregators}</span>
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. PACKAGE TARIFF & FLEET CARDS -->
+      <section id="tariff" class="scroll-mt-28 mb-12">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Transparent Pricing</span>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading mt-1">
+              Chennai to Yelagiri Hills Cab Tariff (2, 3 &amp; 4 Days)
+            </h2>
+            <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">
+              All packages include AC cab, fuel, 14 hairpin-bend hill climb &amp; driver night bata. Highway FASTag tolls (~₹500–₹600) &amp; parking at actuals.
+            </p>
+          </div>
+          <a href="#booking-section" class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-m3-primary hover:underline shrink-0">
+            <span>Calculate Custom Dates</span>
+            <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
+
+        <!-- Tariff Table -->
+        <div class="rounded-2xl bg-m3-surface-container-lowest border border-m3-outline-variant shadow-sm overflow-hidden mb-8">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs sm:text-sm">
+              <thead>
+                <tr class="bg-[#041E49] text-white">
+                  <th class="py-3.5 px-4 font-bold">Vehicle Type</th>
+                  <th class="py-3.5 px-4 font-bold">Capacity</th>
+                  <th class="py-3.5 px-4 font-bold">2 Days / 1 Night</th>
+                  <th class="py-3.5 px-4 font-bold">3 Days / 2 Nights</th>
+                  <th class="py-3.5 px-4 font-bold">4 Days / 3 Nights</th>
+                  <th class="py-3.5 px-4 font-bold">Extra KM</th>
+                  <th class="py-3.5 px-4 font-bold text-right">Quick Book</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-m3-outline-variant/60">
+                {fleetPackages.map((v) => (
+                  <tr class="hover:bg-m3-surface-container-low/60 transition-colors">
+                    <td class="py-3.5 px-4">
+                      <div class="font-bold text-m3-on-surface">{v.name}</div>
+                      <div class="text-[11px] text-m3-on-surface-variant">{v.shortName} • Driver Bata Included</div>
+                    </td>
+                    <td class="py-3.5 px-4 text-m3-on-surface-variant font-medium">{v.seats}</td>
+                    <td class="py-3.5 px-4 font-extrabold text-m3-primary text-sm sm:text-base">{v.day2Price}</td>
+                    <td class="py-3.5 px-4 font-bold text-m3-on-surface">{v.day3Price}</td>
+                    <td class="py-3.5 px-4 font-bold text-m3-on-surface">{v.day4Price}</td>
+                    <td class="py-3.5 px-4 text-m3-on-surface-variant">{v.ratePerKm}</td>
+                    <td class="py-3.5 px-4 text-right">
+                      <a
+                        href={buildWhatsAppUrl(v.whatsappMsg)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-m3-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors whitespace-nowrap"
+                      >
+                        <WhatsAppIcon className="w-3.5 h-3.5" />
+                        <span>Quote</span>
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div class="px-4 py-3 bg-m3-surface-container-low border-t border-m3-outline-variant/60 flex items-start gap-2 text-xs text-m3-on-surface-variant">
+            <Info className="w-4 h-4 text-m3-primary shrink-0 mt-0.5" />
+            <span>
+              <strong>500 km Round-Trip Allowance</strong> included on 2-Day packages (covers Chennai ⇄ Yelagiri ~460 km + 40 km local sightseeing across Punganoor Lake, Swamimalai &amp; Jalagamparai). Extra km beyond 500 km billed at the flat per-km rate above.
+            </span>
+          </div>
+        </div>
+
+        <!-- Vehicle Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {fleetPackages.map((car) => (
+            <VehicleCard
+              name={car.name}
+              subtitle={car.bestFor}
+              image={car.image}
+              badge={car.badge}
+              seats={car.seats}
+              baggage={car.baggage}
+              priceLabel="2 Days / 1 Night"
+              priceSubtext="Bata Included"
+              price={car.day2Price}
+              actionText="Book on WhatsApp"
+              actionHref={buildWhatsAppUrl(car.whatsappMsg)}
+              secondaryActionText="Calculate Fare"
+              secondaryActionHref="#booking-section"
+            />
+          ))}
+        </div>
+      </section>
+
+      <!-- 4. RECOMMENDED 2-DAY ITINERARY -->
+      <section id="itinerary" class="scroll-mt-28 mb-12">
+        <div class="mb-6">
+          <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Curated Hill Route</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading mt-1">
+            Recommended 2-Day / 1-Night Chennai to Yelagiri Itinerary
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">
+            Flexible private cab schedule — stop anywhere for highway breakfast, viewpoints, or resort check-in at your own pace.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {itineraryDays.map((dayObj) => (
+            <article class="bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant p-5 sm:p-6 shadow-xs">
+              <div class="flex items-center gap-2.5 mb-4 pb-3 border-b border-m3-outline-variant/60">
+                <span class="px-3 py-1 rounded-m3-full bg-m3-primary text-white text-xs font-extrabold uppercase tracking-wider">
+                  {dayObj.day}
+                </span>
+                <h3 class="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading leading-snug">
+                  {dayObj.title}
+                </h3>
+              </div>
+
+              <ol class="space-y-4">
+                {dayObj.stops.map((stop) => (
+                  <li class="flex gap-3">
+                    <div class="shrink-0 w-18 text-xs font-bold text-m3-primary pt-0.5 tabular-nums">
+                      {stop.time}
+                    </div>
+                    <div class="border-l-2 border-m3-primary/30 pl-3.5 pb-1">
+                      <h4 class="text-sm font-bold text-m3-on-surface">{stop.place}</h4>
+                      <p class="text-xs text-m3-on-surface-variant mt-0.5 leading-relaxed">{stop.desc}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </article>
+          ))}
+        </div>
+
+        <!-- 1-Day Express Note -->
+        <div class="mt-5 rounded-m3-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 p-4 flex items-start gap-3">
+          <Sparkles className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          <div class="text-xs sm:text-sm text-m3-on-surface">
+            <strong>Short on time?</strong> We also operate <strong>1-Day Express Chennai to Yelagiri Trips</strong> (05:00 AM pickup, 09:00 PM return) covering Punganoor Lake, Nature Park, and Swamimalai. <a href={buildWhatsAppUrl("Hi Kalidass Travels, I want a quote for a 1-Day Same-Day Express Cab from Chennai to Yelagiri Hills.")} target="_blank" rel="noopener noreferrer" class="font-bold text-m3-primary underline">Request 1-Day Express Quote on WhatsApp</a>.
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. TOP SIGHTSEEING & TRAVEL TIPS -->
+      <section id="sightseeing" class="scroll-mt-28 mb-12">
+        <div class="mb-6">
+          <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Hill Station Guide</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading mt-1">
+            Top Places to Visit in Yelagiri Hills
+          </h2>
+          <p class="text-xs sm:text-sm text-m3-on-surface-variant mt-1">
+            All local sightseeing spots below are covered by your dedicated cab during your stay.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          {attractions.map((spot) => (
+            <article class="bg-m3-surface-container-lowest rounded-m3-xl border border-m3-outline-variant p-5 shadow-xs flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <span class="px-2.5 py-0.5 rounded-m3-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-[11px] font-bold">
+                    {spot.tag}
+                  </span>
+                  <Trees className="w-4 h-4 text-emerald-600 shrink-0" />
+                </div>
+                <h3 class="text-base font-extrabold text-m3-on-surface font-heading mb-1">{spot.title}</h3>
+                <p class="text-xs text-m3-on-surface-variant leading-relaxed mb-3">{spot.desc}</p>
+              </div>
+              <div class="pt-2.5 border-t border-m3-outline-variant/50 text-[11px] font-semibold text-m3-primary flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 shrink-0" />
+                <span>{spot.timing}</span>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <!-- Practical Tips & Inclusions/Exclusions -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant p-5 sm:p-6">
+            <h3 class="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading flex items-center gap-2 mb-3">
+              <Lightbulb className="w-5 h-5 text-amber-500 shrink-0" />
+              <span>Practical Tips for Yelagiri Travelers</span>
+            </h3>
+            <ul class="space-y-2.5 text-xs sm:text-sm text-m3-on-surface-variant">
+              <li class="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <span><strong>Book Hotels Early:</strong> Yelagiri resorts fill up fast on Friday–Sunday weekends; confirm your stay before departure.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <span><strong>Monday Boating Note:</strong> Punganoor Lake boating is typically closed on Mondays for maintenance.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <span><strong>14 Hairpin Bends:</strong> Carry motion-sickness tablets if traveling with young children or elders sensitive to curves.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <span><strong>Evening Chill:</strong> Temperatures drop to 12–16°C at night (Oct–Feb); pack a light jacket or sweater.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-m3-surface-container-lowest rounded-m3-2xl border border-m3-outline-variant p-5 sm:p-6">
+            <h3 class="text-base sm:text-lg font-extrabold text-m3-on-surface font-heading flex items-center gap-2 mb-3">
+              <AlertCircle className="w-5 h-5 text-m3-primary shrink-0" />
+              <span>Package Inclusions &amp; Exclusions</span>
+            </h3>
+            <div class="space-y-3 text-xs sm:text-sm">
+              <div>
+                <p class="font-bold text-emerald-700 dark:text-emerald-400 mb-1">Included in Package:</p>
+                <p class="text-m3-on-surface-variant leading-relaxed">
+                  Doorstep Chennai pickup &amp; drop, sanitized AC vehicle with fuel for 500 km, 2-day driver night bata, hill-climb clearance, and local Yelagiri sightseeing.
+                </p>
+              </div>
+              <div class="pt-2 border-t border-m3-outline-variant/50">
+                <p class="font-bold text-m3-on-surface mb-1">Payable at Actuals (Not Included):</p>
+                <p class="text-m3-on-surface-variant leading-relaxed">
+                  NH 48 FASTag tolls (~₹500–₹600 RT), local parking/entry tickets, boating fees, and resort accommodation.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. FAQs -->
+      <section id="faqs" class="scroll-mt-28 mb-12">
+        <div class="mb-6">
+          <span class="text-xs font-bold uppercase tracking-wider text-m3-primary">Common Questions</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-m3-on-surface font-heading mt-1">
+            Chennai to Yelagiri Hills Cab FAQs
+          </h2>
+        </div>
+        <FAQAccordion faqs={faqs} />
+      </section>
+
+      <!-- 7. FINAL CONVERSION CTA -->
+      <section class="rounded-m3-2xl bg-[#041E49] text-white p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-lg">
+        <div class="max-w-2xl">
+          <h2 class="text-xl sm:text-2xl font-extrabold font-heading mb-2">
+            Ready to Book Your Chennai to Yelagiri Hills Cab?
+          </h2>
+          <p class="text-xs sm:text-sm text-white/85 leading-relaxed">
+            Reserve your preferred Sedan, Ertiga, Innova Crysta, or Tempo Traveller with just <strong>₹500 advance</strong>. Instant driver &amp; vehicle details before pickup.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 shrink-0">
+          <WhatsAppButton
+            label="Book on WhatsApp"
+            message={`*Kalidass Travels - Chennai to Yelagiri Hills Booking*
+• Package: 2 Days / 1 Night Round Trip
+• Travel Date: 
+• Pickup Area (Chennai): 
+• Vehicle Preference: [Sedan / Ertiga / Innova / Crysta / Tempo]
+• Passengers: 
+
+Please share confirmed quote & availability.`}
+            variant="primary"
+          />
+          <a
+            href={`tel:+${WHATSAPP_CONFIG.phone}`}
+            class="inline-flex items-center gap-2 px-5 py-3 rounded-m3-full bg-white text-[#041E49] font-bold text-sm hover:bg-slate-100 transition-colors"
+          >
+            <Phone className="w-4 h-4" />
+            <span>Call {WHATSAPP_CONFIG.formattedPhone}</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</Layout>

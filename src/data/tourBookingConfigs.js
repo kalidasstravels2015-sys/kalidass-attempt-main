@@ -976,29 +976,29 @@ export const TOUR_CONFIGS = {
     ]
   },
 
-  'chennai-to-thiruverkadu': {
-    slug: 'chennai-to-thiruverkadu',
-    serviceTitle: 'Chennai to Thiruverkadu Temple & Marriage Anniversary Cab Package',
-    engineTitle: 'Book Chennai to Thiruverkadu',
-    subtitle: 'Sri Devi Karumariamman Temple & Anniversary Wait-and-Return • Standard Outstation Tariff',
+  'chennai-to-thirukadaiyur': {
+    slug: 'chennai-to-thirukadaiyur',
+    serviceTitle: 'Chennai to Thirukadaiyur Temple & Marriage Anniversary Cab Package',
+    engineTitle: 'Book Chennai to Thirukadaiyur',
+    subtitle: 'Sri Amirthakadeswarar & Abhirami Amman Temple • 550 Km Round Trip Outstation Tariff',
     destination: {
-      name: 'Thiruverkadu Sri Devi Karumariamman Temple',
-      roundTripKm: 250,
+      name: 'Thirukadaiyur Abhirami Amman Temple',
+      roundTripKm: 550,
       editable: false
     },
-    minRealisticHours: 6,
-    recommendedHours: 10,
-    advisoryText: 'Billed under standard Outstation Round Trip tariff from our Medavakkam, Chennai base (min 250 km/day for cars, min 300 km/day for Tempo Traveller). Ideal for Marriage Anniversary temple darshan, pooja & family dining.',
+    minRealisticHours: 14,
+    recommendedHours: 36,
+    advisoryText: 'Chennai to Thirukadaiyur round trip is ~550 km (~5.5–6.5 hrs driving each way via ECR/Chidambaram). Ideal for 1-Day darshan or 2-Day/1-Night Marriage Anniversary, Shashtiabdapoorthi & Sadhabishekam rituals.',
     inclusions: {
-      standard: 'Covers Min 250 Km/Day Outstation Slab (300 Km Tempo) + Driver Bata • Tolls & Parking Extra',
-      multiDay: 'Covers Cab, Min Daily Km Slab & Wait-and-Return • Tolls, Parking & Extra Km Extra'
+      standard: 'Covers 550 Km Round Trip + Driver Bata • Tolls & Parking Extra',
+      multiDay: 'Covers Cab, 550 Km Run (600 Km Tempo) & Driver Bata • Tolls & Parking Extra'
     },
     itemizedInclusions: [
-      { label: 'Wait & Return for Anniversary Pooja & Dining:', value: '₹0', multiDayValue: '₹0' },
-      { label: 'Driver Bata Included in Day Total:', value: '₹0', multiDayValue: '₹0' },
-      { label: 'FASTag Tolls & Temple Parking:', value: 'Actuals', multiDayValue: 'Actuals' }
+      { label: 'Local Temple & Mandapam Transfers:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'Driver Bata Included in Package:', value: '₹0', multiDayValue: '₹0' },
+      { label: 'ECR / NH FASTag Tolls & Parking:', value: 'Actuals', multiDayValue: 'Actuals' }
     ],
-    eventPrefix: 'thiruverkadu_temple_engine',
+    eventPrefix: 'thirukadaiyur_temple_engine',
     vehicles: [
       {
         id: 'dzire',
@@ -1007,8 +1007,8 @@ export const TOUR_CONFIGS = {
         capacity: 4,
         luggage: '2 Bags',
         tag: 'Best Value',
-        rates: { 1: 4000, 2: 8000, 3: 12000 },
-        vehicleHire: { 1: 3500, 2: 7000, 3: 10500 },
+        rates: { 1: 8200, 2: 8700, 3: 12000 },
+        vehicleHire: { 1: 7700, 2: 7700, 3: 10500 },
         driverBata: { 1: 500, 2: 1000, 3: 1500 },
         extraHourRate: 150
       },
@@ -1019,8 +1019,8 @@ export const TOUR_CONFIGS = {
         capacity: 6,
         luggage: '3 Bags',
         tag: 'Family Favorite',
-        rates: { 1: 4750, 2: 9500, 3: 14250 },
-        vehicleHire: { 1: 4250, 2: 8500, 3: 12750 },
+        rates: { 1: 9850, 2: 10350, 3: 14250 },
+        vehicleHire: { 1: 9350, 2: 9350, 3: 12750 },
         driverBata: { 1: 500, 2: 1000, 3: 1500 },
         extraHourRate: 200
       },
@@ -1031,8 +1031,8 @@ export const TOUR_CONFIGS = {
         capacity: 7,
         luggage: '4 Bags',
         tag: 'Senior Friendly',
-        rates: { 1: 5600, 2: 11200, 3: 16800 },
-        vehicleHire: { 1: 5000, 2: 10000, 3: 15000 },
+        rates: { 1: 11600, 2: 12200, 3: 16800 },
+        vehicleHire: { 1: 11000, 2: 11000, 3: 15000 },
         driverBata: { 1: 600, 2: 1200, 3: 1800 },
         extraHourRate: 250
       },
@@ -1043,8 +1043,8 @@ export const TOUR_CONFIGS = {
         capacity: 7,
         luggage: '4 Bags',
         tag: 'Anniversary VIP',
-        rates: { 1: 6200, 2: 12400, 3: 18600 },
-        vehicleHire: { 1: 5500, 2: 11000, 3: 16500 },
+        rates: { 1: 12800, 2: 13500, 3: 18600 },
+        vehicleHire: { 1: 12100, 2: 12100, 3: 16500 },
         driverBata: { 1: 700, 2: 1400, 3: 2100 },
         extraHourRate: 350
       },
@@ -1055,10 +1055,70 @@ export const TOUR_CONFIGS = {
         capacity: 12,
         luggage: '8 Bags',
         tag: 'Joint Family',
-        rates: { 1: 8000, 2: 16000, 3: 24000 },
-        vehicleHire: { 1: 7200, 2: 14400, 3: 21600 },
+        rates: { 1: 14000, 2: 16000, 3: 24000 },
+        vehicleHire: { 1: 13200, 2: 14400, 3: 21600 },
         driverBata: { 1: 800, 2: 1600, 3: 2400 },
         extraHourRate: 400
+      },
+      {
+        id: 'tempo14',
+        name: '14-Seater Tempo Traveller',
+        shortName: '14S Tempo',
+        capacity: 14,
+        luggage: '10 Bags',
+        tag: 'Extended Family',
+        rates: { 1: 14550, 2: 16600, 3: 24900 },
+        vehicleHire: { 1: 13750, 2: 15000, 3: 22500 },
+        driverBata: { 1: 800, 2: 1600, 3: 2400 },
+        extraHourRate: 400
+      },
+      {
+        id: 'tempo17',
+        name: '17-Seater Tempo Traveller',
+        shortName: '17S Tempo',
+        capacity: 17,
+        luggage: '12 Bags',
+        tag: 'Group Celebration',
+        rates: { 1: 15100, 2: 17200, 3: 25800 },
+        vehicleHire: { 1: 14300, 2: 15600, 3: 23400 },
+        driverBata: { 1: 800, 2: 1600, 3: 2400 },
+        extraHourRate: 400
+      },
+      {
+        id: 'urbania',
+        name: 'Force Urbania (16+1 VIP)',
+        shortName: 'Force Urbania',
+        capacity: 16,
+        luggage: '12 Bags',
+        tag: 'VIP Luxury',
+        rates: { 1: 22000, 2: 25000, 3: 37500 },
+        vehicleHire: { 1: 20900, 2: 22800, 3: 34200 },
+        driverBata: { 1: 1100, 2: 2200, 3: 3300 },
+        extraHourRate: 600
+      },
+      {
+        id: 'tempo20',
+        name: '20-Seater Grand Tempo',
+        shortName: '20S Tempo',
+        capacity: 20,
+        luggage: '15 Bags',
+        tag: 'Large Group',
+        rates: { 1: 17400, 2: 19800, 3: 29700 },
+        vehicleHire: { 1: 16500, 2: 18000, 3: 27000 },
+        driverBata: { 1: 900, 2: 1800, 3: 2700 },
+        extraHourRate: 500
+      },
+      {
+        id: 'minibus26',
+        name: '26-Seater Mini Bus',
+        shortName: '26S Mini Bus',
+        capacity: 26,
+        luggage: '20 Bags',
+        tag: 'Full Family Bus',
+        rates: { 1: 20800, 2: 27200, 3: 40800 },
+        vehicleHire: { 1: 19800, 2: 25200, 3: 37800 },
+        driverBata: { 1: 1000, 2: 2000, 3: 3000 },
+        extraHourRate: 600
       }
     ]
   }
@@ -1089,5 +1149,61 @@ for (const [slug, tourData] of Object.entries(TOUR_CONFIGS)) {
       });
     }
   }
+}
+
+// Ensure all Temple Tours include larger group coaches beyond 12-Seater (14S, 17S, Force Urbania, 20S, 26S Mini Bus)
+const templeGroupSlugs = new Set([
+  'tirupati-package',
+  'navagraha-tour',
+  'thiruvannamalai-girivalam-trip',
+  'sabarimala-trip',
+  'rameswaram-2-days',
+  'kanchipuram-temple-trip',
+  'chidambaram-temple-trip',
+  'vellore-golden-temple',
+  'tiruchendur-temple-tour',
+  'madurai-meenakshi-temple-tour'
+]);
+
+const round50 = (n) => Math.round(n / 50) * 50;
+
+for (const slug of templeGroupSlugs) {
+  const tourData = TOUR_CONFIGS[slug];
+  if (!tourData || !Array.isArray(tourData.vehicles)) continue;
+  if (tourData.vehicles.some((v) => v.id === 'tempo14')) continue;
+  const t12 = tourData.vehicles.find((v) => v.id === 'tempo12');
+  if (!t12) continue;
+
+  const baseKm = tourData.destination?.roundTripKm || 300;
+  const scaleRates = (kmDelta, bataDeltaDay, minKmDay = 300) => {
+    const out = {};
+    const hire = {};
+    const bata = {};
+    for (const [dStr, r12] of Object.entries(t12.rates)) {
+      const days = Number(dStr) || 1;
+      const billKm = Math.max(baseKm, days * 300);
+      const busKm = Math.max(baseKm, days * minKmDay);
+      const total = round50(r12 + (busKm - billKm) * 24 + busKm * kmDelta + days * bataDeltaDay);
+      const bVal = (t12.driverBata?.[days] ?? days * 800) + days * bataDeltaDay;
+      out[days] = total;
+      bata[days] = bVal;
+      hire[days] = total - bVal;
+    }
+    return { rates: out, vehicleHire: hire, driverBata: bata };
+  };
+
+  const s14 = scaleRates(1, 0);
+  const s17 = scaleRates(2, 0);
+  const sUrb = scaleRates(14, 300);
+  const s20 = scaleRates(6, 100);
+  const s26 = scaleRates(12, 200, 350);
+
+  tourData.vehicles.push(
+    { id: 'tempo14', name: '14-Seater Tempo Traveller', shortName: '14S Tempo', capacity: 14, luggage: '10 Bags', tag: 'Extended Family', ...s14, extraHourRate: 400 },
+    { id: 'tempo17', name: '17-Seater Tempo Traveller', shortName: '17S Tempo', capacity: 17, luggage: '12 Bags', tag: 'Group Yatra', ...s17, extraHourRate: 400 },
+    { id: 'urbania', name: 'Force Urbania (16+1 VIP)', shortName: 'Force Urbania', capacity: 16, luggage: '12 Bags', tag: 'VIP Luxury', ...sUrb, extraHourRate: 600 },
+    { id: 'tempo20', name: '20-Seater Grand Tempo', shortName: '20S Tempo', capacity: 20, luggage: '15 Bags', tag: 'Large Group', ...s20, extraHourRate: 500 },
+    { id: 'minibus26', name: '26-Seater Mini Bus', shortName: '26S Mini Bus', capacity: 26, luggage: '20 Bags', tag: 'Full Family Bus', ...s26, extraHourRate: 600 }
+  );
 }
 
